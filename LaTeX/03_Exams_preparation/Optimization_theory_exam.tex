@@ -1,0 +1,813 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{caption}
+\lstloadlanguages{Matlab,C++}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{siunitx}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+
+\usetikzlibrary{calc,through,backgrounds,positioning,fit}
+\usetikzlibrary{shapes,arrows,shadows,patterns}
+
+\tikzstyle{place}=[shape=circle, draw, minimum height=10mm]
+\tikzstyle{place_1}=[shape=circle, draw, minimum height=5mm]
+\tikzstyle{trig}=[shape=circle, draw, dashed, minimum height=10mm]
+\tikzstyle{trans}=[shape=rectangle, draw, minimum height=15mm, minimum width=16mm]
+
+\newdimen\LineSpace
+\tikzset{
+    line space/.code={\LineSpace=#1},
+    line space=3pt
+}
+
+\pgfdeclarepatternformonly[\LineSpace]{my north east lines}{\pgfqpoint{-1pt}{-1pt}}{\pgfqpoint{\LineSpace}{\LineSpace}}{\pgfqpoint{\LineSpace}{\LineSpace}}%
+{
+    \pgfsetlinewidth{0.4pt}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\LineSpace + 0.1pt}{\LineSpace + 0.1pt}}
+    \pgfusepath{stroke}
+}
+
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\textit{Metody i algorytmy optymalizacji - Zbiór zadań 2017/18} }
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\pagestyle{mypage_1}
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+ 
+\begin{document}
+
+\tableofcontents
+
+\newpage
+\section{Lista opracowanych tematów}
+\begin{enumerate}
+
+\item Wypukłość, wklęsłość, twierdzenie o punktach optymalnych
+
+
+\item Poszukiwanie ekstremum na kierunku
+
+
+\item Metoda Lagrange'a + regularność punktów 
+
+
+\item Kierunki sprzężone - ogólnie
+
+
+\item Kierunki sprzężone - Metoda gradientów sprzężonych
+
+
+\item Metoda Newtona-Rapsona
+
+
+\item Wewnętrzna funkcja kary
+
+\item Dualność
+
+\item Kierunki poprawy
+
+\item Kuhn - Tucker
+
+\item Programowanie liniowe
+
+\item \textbf{Do zrobienia}:
+\item Kierunki sprzężone - Metoda Powella
+
+
+
+\end{enumerate}
+
+
+\newpage
+\section{Wypukłość, wklęsłość, warunki optymalności}
+
+\subsection{Pytania własne - teoria do opracowania}
+\begin{enumerate}
+\item Definicja wypukłości 
+\item Definicja ścisłej wypukłości 
+\item Definicja wklęsłości
+\item Funkcja wklęsła, a wypukła ( zależność )
+\item Wypukłość - liniowa kombinacja
+\item Wypukłość - funkcja złożona 
+\item Czym jest hesjan ?
+\item Dodatnia i ściśle dodatnia określoność macierzy - jak stwierdzić ?
+\item Ujemna i ściśle ujemna określoność macierzy - jak stwierdzić ?
+\item Określoność hesjanu, a wypukłość.
+\item Twierdzenie Fermata, część I = WK optymalności rozwiązania
+\item WD istnienia minimum
+\item Kiedy punkt jest minimum, maksimum, punktem siodłowym ?
+\item Kiedy minimum lokalne jest globalne ? Kiedy ekstremum jest globalne ?
+\item Kiedy zadanie optymalizacji jest wypukłe ?
+\end{enumerate}
+
+\subsection{Ćwiczenia}
+
+\begin{framed}
+\textbf{Zadanie 1 - Notatki z ćwiczeń od Gregi} \\
+Udowodnić, że jeśli \( F(x) \) jest liniowa, a \( G(x) \) jest wypukła to \( H(x) = G(F(x)) \) jest wypukła.
+\end{framed}
+
+\begin{framed}
+\textbf{Zadanie 2 - Notatki z ćwiczeń od Gregi} \\
+Dowieść, że jeśli \( F(x) \) i \( G(x) \) są wypukłe, to stwierdzenie, że \( H(x)=G(F(x)) \) jest wklęsła jest nie zawsze prawdziwe. 
+\end{framed}
+
+\begin{framed}
+\textbf{Zadanie 3 - Notatki z ćwiczeń od Gregi} \\
+Udowodnić, że jeśli \( F_i(x) : R^N \rightarrow R \) jest wypukła oraz \( \forall i \; c_i \geq 0 \), to \( F(x) = \sum_{i=1}^n c_i F_i(x) \) jest także funkcją wypukłą. 
+\end{framed}
+
+\begin{framed}
+\textbf{Zadanie 4 - Notatki z ćwiczeń od Gregi} \\
+Udowodnić, że funkcja \( e^{x_1^2+x_2^2} + e^{x_1+x_2} \) jest wypukła. 
+\end{framed}
+
+\begin{framed}
+\textbf{Zadanie 5 - Notatki z ćwiczeń od Gregi} \\
+Wyznaczyć gradient i hesjan funkcji \( F(x)=x_1^2+2x_2^2+x_1x_2 \). Przyjąć punkt początkowy \( x_0 = [ x_{01} \; x_{02} ] \). 
+\end{framed}
+
+\begin{framed}
+\textbf{Zadanie 6 - Notatki z ćwiczeń od Gregi} \\
+Czy funkcja \( F(x)=12x_1^{\frac{1}{3}} \cdot x_2^{\frac{1}{2}} \) osiąga maksimum dla pewnego \( x_1 \; , x_2 \), gdzie \( x_1, \; x_2 \geq 0 \).
+\end{framed}
+
+\begin{framed}
+\textbf{Zadanie 7 - Notatki z ćwiczeń od Gregi} \\
+Wykazać ścisłą wklęsłość funkcji \( F(x,y) = x+y(-e^x)(-e^{x+y}) \).
+\end{framed}
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 8 - Egzamin +}} \\
+Znaleźć obszar wypukłości funkcji \( F(x)=\frac{1}{x_1}+2x_2 \).
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 9 - Egzamin +}} \\
+Czy funkcja \( F(x_1,x_2)=\frac{1}{x_1}+\frac{1}{x_2} \) jest \\ a) wypukła, b) wklęsła c) wypukła na podzbiorach ( jakich ? ).
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 10 - Egzamin +}} \\
+Czy rozwiązanie zadanie \( \text{min} \sum_{i=1}^N \frac{1}{x_i} \) na zbiorze \( X_0 = \{ x: Ax \leq b , \; b \geq 0 , \; x_i \geq 0 \} \) jest globalne ? 
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 11 - Egzamin +}} \\
+Czy zadanie \( \text{min} \{ (x-5)^2+(y-1)^2+xy\} \), przy ograniczeniach \( x+y \leq 0 \), \( x \geq 0 \) , \( y \geq 0 \) jest wypukłym zadaniem optymalizacji w \( R^2 \)? Odpowiedź uzasadnij.
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 12 - Egzamin + }} \\
+Dla zadania \( \text{min} \{ 2x_1^3+-3x_1^2-6x_1x_2(x_1-x_2-2)\} \), gdzie \( (x_1,x_2) \in R^2 \) : \\
+a) Znaleźć punkty spełniające warunki konieczne optymalności. \\
+b) Na podstawie warunków wystarczających, określić charakter tych punktów.
+\end{framed}
+
+
+
+
+
+\newpage
+\section{Optymalizacja na kierunku}
+
+\subsection{Pytania własne - teoria do opracowania}
+\begin{enumerate}
+
+\item Jak wyznaczamy minimum na określonym kierunku i przy danym punkcie początkowym ? Podaj algorytm. Czym jest krok ? 
+
+
+\end{enumerate}
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin +}} \\
+Obliczyć: \\
+a) gradient \\
+b) hesjan \\
+c) określić wypukłość \\
+funkcji \( F(x_1,x_2) = x_1^2+2x_2^2+x_1x_2 \). \\
+d) Jakiej długości należy wykonać krok z punktu \( (1,0) \) na kierunku \( d=(1,1) \) aby osiągnąć ekstremum? 
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin +}} \\
+Dla zadania: \\
+\( F(x)=x_1^2+x_1x_2+(x_1-x_2)^4 \) \\
+wykonać dokładne poszukiwanie minimum na kierunku \( d = \begin{bmatrix}
+1 \\ -3 
+\end{bmatrix} \) 
+z punktu \( x_0 = (0,0)^T \).
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 3 - Egzamin +}} \\
+\begin{align*}
+&\text{min} F(x) = x_1^2 -2x_1x_2+x_2^2+x_2^3+cx_2 \\
+&x \in R^2, \; c - \text{parametr} \\
+\end{align*}
+Dla \( c = -3 \) znaleźć wszystkie wektory d, które w punkcie \( x^0 = (0,1)^T n \) są ani kierunkami wzrostu ani kierunkami spadku.
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 4 - Egzamin +}} \\
+Wyznacz minimum na kierunku  antygradientu z punktu \( x_0 \)  dla formy kwadratowej
+\begin{align*}
+&F(x)=\frac{1}{2}x^TAx \\
+& A = \begin{bmatrix}
+1 & 1 \\
+1 & 2
+\end{bmatrix}
+\quad 
+x_0 = \begin{bmatrix}
+10 \\
+-5
+\end{bmatrix}
+\end{align*}
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 5 - Egzamin +}} \\
+Dla zadania
+\begin{align*}
+\text{min} \; x_1^2 + 2x_2^2 + 4x_1 + 4x_2 
+\end{align*}
+a) Znajdź punkty w \( R^2 \) spełniające WK optymalności \\
+b) Metodą analityczną (dokładną) dokonaj jednokrotnej optymalizacji kierunkowej z punktu startowego \( x = [ 0 \; 0 ]^T \).
+\end{framed}
+
+
+
+
+
+
+
+
+\newpage
+\section{Metoda Lagrange'a + regularność}
+
+\subsection{Pytania własne - teoria do opracowania}
+\begin{enumerate}
+
+\item Do jakiego problemu jest używana metoda Lagrange'a ?
+\item Jak przekształcamy zadanie z ograniczeniami na zadanie bez ograniczeń ? Jaki jest WK ?
+\item Jak stwierdzić na podstawie tej metody czy obliczony punkt to minimum czy maksimum ?
+\item Czym jest punkt regularny w zadaniu z ograniczeniami równościowymi ?
+
+
+\end{enumerate}
+
+\subsection{Ćwiczenia}
+
+\begin{framed}
+\textbf{Zadanie 1 - Notatki z ćwiczeń od Gregi } \\
+Dana jest hiperpłaszczyzna \( x+y-z=3 \) . Na tej płaszczyźnie znaleźć punkt najbliżej punktu środka układu współrzędnych.
+\end{framed}
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin +}} \\
+Wykorzystując metodę mnożników Lagrange'a znaleźć punkty ekstremalne funkcji \\ \( F(x) = x_1x_2 \) na zbiorze dopuszczalnym \( x_1^2+x_2^2  = 1\).
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 3 - Egzamin ( podpunkt b) ? ) }} \\
+Zadanie
+\begin{align*}
+&\text{min} \; x_1^2 + x_2^2 + \frac{1}{4}x_3^2 \\
+&-x_1+x_3-1=0
+\end{align*}
+a) Rozwiąż metodą mnożników Lagrangea \\
+\colorbox{yellow}{b) Sprawdź warunki regularności w punkcie rozwiązania.}
+\end{framed}
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Kierunki sprzężone - ogólne }
+
+\subsection{Pytania własne - teoria do opracowania}
+
+\begin{enumerate}
+\item Jaki problem jest rozpatrywany w metodach kierunków sprzężonych ?
+\item Jaki jest WK dla zastosowania tych metod ?
+\item Jakie znasz metody kierunków sprzężonych ?
+\item Kiedy dwa kierunki są sprzężone ?
+\item Kiedy dwa kierunki są sprzężone względem ściśle dodatnio określonej macierzy A ?
+\item Czy ściśle dodatnio określona macierz A ma zawsze kierunki sprzężone ?
+\item Ile potrzeba kroków do znalezienia minimum w metodach kierunków sprzężonych ? Podaj twierdzenie.
+\end{enumerate}
+
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin +}} \\
+Zbadać sprzężoność podanych kierunków d w stosunku do podanej macierzy A:
+\begin{align*}
+A = 
+\begin{bmatrix}
+2 & 1 \\
+1 & 3 
+\end{bmatrix}
+\end{align*}
+a) \( d^1 = \begin{bmatrix}
+1 \\ 0 
+\end{bmatrix} \quad d^2 = \begin{bmatrix}
+1 \\ -2
+\end{bmatrix} \) \\
+b)  \( d^1 = \begin{bmatrix}
+1 \\ 0 
+\end{bmatrix} \quad d^2 = \begin{bmatrix}
+3 \\ -1
+\end{bmatrix} \)
+
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin +}} \\
+Udowodnić, że jeśli \( u, v \) są wektorami własnymi macierzy \( A \), to \( <u,Av>=0 \), gdzie \( A > 0 \). 
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 3 - Egzamin +}} \\
+Dla jakiego \( a \) kierunki \( d^1 = \begin{bmatrix}
+a \\ 0 
+\end{bmatrix} \quad d^2=\begin{bmatrix}
+1 \\ -2 
+\end{bmatrix} \) są sprzężone względem \( A = \begin{bmatrix}
+2 & 1 \\ 1 & 3 
+\end{bmatrix}
+\)
+\end{framed}
+
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 4 - Egzamin +}} \\
+Metoda kierunków  sprzężonych zastosowana dla znalezienia minimum  funkcji: 
+\begin{align*}
+&F(x)=\frac{1}{2}x^TAx+b^Tx+c \\
+&A > 0, \; x \in R^3
+\end{align*}
+zakończy poszukiwania w co najwyżej n krokach. Podać n  i uzasadnić. 
+\end{framed}
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Kierunki sprzężone - Metoda Powella}
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Kierunki sprzężone - Metoda gradientów sprzężonych}
+
+\subsection{Pytania własne - teoria do opracowania}
+
+\begin{enumerate}
+\item Podaj algorytm metody gradientów sprzężonych
+\item Ile kroków potrzebnych jest do wykonania co najwyżej aby metoda ta znalazła minimum przy ściśle dodatnio określonej macierzy A ?
+\end{enumerate}
+
+\subsection{Ćwiczenia}
+
+\begin{framed}
+\textbf{Zadanie 1 - Notatki z ćwiczeń od Gregi} \\
+Metodą gradientów sprzężonych znaleźć minimum funkcji \( F(x_1,x_2)=2x_1^2+x_2^2-x_1x_2 \).
+\end{framed}
+
+\subsection{Egzamin}
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin}} \\
+a) Uzupełnić krok algorytmu gradientu sprzężonego \\
+b) Jeśli F jest formą kwadratową ściśle dodatnio określoną to w ilu krokach algorytm osiąga minimum  
+\end{framed}
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Metoda Newtona - Rapsona}
+
+\subsection{Pytania własne - teoria do opracowania}
+
+\begin{enumerate}
+
+\item Podaj WKiD zbieżności metody Newtona 
+\item Dla formy kwadratowej, w ilu krokach jest osiągane minimum przez algorytm i jaki jest konieczny do tego warunek ?
+\item Podaj algorytm metody Newtona-Rapsona
+\item Jaki jest związek pomiędzy WK optymalności ( Fermat ), a działaniem metody dla macierzy ściśle dodatnio określonej ?
+\end{enumerate}
+
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin +}} \\
+Wykazać, że algorytm Newtona-Rapsona zastosowany do funkcji \\ \( F(x) = (x_1-2)^2 +4(x_2-2)^2 \) pozwoli osiągnąć jej minimum w jednym kroku.
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin +}} \\
+Minimum formy kwadratowej \( F(x) = x^TAx \) , gdzie \( x \in \mathbb{R}^N \) będzie osiągnięte w jednym kroku przez algorytm Newtona-Rapsona pod warunkiem, że...
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 3 - Egzamin +}} \\
+\( min F(x) = x_1^2-2x_1x_2+x_2^2+x_2^3+cx_2 \) \\
+a)  dla \( c = 3 \) znaleźć punkty stacjonarne funkcji celu i określić charakter \\
+b) dla \( c = -1 \) i \( x0 = [2 \; 1]^T \) wyznaczyć kierunek poszukiwań metody Newtona 
+\end{framed}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Wewnętrzna funkcja kary}
+
+\subsection{Pytania własne - teoria do opracowania}
+\begin{enumerate}
+\item Podaj postać problemu w zadaniu z wewnętrzną funkcją kary. ( UWAGA: Jakie są tam ograniczenia ? )
+\item Jak zamieniany jest problem wyjściowy na problem bez ograniczeń ? Jaką postać ma nowa funkcja celu ?
+\item Podaj postać dwóch najczęściej wykorzystywanych funkcji kary.
+\item Jak wyznaczamy rozwiązanie ? Co należy obliczyć ?
+\end{enumerate}
+
+
+
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin +}} \\
+Rozwiązać zadanie metodą wewnętrznej funkcji kary
+\begin{align*}
+& \text{min} \{ (x_1+1)^3 + x_2 \} \\
+& g_1(x) = x_1-1 \geq 0 \\
+& g_2(x) = x_2 \geq 0 
+\end{align*}
+Podać postać nowej funkcji celu.
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin +}} \\
+Rozwiązać zadanie metodą wewnętrznej funkcji kary
+\begin{align*}
+& \text{min} \{ (x_1+1)^3 + x_2 \} \\
+& g_1(x) = x_1 \geq 1 \\
+& g_2(x) = x_2 \geq 10 
+\end{align*}
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 3 - Egzamin + }} \\
+Rozwiązać zadanie przy użyciu logarytmicznej wewnętrznej funkcji kary
+\begin{align*}
+& \text{min} \{ \frac{1}{2}x_1^2 + \frac{1}{2}x_2^2 \} \\
+&  x_1 + x_2 \geq 0 \\
+\end{align*}
+a) wykorzystać logarytmiczną wewnętrzną funkcję kary \\ 
+b) czy rozwiązanie jest globalne + uzasadnienie
+\end{framed}
+
+
+
+
+
+
+\newpage
+\section{Dualność}
+
+\subsection{Pytania własne - teoria do opracowania}
+
+\begin{enumerate}
+
+\item Jaki problem jest rozważany w problemie dualności ? Jaką postać mają ograniczenia ?
+\item Czym różni się ten problem od problemu KKT ?
+\item Jaką postać ma funkcja Lagrange'a dla tego problemu ?
+\item Czym jest punkt siodłowy ? Dlaczego jest ważny dla problemu wyjściowego ? Jak go wyznaczyć ?
+\item Jak wyznaczyć funkcję dualną ?
+\item Jak wyznaczyć punkt siodłowy ?
+\item Czym jest odstęp dualności ?
+\item Podaj treść silnego twierdzenia o dualności.
+
+
+\end{enumerate}
+
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin + }} \\
+Co to jest odstęp  dualności? Kiedy odstęp dualności   jest równy zero? 
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin + }} \\
+Znaleźć punkt położony najbliżej początku układu współrzędnych i spełniający:
+\begin{align*}
+& x_1+x_2 \geq 1 \\
+& x_1 \geq 0 \\
+& x_2 \geq 0
+\end{align*}
+Zadanie rozwiązać metodą dekompozycji dualnej. 
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 3 - Egzamin +}} \\
+Zaleźć funkcję dualną dla zadania:
+\begin{align*}
+&\text{min} \; x_1^2+x_2^2 \\
+&x_1+x_2 \geq 0 
+\end{align*}
+Następnie zadanie rozwiązać metodą dekompozycji dualnej. 
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 4 - Egzamin + }} \\
+Obliczyć funkcję dualną i składową \( \lambda \) punktu siodłowego dla problemu:
+\begin{align*}
+&\text{min} \{ 2x_1^2+x_2^2-4x_1-6x_2 \} \\
+&-x_1+2x_1 \leq 4
+\end{align*}
+\end{framed}
+
+
+
+
+
+\newpage
+\section{Kierunki poprawy}
+
+\subsection{Pytania własne - teoria do opracowania}
+
+\begin{enumerate}
+
+\item Czym są kierunki dopuszczalne w danym punkcie ?
+\item Czym są kierunki spadku w danym punkcie ?
+\item Czym są kierunki poprawy w danym punkcie ?
+
+\end{enumerate}
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin +}} \\
+Wyznaczyć analitycznie kierunek dopuszczalny poprawy. Optymalizować długość kroku na tym kierunku. 
+\begin{align*}
+& d = (-1,-1)^T \\
+& F(x)=x_1+x_2 \\
+& h(x) = x_1^2+x_2^2-1 \\
+& x_0 = ( \frac{\sqrt{2}}{2} ,\; \frac{\sqrt{2}}{2} )
+\end{align*}
+a) Czy d jest kierunkiem poprawy ?
+b) Czy d jest kierunkiem dopuszczalnym ?
+\end{framed}
+
+
+
+
+
+
+\newpage
+\section{Kuhn - Tucker}
+
+\subsection{Pytania własne - teoria do opracowania}
+
+\begin{enumerate}
+
+\item Jaki jest problem w zadaniu KT ?
+\item Podaj warunki konieczne KT
+\item Czym są ograniczenia aktywne ? Jak mają się do lambd ?
+\item Podaj WKiD KT 
+\item Co się dodaje do WK KT w przypadku ograniczeń równościowych ?
+\item Jak wyglądają WK KT w przypadku maksymalizacji ?
+\item Jak wykazać regularność punktów wyznaczonych przez warunki konieczne KT ?
+
+\end{enumerate}
+
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin + }} \\
+Dla zadania:
+\begin{align*}
+& \text{min} -x^2-x^3 \\
+& x^2 \leq 1 
+\end{align*}
+Wyznaczyć pary \( (x,\lambda ) \) spełniające warunki konieczne Kuhna-Tuckera.
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin + }} \\
+Czy w punkcie \( x = 6 \) spełnione są warunki konieczne Khuna-Tuckera ?
+\begin{align*}
+& \text{max} (x-4)^2 \\
+& 1 \leq x \leq 6 
+\end{align*}
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 3 - Egzamin +}} \\
+Sformułować warunki Kuhna Tuckera dla zadania: 
+\begin{align*}
+& \text{max} F(x) \\
+& h_i(x) \leq 0 
+\end{align*}
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 4 - Egzamin + }} \\
+\begin{align*}
+& \text{min} ( e^{-x_1}-x_2^2 ) \\
+& x_1^2+x_2^2 \leq 1 \\
+& x_1^2-1 \leq x_2 \\
+& x \in R^2 
+\end{align*}
+a) Czy jest to wypukły problem optymalizacji ? \\
+b) Czy punkt \( (1,0) \) spełnia WK Kuhna-Tuckera ? \\
+c) Jeśli tak, to czy jest to minimum czy maksimum ?
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 5 - Egzamin +}} \\
+\begin{align*}
+& \text{min} ( e^{-x_1}+2x_2^2 ) \\
+& x_1^2+x_2^2 \leq 1 \\
+& x_1^2-1 \leq x_2 \\
+& x \in R^2 
+\end{align*}
+Czy w punkcie \( (2,1) \) są spełniona warunki KKT ?
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 5 - Egzamin }} \\
+\begin{align*}
+& \text{min} ( e^{-x_1}+2x_2^2 ) \\
+& x_1^2+x_2^2 \leq 1 \\
+& x_1^2-1 \leq x_2 \\
+& x \in R^2 
+\end{align*}
+Czy w punkcie \( (2,1) \) są spełniona warunki KKT ?
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 6 - Egzamin}} \\
+Dla zadania
+\begin{align*}
+&\text{min} \; x_1^3-x_1^2x_2+2x_2^2 \\
+&x_1 \geq 0 \; x_2 \geq 0
+\end{align*}
+a) Podaj warunki konieczne optymalności ( Karusha - Tuckera ) \\
+b) Udowodnij, że istnieją dwa punkty spełniające te warunki
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 7 - Egzamin}} \\
+Dla zadania 
+\begin{align*}
+&\text{min} \; -x_1-x_2 \\
+&x_1+x_2^2-5\leq 0 \\
+&x_1 - 2 \leq 0 \\
+&x_1 , \; x_2 \in R^2
+\end{align*}
+a) Podać warunki konieczne optymalności i znaleźć punkty, które je spełniają. Który z tych punktów jest rozwiązaniem? \\
+b) Pokazać, że w tym punkcie są spełnione warunki regularności. 
+\end{framed}
+
+
+
+
+\newpage
+\section{Programowanie liniowe}
+
+\subsection{Pytania własne - teoria do opracowania}
+
+\begin{enumerate}
+
+\item Jak dodawane są zmienne przy przekształcaniu ograniczeń w programowaniu liniowym ?
+\item Które zmienna są zmiennymi bazowymi w pierwszej iteracji ?
+\item Jak wyznaczyć pierwsze rozwiązanie bazowe ?
+
+
+\end{enumerate}
+
+
+\subsection{Egzamin}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 1 - Egzamin +}} \\
+Podać pierwsze rozwiązanie bazowe: 
+\begin{align*}
+& \text{max} \; 2x_1 + x_2 \\
+& 3x_1+x_2 \leq 7 \\
+& 2x_1+3x_2 \geq 10
+\end{align*}
+\end{framed}
+
+\begin{framed}
+\textbf{\colorbox{orange}{Zadanie 2 - Egzamin }} \\
+Wypisać ograniczenia oraz funkcję celu dla budynku o zadanych parametrach
+
+\end{framed}
+
+
+
+
+
+
+\end{document}
+ 

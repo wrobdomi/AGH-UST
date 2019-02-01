@@ -1,0 +1,687 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{caption}
+\lstloadlanguages{Matlab,C++}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{siunitx}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+
+\usetikzlibrary{calc,through,backgrounds,positioning,fit}
+\usetikzlibrary{shapes,arrows,shadows,patterns}
+
+\tikzstyle{place}=[shape=circle, draw, minimum height=10mm]
+\tikzstyle{place_1}=[shape=circle, draw, minimum height=5mm]
+\tikzstyle{trig}=[shape=circle, draw, dashed, minimum height=10mm]
+\tikzstyle{trans}=[shape=rectangle, draw, minimum height=15mm, minimum width=16mm]
+
+\newdimen\LineSpace
+\tikzset{
+    line space/.code={\LineSpace=#1},
+    line space=3pt
+}
+
+\pgfdeclarepatternformonly[\LineSpace]{my north east lines}{\pgfqpoint{-1pt}{-1pt}}{\pgfqpoint{\LineSpace}{\LineSpace}}{\pgfqpoint{\LineSpace}{\LineSpace}}%
+{
+    \pgfsetlinewidth{0.4pt}
+    \pgfpathmoveto{\pgfqpoint{0pt}{0pt}}
+    \pgfpathlineto{\pgfqpoint{\LineSpace + 0.1pt}{\LineSpace + 0.1pt}}
+    \pgfusepath{stroke}
+}
+
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Algorytmy i struktury danych - Egzamin}}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\pagestyle{mypage_1}
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+ 
+\begin{document}
+\tableofcontents
+
+\newpage
+\section{Pytania na egzamin z algorytmów}
+\subsection{Ogólne}
+\begin{enumerate}
+\item Co to jest algorytm ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Co to jest struktura danych ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Czym jest rozumowanie indukcyjne ? Przykład na ciągu arytmetycznym. \\ \colorbox{green}{Plusy+:} \colorbox{red}{
+Minusy: }
+
+\item Czym jest złożoność algorytmu ? \\ \colorbox{green}{Plusy+:} \colorbox{red}{Minusy: }
+
+\end{enumerate}
+\subsection{Sortowanie przez wstawianie, notacje asymptotyczne}
+\begin{enumerate}
+\item Algorytm sortowania przez wstawianie - napisać algorytm. \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Algorytm sortowania przez wstawianie - działanie na danych: 5, 2, 4, 6, 1, 3 \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Algorytm sortowania przez wstawianie - obliczyć czas działania w przypadku pesymistycznym i optymistycznym.\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Algorytm sortowania przez wstawianie - wykazać złożoność w przypadku pesymistycznym i optymistycznym. \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podać definicje notacji asymptotycznych wraz z przykładowymi rysunkami.\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\end{enumerate}
+\subsection{Dziel i zwyciężaj, MergeSort, złożoność rekurencyjna}
+\begin{enumerate}
+\item Na czym polega podejście dziel i zwyciężaj w pisaniu algorytmów ?\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisać funkcję Merge oraz MergeSort z algorytmu sortowania przez scalanie.\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Sortowanie przez scalanie - działanie na danych: 2, 8, 0, 2, 2, 0, 1, 8 . Kolejność wykonywania.\\  \colorbox{green}{ Plusy:+} \colorbox{red}{Minusy: }
+
+\item Jaka jest złożoność MergeSort ? Jaka jest złożoność Merge ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podać równanie określające złożoność algorytmów rekurencyjnych. \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podaj 3 sposoby rozwiązywania równań rekurencyjnych. \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Czym są drzewa rekursji ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy:}
+
+\item Podaj twierdzenie o rekurencji uniwersalnej. \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Rozwiąż metodą rekurencji uniwersalnej : \( T(n)=9T(\frac{n}{3})+n\), \( T(n)=T(\frac{2n}{3})+1\)  , \( T(n)=3T(\frac{n}{4})+n \log n\)  .  \\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy:-}
+
+\item Rozwiązać drzewem rekursji \( T(n)=2T(\frac{n}{2})+n^2 \) , \( T(n)=T(\frac{n}{3})+T(\frac{2n}{3})+n \)\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Obliczyć złożoność MergeSort przy pomocy rekurencji uniwersalnej. \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Obliczyć złożoność MergeSort przy pomocy drzewa rekursji.\\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+\end{enumerate}
+
+\subsection{Kopiec}
+\begin{enumerate}
+\item Czym jest kopiec ? Podaj przykład dwóch reprezentacji kopca. 
+\\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Jak są numerowane elementy kopca w drzewie z tablicy ?\\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Czym jest własność kopca ?\\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Co robi procedura Heapify ? Na jakich danych działa ? \\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz algorytm heapify.\\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podaj przykład działania heapify na danych z tablicy: 16, 4, 10, 14, 7, 9, 3, 2, 8, 1 \\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podaj złożoność obliczeniową heapify.\\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Co robi procedura Build-Heap ? \\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Działanie Build-Heap na danych 4, 1, 3, 2, 16, 9, 10, 14, 8, 7\\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz algorytm Build-Heap.\\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podaj złożoność obliczeniową Build-Heap z krótkim uzasadnieniem. \\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Heap-Sort - ogólnie na czym polega ?\\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Heap-Sort - napisz algorytm.\\  
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy:- }
+
+\item Heap-Sort działanie na przykładowych danych: 16, 14, 10, 8, 7, 9, 3, 2, 4, 1\\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podaj złożoność obliczeniową Heap-Sort i krótkie uzasadnienie. \\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+\end{enumerate}
+\subsection{Kolejka priorytetowa}
+\begin{enumerate}
+\item Jak działają / do czego służą kolejki priorytetowe ? \\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Przy pomocy czego / jak są implementowane kolejki priorytetowe ?\\  
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podaj 4 metody działające na kolejkach priorytetowych.\\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz algorytmy i podaj złożoność algorytmów : Heap-Maximum, Heap-Extract-Max, Heap-Increase-Key, Max-Heap-Insert. \\  \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\end{enumerate}
+\subsection{Sortowanie szybkie}
+\begin{enumerate}
+\item Quick-Sort - jak ogólnie działa ? Czy sortuje w miejscu ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Procedura Partition - jak ogólnie działa ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz algorytm Quick-Sort  \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz algorytm Partition  \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Podaj złożoność obliczeniową Partition  \\
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+ 
+\item Podaj złożoność obliczeniową Quick-Sort w przypadku optymistycznym oraz w przypadku pesymistycznym. Czym jest ona uwarunkowana ?  \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Oblicz złożoność obliczeniową Quick-Sort w przypadku optymistycznym przy pomocy twierdzenia o rekurencji uniwersalnej / drzewa rekursji.  \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Partition - działanie na danych : 2, 9, 7, 1, 3, 5, 6, 4
+\\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Quick-Sort - działanie na danych: 2, 9, 7, 3, 5, 6, 4
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy:- }
+
+\end{enumerate}
+
+\subsection{Drzewa decyzyjne}
+\begin{enumerate}
+
+\item Czym są drzewa decyzyjne ? Co reprezentują ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Czym są węzły w drzewach decyzyjnych ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Czym są liście w drzewach decyzyjnych ? Ile ich jest ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Jakie jest dolne ograniczenie pesymistycznego czasu sortowania dla sortowań wykorzystujących porównania ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Narysuj drzewo decyzyjne dla tablicy o 3 elementach. \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+ 
+\end{enumerate}
+
+\subsection{Sortowania liniowe}
+\begin{enumerate}
+\item Co oznacza, że algorytm jest stabilny dla sortowania ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Czym się różni sortowanie w czasie liniowym od innych sortowań ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Jakie znasz sortowania liniowe ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Counting-Sort - ogólna idea algorytmu, cechy algorytmu, stosowanie, złożoność \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Counting-Sort przykład na danych : 3, 6, 4, 1, 3, 4, 1, 4\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Sortowanie pozycyjne - ogólna idea, cechy algorytmu, stosowanie, złożoność \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Sortowanie pozycyjny - przykład na danych: 329, 457, 657, 839, 436, 720, 355 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Sortowanie kubełkowe - ogólna, idea, cechy algorytmu, stosowanie, złożoność \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Sortowanie kubełkowe - przykład na danych: 0,78 , 0,17 , 0,39 , 0,26 , 0,72 , 0,94 , 0,21 , 0,12 , 0,23 , 0,68 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\end{enumerate}
+\subsection{Stos, lista, kolejka}
+
+
+\subsection{Drzewa binarne}
+\begin{enumerate}
+\item Czym są drzewa binarne ? Jaką mają własność ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz kod procedury przeglądania drzewa binarnego w kolejności inorder ? Jaką ten algorytm ma złożoność ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz kod wyszukiwania w drzewie binarnym ? Jaką ma złożoność ? \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz kod dodawania do drzewa binarnego ? Czym jest węzeł x, a czym węzeł  y ? Jaką ma złożoność ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Jakie 3 przypadki są możliwe w procedurze usuwania węzła z drzewa binarnego ? Zrób rysunki. \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }
+
+\item Napisz kod usuwania z drzewa binarnego ? Jaką ma złożoność ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\end{enumerate}
+
+\subsection{Drzewa czerwono-czarne}
+\begin{enumerate}
+\item W jakim czasie są wykonywane operacje na drzewach binarnych, a w jakim na drzewach czerwono-czarnych, podaj złożoności oraz powód.\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jakie 5 atrybutów ma węzeł drzewa czerwono-czarnego ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jakie 5 własności ma drzewo czerwono-czarne ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym jest wysokość drzewa i jaka jest maksymalna dla drzewa czerwono-czarnego o n węzłach wewnętrznych ( wszystkie oprócz NIL ) ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Na czym polega operacja rotacji ? Do czego jest wykorzystywana ? Przedstaw to za pomocą grafu. \\ 
+\colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }  
+
+\item Czym jest wartownik ? Jak jest oznaczany ? Jakie ma atrybuty ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Kiedy nie można wykonać lewej/prawej rotacji ? \\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Napisz kod Left-Rotate, w jakim czasie działa ta procedura ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Do czego służy RB-Insert(T,z) ? W jakim czasie działa ? Jaki kolor ma wstawiany węzeł. Napisz kod. 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jakie możliwe naruszenia własności drzewa czerwono-czarnego mogą wystąpić po operacji wstawiania ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym jest węzeł z w RB-Fixup ? Jaki jest warunek stopu w tej procedurze ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jakie trzy przypadki są rozważane w RB-Fixup i jak są obsługiwane ? Zrób rysunki. 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Napisz procedurę RB-Fixup. 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }  
+\end{enumerate}
+
+
+\subsection{Skip-listy}
+\begin{enumerate}
+\item Jakiego typu strukturą jest Skip-Lista ? Dla jakiej innej struktury jest alternatywą ? Jakie są jej zalety ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }  
+
+\item Jaki jest czas działania procedur delete, insert, search dla skip-listy ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }  
+
+\item Jakie atrybuty ma węzeł w skip-liście ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }  
+
+\item Jak jest zbudowana Skip-Lista ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }  
+
+\item Jak przebiega przeszukiwanie Skip-Listy ? Napisz kod + złożoność.
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: }  
+
+\item Jak przebiega wstawianie do Skip-Listy ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jak przebiega usuwanie ze Skip-Listy ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\end{enumerate}
+\subsection{Tablice haszujące}
+\begin{enumerate}
+\item Na czym polega adresowanie bezpośrednie ? Kiedy jest stosowane ? Jakie ma wady ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Zaimplementuj metody insert, search, delete dla adresowania bezpośredniego.
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym są tablice z haszowaniem ? Kiedy są stosowane ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jaka jest złożoność w przypadku optymistycznym i pesymistycznym dla działań na tablicach z haszowaniem ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item  Czym jest funkcja haszująca ? Czym jest kolizja ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jakie znasz sposoby rozwiązywania kolizji ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jakie są cechy dobrej funkcji haszującej ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Zaimplementuj operacje słownikowe dla tablicy z haszowaniem z rozwiązywaniem kolizji
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym jest haszowanie modularne ? Jakie powinno być m ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym jest haszowanie przez mnożenie ? Jakie powinno być m ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym jest haszowanie uniwersalne ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Na czym polega adresowanie otwarte ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jaką postać ma funkcja haszująca w adresowaniu otwartym ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Napisz algorytm wstawiania w adresowaniu otwartym.
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jak przebiega wyszukiwanie w adresowaniu otwartym ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jak jest realizowanie usuwanie w adresowaniu otwartym ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym jest adresowanie liniowe / kwadratowe / dwukrotne ? Podaj postać funkcji oraz wady/zalety. 
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy:-} 
+
+\item Jaka jest złożoność operacji słownikowych w adresowaniu otwartym ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+
+
+\end{enumerate}
+ \subsection{Statystyki pozycyjne, drzewa przedziałowe}
+\begin{enumerate}
+\item Czym jest i-ta statystyka pozycyjna ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Ile przynajmniej porównań trzeba wykonać aby znaleźć minimum/maksimum zbioru n elementów ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Na czym polega problem wyboru i-tej statystyki pozycyjnej ? Co jest wejściem, a co jest wyjściem ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jaki czas jest potrzebny do rozwiązania problemu wyboru i-tej statystyki pozycyjnej i jakim algorytmem jest to wykonywane ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jaka jest różnica pomiędzy Quick-Sort, a Randomized-Select ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Podaj algorytm Randomized-Select oraz Randomized-Partition.
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym są wzbogacane struktury danych ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jak wzbogacamy drzewa RB aby uzyskać drzewa statystyk pozycyjnych ? Jaki atrybut dodajemy i czym on jest ? Czym jest drzewo statystyk pozycyjnych / czym są dynamiczne statystyki pozycyjne ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item W jakim czasie możliwe jest wyznaczenie dowolnej statystyki pozycyjnej w drzewie statystyk pozycyjnych ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Czym jest ranga w drzewie RB ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Co robi procedura OS-Select ? W jakim czasie działa ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Napisz procedurę OS-Select, omów działanie.
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy:- } 
+
+\item Jak odbywa się wstawianie do drzew statystyk pozycyjnych ? Jakie modyfikacje są potrzebne w algorytmie ? Czy zmienia to czas działania wstawiania ? Zrób rysunki rotacji. 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jak wzbogacamy drzewa RB aby uzyskać drzewa przedziałowe ? Jakie dwa atrybuty dodajemy ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Jakie przedziały zawierają węzły w drzewie przedziałowym ? Domknięte / niedomknięte ? Jak są uporządkowane ? 
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Narysuj przykładowe drzewo przedziałowe.
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\item Napisz algorytm Interval-Search znajdujący przedział zachodzący na i w drzewie przedziałowym. W jakim czasie działa ?
+\\ \colorbox{green}{Plusy:+} \colorbox{red}{Minusy: } 
+
+\end{enumerate}
+
+\subsection{Grafy - podstawowe informacje}
+\begin{enumerate}
+\item Czym jest zbiór E, a czym jest zbiór V dla grafów ? 
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item W zależności od czego wyrażana jest złożoność obliczeniowa algorytmów grafowych ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jakie są dwie reprezentacje grafów ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Czym jest tablica adj ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Czym jest graf spójny ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Czym jest graf pełny ? Czym różni się od spójnego ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\end{enumerate}
+
+\subsection{BFS, DFS}
+\begin{enumerate}
+
+\item Jakie atrybuty ma węzeł w przeszukiwaniu wszerz (BFS) ?
+ \\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+ 
+\item Jaka pomocnicza struktura danych jest wykorzystywana w BFS i jak jest obsługiwana ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jak zmieniają się kolory wierzchołków w BFS ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jak działa BFS ? 
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jaki jest czas działania BFS ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Zrób BFS dla grafu 
+\begin{figure}[H]
+\includegraphics[scale=0.3]{egz_1.jpg}
+\end{figure}
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jakie atrybuty ma węzeł w przeszukiwaniu w głąb (DFS) ?
+ \\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jak zmieniają się kolory wierzchołków w DFS ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jak działa DFS ? 
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jaki jest czas działania DFS ?
+\\ \colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Zrób DFS dla grafu 
+\begin{figure}[H]
+\includegraphics[scale=0.4]{egz_2.jpg}
+\end{figure}
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Krawędź drzewowa, powrotna, w przód, poprzeczna (str. 621) \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\end{enumerate}
+\subsection{Sortowanie topologiczne}
+\begin{enumerate}
+
+\item Czym jest DAG ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Na jakich grafach działa sortowanie topologiczne ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Do czego służy sortowanie topologiczne ?  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Z jakiego informacji z jakiego algorytmu korzysta sortowanie topologiczne ?  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jaki jest czas sortowania topologicznego ?  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Podaj algorytm sortowania topologicznego.  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+ 
+\end{enumerate}
+
+
+\subsection{MTS}
+
+\begin{enumerate}
+
+
+\item Jak działa algorytm Kruskala ?  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+ 
+\item Czym są zbiory ( set ) w algorytmie Kruskala ? Czemu zapobiegają ?  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+ 
+\item Działanie algorytmu Kruskala na grafie: 
+\begin{figure}[H]
+\includegraphics[scale=0.7]{egz_3.jpg}
+\end{figure}
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+  
+\item Złożoność algorytmu Kruskala \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Jak działa algorytm Prima ?  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+ 
+\item Jaką dodatkową strukturę wykorzystuje algorytm Prima ?  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+ 
+\item Działanie algorytmu Prima na grafie: 
+\begin{figure}[H]
+\includegraphics[scale=0.7]{egz_4.jpg}
+\end{figure}
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+  
+\item Złożoność algorytmu Prima w dwóch przypadkach \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\end{enumerate}
+
+ 
+\subsection{Najkrótsze ścieżki w grafie}
+\begin{enumerate}
+\item Co oblicza algorytm Belmana-Forda ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Czy jest jakieś ograniczenie na wartości wag krawędzi w algorytmie B-F ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Co robi procedura Relax(u,v,w) ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jakie dwa atrybuty ma węzeł w algorytmie Belmana-Forda ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jak działa algorytm Belmana-Forda ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jaki jest czas działania algorytmu Belmana-Forda ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Działanie algorytmu Belmana-Forda na grafie: 
+\begin{figure}[H]
+\includegraphics[scale=0.7]{egz_5.jpg}
+\end{figure}
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Co oblicza algorytm Dijkstry ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Czy jest jakieś ograniczenie na wartości wag krawędzi w algorytmie Dijkstry ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jakie dwa atrybuty ma węzeł w algorytmie Dijkstry ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jak działa algorytm Dijkstry ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jaki jest czas działania algorytmu Dijkstry w dwóch przypadkach ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Działanie algorytmu Dijkstry na grafie: 
+\begin{figure}[H]
+\includegraphics[scale=0.7]{egz_6.jpg}
+\end{figure}
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } 
+
+\item Co wyznacza algorytm Floyda - Warshalla ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Jaką ma złożoność algorytm Floyda-Warshalla ? \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Działanie na danych -> opracowanie \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+
+\end{enumerate}
+
+\subsection{Koszt zamortyzowany}
+\begin{enumerate}
+\item Trzy metody obliczania kosztu operacji przy pomocy kosztu  \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: } zamortyzowanego
+\end{enumerate}
+\subsection{Wyszukiwanie wzorca}
+\begin{enumerate}
+\item Algorytm naiwny \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Algorytm Rabina-Karpa \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+
+\item Wyszukiwanie wzorca przy pomocy automatów skończonych \\
+\colorbox{green}{Plusy:} \colorbox{red}{Minusy: }
+\end{enumerate}
+\end{document}
+ 

@@ -1,0 +1,506 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{tikz}
+\usepackage{makecell}
+
+\usetikzlibrary{calc,through,backgrounds,positioning,fit}
+\usetikzlibrary{shapes,arrows,shadows}
+
+\tikzstyle{place}=[shape=circle, draw, minimum height=10mm]
+\tikzstyle{place_1}=[shape=circle, draw, minimum height=5mm]
+\tikzstyle{trig}=[shape=circle, draw, dashed, minimum height=10mm]
+\tikzstyle{trans}=[shape=rectangle, draw, minimum height=15mm, minimum width=16mm]
+
+
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Teoria Sterowania - Laboratorium}}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\pagestyle{mypage_1}
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+ 
+\begin{document}
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|p{1.8cm}|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Systemy dyskretne}} \\ 
+\hline 
+Dominik Wróbel &  \textbf{29 V 2018 05 VI 2018 }  & \textbf{Wt 09:30} \\ 
+\hline
+
+\end{tabular}
+\end{center}
+\end{table}
+\tableofcontents
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest przeprowadzenie analizy systemów dyskretnych pod względem stabilności, poprawnego doboru okresu próbkowania przetwornika oraz analizy różnych schematów różnicowych.
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 7.1}
+\subsubsection{Opis zagadnienia}
+W zadaniu rozważany jest liniowy dynamiczny układ stacjonarny z czasem ciągłym
+\begin{equation}
+\dot{x}(t) = Ax(t)+Bu(t)
+\label{eq:eq_1}
+\end{equation}
+\begin{equation*}
+y(t)=Cx(t)+Du(t)
+\end{equation*}
+z macierzami:
+\begin{equation*}
+A = \begin{bmatrix}
+-I & 0 \\
+0 & -N
+\end{bmatrix} =
+\begin{bmatrix}
+-4 & 0 \\
+0 & - 23
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+B = \begin{bmatrix}
+0 \\ S
+\end{bmatrix} = 
+\begin{bmatrix}
+0 \\ 7
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+C = \begin{bmatrix}
+1 & 0 \\ 0 & 1 
+\end{bmatrix} 
+\end{equation*}
+\begin{equation*}
+D = \begin{bmatrix}
+0 \\ 0 
+\end{bmatrix} 
+\end{equation*}
+Na układ podawany jest testowy sygnał cyfrowy, który przed wejściem do systemu jest poddawany działaniu ekstrapolatora w celu zamiany sygnału dyskretnego na ciągły. 'Mierzonym' sygnałem jest w tym eksperymencie sygnał ciągły wychodzący z systemu, badana jest jego zależność od okresu próbkowania ekstrapolatora. 
+\pagestyle{mypage}
+Schematycznie eksperyment przedstawia Rysunek \ref{fig:dys_1}.
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1,inner sep=0.4mm]
+
+\node (pid) [trans,label=below:{$zero-order-hold$}] at (2,0) {Ekstrapolator rzędu 0};
+\node [text width=3.5cm] (obiekt) [trans,label=below:{$system$}] at (6.7,0) {$\dot{x}(t) = Ax(t)+Bu(t)$ $y(t)=Cx(t)+Du(t)$};
+% \node (env) [trans] at (3.75,1.5) {$env_{1}$};
+
+% \draw [->] (sum) to (pid);
+\path[->] (pid) edge node [above ] {$u(t)$} (obiekt);
+\path[->] (-4,0) edge node [above ] {$u^{+}(i)=A\sin(\omega i + \phi)$} (pid);
+\path[->] (obiekt) edge node [above ] {$y(t)$} (10,0);
+%\path[->]  (10,0) - (10,-3) - (-1,-3) - (sum);
+% \draw [->] (8,0) -- (8,-2) -- (-1,-2) -- (sum);
+\end{tikzpicture}
+\caption{Schemat testowego systemu dyskretnego}
+\label{fig:dys_1}
+\end{figure}
+
+\subsubsection{Analityczne wyznaczenie macierzy systemu dyskretnego}
+Układ dyskretny można opisać przy pomocy równania rekurencyjnego:
+\begin{equation*}
+x^{+}(i+1)=A^{+}x^{+}(i)+B^{+}u^{+}(i)
+\end{equation*}
+\begin{equation*}
+y^{+}(i)=C^{+}x^{+}(i)
+\end{equation*}
+gdzie macierze systemu dyskretnego oznaczone \(+\) są dane wzorami:
+\begin{equation*}
+A^{+}=e^{hA}
+\end{equation*}
+\begin{equation*}
+B^{+}= \int_{0}^{h} e^{tA}Bdt
+\end{equation*}
+\begin{equation*}
+C^{+}=C 
+\end{equation*}
+gdzie h oznacza okres próbkowania.
+
+Patrząc na macierz systemu A z czasem ciągłym łatwo zauważyć, że jest to macierz w postaci kanonicznej Jordana o wartościach własnych \( \lambda_{1} = -4 \) oraz \( \lambda_{2} = -23 \), a zatem
+\begin{equation*}
+A^{+} = e^{hA} = \begin{bmatrix}
+e^{-4h} & 0 \\
+0 & e^{-23h} 
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+B^{+} = \int_{0}^{h}e^{tA}Bdt = \int_{0}^{h} \begin{bmatrix}
+e^{-4t} & 0 \\
+0 & e^{-23t} 
+\end{bmatrix}
+\begin{bmatrix}
+0 \\ 7
+\end{bmatrix}
+dt=
+\int_{0}^{h}\begin{bmatrix}
+0 \\ 7e^{-23t}
+\end{bmatrix}
+dt =
+\begin{bmatrix}
+0 \\
+-\frac{7}{23}e^{-23h}+\frac{7}{23}
+\end{bmatrix}
+\end{equation*}
+\begin{equation*}
+C=C^{+}=\begin{bmatrix}
+1 & 0 \\ 
+0 & 1
+\end{bmatrix}
+\end{equation*}
+Na podstawie macierzy \( A^{+} \) można stwierdzić, że system będzie stabilny asymptotycznie dla dowolnego \(h\), ponieważ wykładnik eksponenty będzie zawsze liczbą ujemną, a więc wartości własne macierzy \(A^{+}\) będą zawsze mniejsze od 1 dla \(h > 0\) i będą zawierać się w kole jednostkowym o środku z zerze.
+
+\subsubsection{Programowy eksperyment doboru okresu próbkowania}
+Aby móc zbadać działanie systemu w zależności od okresu próbkowania zbudowano model w programie Matlab/Simulink przedstawiony na Rysunku \ref{fig:dys_2}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.3]{dys_2.jpg}}
+\caption{Model rozważanego systemu w programie Matlab/Simulink}
+\label{fig:dys_2}
+\end{figure}
+Przy symulacji użyto opcji \textit{'fixed step'} oraz solvera \textit{ode8}. 
+
+Sygnał wejściowy jest sygnałem dyskretnym okresowym próbkowanym z okresem \( h \) przez ekstrapolator. Wejściowe punkty dyskretne odpowiadają próbkom pobieranym z funkcji \( sinus \) o amplitudzie 1 i częstotliwości \( 0.25 Hz \). 
+
+\subsubsection{Zbyt duży okres próbkowania}
+Zgodnie z twierdzenie o próbkowaniu, aby sygnał ciągły mógł zostać poprawnie odtworzony z sygnału dyskretnego musi zachodzić warunek:
+\begin{equation*}
+f_{p} > 2f_{g} 
+\end{equation*}
+\begin{equation*}
+\frac{1}{h} > 0.5 
+\end{equation*}
+\begin{equation*}
+h < 2
+\end{equation*}
+Na Rysunku \ref{fig:dys_3} przedstawiono działanie ekstrapolatora dla \( h = 3 \). Można zauważyć, że źle dobrany okres próbkowania istotnie zniekształca sygnał i daje w efekcie błędne wartości.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{dys_3.jpg}}
+\caption{Przebieg sygnału z ekstrapolatora ( kolor żółty ) dla zbyt dużego okresu próbkowania systemu.}
+\label{fig:dys_3}
+\end{figure}
+W tym przypadku nie analizowano wyjścia systemu ze względu na to, że sygnał wejściowy nie jest poprawny przy przyjętych założeniach. 
+
+System posiada dwie zmienne stanu, które są obserwowane jako wyjścia, jedna na jeden ze stanów jest ciągle równy 0
+\subsubsection{Okres próbkowania bliski wartości granicznej}
+W tym przypadku zbadano okres próbkowania \( h = 1.8 \) jako przypadek w którym okres próbkowania jest bliski \( h = 2 \) ,czyli granicznemu okresowi obliczonemu na podstawie twierdzenia o próbkowaniu. W tym przypadku działanie ekstrapolatora przedstawia Rysunek \ref{fig:dys_4}.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{dys_4.jpg}}
+\caption{Działanie ekstrapolatora dla \( h = 1.8 \).}
+\label{fig:dys_4}
+\end{figure}
+
+Wyjście z systemu przedstawia Rysunek \ref{fig:dys_5}. 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{dys_5.jpg}}
+\caption{Wyjście ciągłe oraz wyjście z impulsatora dla \( h = 1.8 \).}
+\label{fig:dys_5}
+\end{figure}
+
+\subsubsection{Okres próbkowania mniejszy od wartości granicznej}
+W tym przypadku zbadano okres próbkowania \( h = 0.2 \) jako przypadek w którym okres próbkowania jest relatywnie mały w stosunku do \( h = 2 \). 
+W tym przypadku działanie ekstrapolatora przedstawia Rysunek \ref{fig:dys_6}.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{dys_6.jpg}}
+\caption{Działanie ekstrapolatora dla \( h = 0.2 \).}
+\label{fig:dys_6}
+\end{figure}
+
+Wyjście z systemu przedstawia Rysunek \ref{fig:dys_7}. 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{dys_7.jpg}}
+\caption{Wyjście ciągłe oraz wyjśie z impulsatora dla \( h = 0.2 \).}
+\label{fig:dys_7}
+\end{figure}
+
+\subsubsection{Wnioski do zadania 7.1}
+Na Rysunku \ref{fig:dys_4} oraz \ref{fig:dys_5} widoczne jest, że nawet jeśli dobrany okres próbkowania spełnia założenia twierdzenia o próbkowaniu, to nie daje to gwarancji, że otrzymany z ekstrapolatora sygnał będzie zachowywał wartości sygnału próbkowanego. Dowodem tego stwierdzenia jest to, że na rysunkach tych amplituda kolejnych próbek wejściowych do ekstrapolatora wzrasta, co pociąga za sobą wzrost amplitudy sygnału ciągłego, natomiast w rzeczywistości próbki te powinny mieć amplitudę zbliżoną między sobą dla poprawności działania systemu.
+
+Z Rysunków \ref{fig:dys_6} oraz \ref{fig:dys_7} widać, że im mniejszy dobrany okres próbkowania tym sygnał jest lepiej odwzorowywany na wyjściu z ekstrapolatora, co pociąga za sobą sygnał zbliżony do wejściowej sinusoidy na wyjściu systemu. W ogólnym przypadku można stwierdzić, że im mniejszy dobrany okres próbkowania tym lepiej. W praktyce jednak okres ten musi mieć zawsze skończenie małą wartość. 
+
+\subsection{Zadanie 7.2}
+\subsubsection{Opis zagadnienia}
+Problemem w tym zadaniu polega na zbadaniu różnych schematów różnicowych dla systemu określonego macierzą:
+\begin{equation*}
+A = 
+\begin{bmatrix}
+-1 & 0 \\ 
+0 & -2
+\end{bmatrix}
+\end{equation*}
+Równania różnicowe polegają na aproksymowaniu pochodnej odpowiednim ilorazem różnicowym i pozwalają na zastosowanie schematów różnicowych do systemu (\ref{eq:eq_1}). 
+
+Zastosowanie danego równania różnicowego polega na zastąpieniu w tych równaniach pochodnej odpowiednią aproksymacją, a następnie wyznaczeniu zależności pomiędzy stanem w chwili następnej i poprzedniej. 
+
+W problemie będą rozważane schematy różnicowe:
+\begin{itemize}
+\item Eulera z krokiem w przód
+\item Eulera z krokiem w tył
+\item Newtona-Cotesa 
+\end{itemize}
+dla różnych okresów próbkowania \( h \).
+\subsubsection{Rozwiązanie analityczne układu ciągłego w czasie}
+Z powodu braku danych na temat macierzy B przyjęto, że rozważany jest układ liniowy jednorodny. Rozwiązanie takiego układu z czasem ciągłym wyraża się wzorem: 
+\begin{equation*}
+x(t)=e^{At}x_{0}
+\end{equation*}
+Macierz A jest postacią kanoniczną Jordana dlatego można wnioskować o wartościach własnych bezpośrednio na jej podstawie:
+\begin{equation*}
+\lambda_{1} = -1 \quad \lambda_{2} = -2
+\end{equation*}
+Można stwierdzić, że system z czasem ciągłym jest asymptotycznie stabilny. Na podstawie postaci macierzy A łatwo wyznaczyć rozwiązanie \( x(t) \):
+\begin{equation*}
+x(t)=e^{At}x_{0}=
+\begin{bmatrix}
+e^{-t} & 0 \\
+0 & e^{-2t}
+\end{bmatrix}
+x_{0}
+\end{equation*}
+Dla rozważań przyjęto \( x_{0} = 1  \)
+\subsubsection{Metoda Eulera z krokiem w przód}
+Schemat różnicowy tej metody przedstawia wzór:
+\begin{equation*}
+x^{+}(i+1)=(I+hA)x^{+}(i)+hBu^{+}(i)
+\end{equation*}
+Schemat ten jest stabilny asymptotycznie wtedy i tylko wtedy gdy wszystkie wartości własne macierzy \( hA \) leżą wewnątrz koła o promieniu 1 i środku w \( (-1, j0) \). 
+
+Wartości własne macierzy \( hA \) to:
+\begin{equation*}
+\lambda_{1} = -h \quad \lambda_{2} = -2h
+\end{equation*}
+
+Zbadano kilka przypadków ze względu na wartość okresu próbkowania, które przedstawiają Rysunku poniżej ( kolor niebieski \( x_{1} \), kolor czerwony \(x_{2}\) ) : 
+\begin{figure}[!htb]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{dys_8.jpg}
+  \caption{\(h=0.2\) - stabilny asymptotycznie }\label{fig:dys_8}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{dys_9.jpg}
+  \caption{\(h=1\) - granica stabilności}\label{dys_9}
+
+\endminipage
+\end{figure}
+
+\subsubsection{Metoda Eulera z krokiem w tył}
+Schemat różnicowy tej metody przedstawia wzór:
+\begin{equation*}
+x^{+}(i+1)=(I-hA)^{-1}x^{+}(i)+(i-hA)^{-1}hBu^{+}(i+1)
+\end{equation*}
+Schemat ten jest stabilny asymptotycznie wtedy i tylko wtedy gdy wszystkie wartości własne macierzy \( hA \) leżą na zewnątrz koła o promieniu 1 i środku w \( (1, j0) \). W tym przypadku zatem dla dowolnego \( h \) schemat pozostanie asymptotycznie stabilny. 
+
+Zbadano kilka przypadków ze względu na wartość okresu próbkowania, które przedstawiają Rysunku poniżej ( kolor niebieski \( x_{1} \), kolor czerwony \(x_{2}\) ) : 
+\begin{figure}[!htb]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{dys_10.jpg}
+  \caption{\(h=0.2\) - stabilny asymptotycznie }\label{fig:dys_10}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{dys_11.jpg}
+  \caption{\(h=1\) - stabilny asymptotycznie}\label{fig:dys_11}
+
+\endminipage
+\end{figure}
+
+\subsubsection{Wzór Newtona-Cotesa}
+Schemat różnicowy tej metody przedstawia wzór:
+\begin{equation*}
+x^{+}(i+1)=(I-0.5hA)^{-1}(I+0.5hA)^{-1}x^{+}(i) +0.5h(i-hA)(I-0.5hA)^{-1}B(u^{+}(i+1)+u^{+}(i))
+\end{equation*}
+Schemat ten jest stabilny asymptotycznie wtedy i tylko wtedy gdy wszystkie wartości własne macierzy \( A \) leżą w lewej półpłaszczyźnie.
+W tym przypadku zatem dla dowolnego \( h \) schemat pozostanie asymptotycznie stabilny. 
+
+Zbadano kilka przypadków ze względu na wartość okresu próbkowania, które przedstawiają Rysunku poniżej ( kolor niebieski \( x_{1} \), kolor czerwony \(x_{2}\) ) : 
+\begin{figure}[!htb]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{dys_12.jpg}
+  \caption{\(h=0.2\) - stabilny asymptotycznie }\label{fig:dys_12}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{dys_13.jpg}
+  \caption{\(h=1\) - stabilny asymptotycznie}\label{fig:dys_13}
+
+\endminipage
+\end{figure}
+\subsubsection{Porównanie metod}
+Zestawienie porównawcze wraz z rozwiązaniem systemu ciągłego przedstawia Rysunek \ref{fig:dys_14}. Dla porównania metod wybrano okres próbkowania \(h = 0.9 \), ponieważ przy tej wartości każdy ze schematów pozostaje stabilny, a jednocześnie uwidacznia to różnicę pomiędzy metodami.
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.3]{dys_14.jpg}}
+\caption{Zestawienie porównawcze działania schematów różnicowych.}
+\label{fig:dys_14}
+\end{figure}
+ 
+
+\subsubsection{Wnioski do zadania 7.2}
+Podczas stosowania schematów różnicowych należy pamiętać o zbadaniu stabilności, ponieważ nieodpowiedni dobór kroku próbkowania może prowadzić do niestabilności rozwiązania na co dowód znajduje się na Rysunku \ref{dys_9} na którym widać, że system znajduje się na granicy stabilności i nie aproksymuje prawidłowo rozwiązania równania różniczkowego.
+
+W zestawieniu porównawczym najbardziej dokładna okazała się metoda Newtona-Cotesa, która jest jednak najbardziej złożona obliczeniowo. Warto jednak zaznaczyć, że w tym porównaniu jest rozważany system jednorodny, dla systemu niejednorodnego wyniki mogłyby być inne. 
+
+
+\subsection{Zadanie 7.3}
+\subsubsection{Opis zagadnienia}
+Problemem w tym zadaniu polega na zbadaniu zachowania systemu 
+\begin{equation*}
+x(k+1) = \lambda x(k) \quad k=0,1,2,3, \dots
+\end{equation*}
+w zależności od parametru \( \lambda \) .
+Jako warunek początkowy przyjęto \( x_{0} = 1 \). 
+\subsubsection{Przypadki testowe}
+Zachowanie systemu dla różnych wartości \( \lambda \) przedstawiają poniższe Rysunki: \\
+ 
+\begin{figure}[!htb]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{dys_15.jpg}
+  \caption{\( \lambda=-2\) - niestabilny }\label{fig:dys_15}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{dys_16.jpg}
+  \caption{\( \lambda = -1\) - granica stabilności}\label{dys_16}
+
+\endminipage
+\end{figure}
+
+
+\begin{figure}[!htb]
+\minipage{0.5\textwidth}
+  \includegraphics[width=\linewidth]{dys_17.jpg}
+  \caption{\( \lambda = -0.5 \) stabilny asymptotycznie \( \lambda = 0 \)  - stabilny asymptotycznie }\label{fig:dys_17}
+\endminipage\hfill
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{dys_18.jpg}
+  \caption{ \( \lambda=0.5 \) - stabilny asymptotycznie \( \lambda=1 \) - stabilny}\label{fig:dys_18}
+
+\endminipage
+\end{figure}
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.3]{dys_19.jpg}}
+\caption{\( \lambda = 2 \) - niestabilny}
+\label{fig:dys_19}
+\end{figure}
+ 
+
+\subsubsection{Wnioski do zadania 7.3}
+Z Rysunków \ref{fig:dys_15} do \ref{fig:dys_19} wynika, że system pozostaje stabilny asymptotycznie dla wartości $ \lambda $ zawierających się w kole jednostkowym o środku w zerze, co zgadza się z teorią. System pozostaje na granicy stabilności dla $ \lambda $ leżących na promieniu koła oraz niestabilny dla $ \lambda $ leżących poza kołem.
+
+Nie bez znaczenia pozostaje znak $ \lambda $, dla wartości ujemnych sposób osiągania stanu ustalonego różni się od sposobu osiągania go dla wartości dodatnich, ponieważ z każdym następnym punktem zmieniany jest jego znak na przeciwny. 
+
+\subsection{Zadanie 7.4}
+\subsubsection{Opis zagadnienia}
+Problem polega na obliczeniu i-tego wyrazu ciągu Fibonacciego wykorzystując wzór na i-ty wyraz oraz rekurencję, następnie zostanie porównana szybkość działania tych dwóch podejść oraz wyznaczony zostanie punkt stały odwzorowania generującego układ dynamiczny powstały na bazie wzorów określających ciąg Fibonacciego.
+ 
+\subsubsection{Porównanie czasów działania}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Czas działania metod}} \\ 
+\hline 
+Metoda &  Rekurencja  & Wzór \\ \hline
+i = 8  & t = 0.002894 s  &  t = 0.001850 s \\ 
+i = 15 & t = 0.003293 s  &  t = 0.001803 s \\
+i = 20 & t = 0.005601 s  & t = 0.002075 s \\
+\hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsubsection{Wyznaczenie punktu stałego odwzorowania numerycznie i analitycznie}
+Rozważając stosunek dwóch kolejnych wyrazów ciągu Fibonacciego:
+\begin{equation*}
+y_{i} = \frac{x_{i+1}}{x_{i}}
+\end{equation*}
+można stwierdzić, że spełnia on równanie: 
+\begin{equation*}
+y_{i+1}=F(y_{i})=1+\frac{1}{y_{i}}
+\end{equation*}
+Odwzorowanie to generuje układ dynamiczny, którego punkt stały zostanie wyznaczony. 
+Punkt ten może być łatwo wyznaczony rozwiązując równanie:
+\begin{equation*}
+y = 1 +\frac{1}{y}
+\end{equation*}
+Po sprowadzeniu do równania kwadratowego otrzymamy, że
+\begin{equation*}
+y^{*}=\frac{1+\sqrt{5}}{2}
+\end{equation*}
+
+Numerycznie zadanie rozwiązano stosując algorytm 
+\begin{equation*}
+y(k+1)=F(y(k))=1+\frac{1}{y(k)}
+\end{equation*}
+Gdzie \( y_{0}=4 \) jest początkowym przybliżeniem punktu stałego. 
+Otrzymano następujące wyniki:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{dys_20.jpg}}
+\caption{Poszukiwanie punktu stałego}
+\label{fig:dys_20}
+\end{figure}
+Ostatnią odczytaną wartość można uznać za punkt stały:
+\begin{equation*}
+y^{*}=1,6180
+\end{equation*}
+co jest równe 
+\begin{equation*}
+y^{*}=\frac{1+\sqrt{5}}{2}
+\end{equation*}
+\subsubsection{Wnioski do zadania 7.4}
+Na podstawie analizy czasów działania funkcji rekurencyjnej oraz obliczania wyrazów ciągów na podstawie wzoru łatwo stwierdzić, że sposób rekurencyjny jest o wiele wolniejszy, zwłaszcza dla większych wyrazów ciągu, co jest spowodowane przede wszystkim koniecznością obsługi zmiennych lokalnych w pamięci. 
+
+Punkt stały odwzorowania można wyznaczyć przy pomocy początkowego przybliżenia, jeśli obszar atrakcji jest wystarczająco duży to kolejne iteracje pozwalają na wyznaczenie punktu stałego, co obrazuje Rysunek \ref{dys_20}.
+
+\end{document}

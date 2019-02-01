@@ -1,0 +1,419 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Identyfikacja procesów przemysłowych }}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+%\thispagestyle{mypage_1}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Identyfikacja procesów przemysłowych}} \\ \hline Dominik Wróbel & 06 XI 2018 & Wt. 13:45, s. 111 \\ \hline
+\multicolumn{3}{|c|}{Laboratorium 4} \\ \hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 1 }
+
+Zadanie polega na identyfikacji modelu ARMAX o strukturze 
+\begin{equation*}
+y_i = -a_1y_{i-1} + b_0u_{i-1} + e_i + ce_{i-1}
+\end{equation*}
+przy pomocy dwóch metod:
+\begin{itemize}
+\item Metody najmniejszych kwadratów
+\item Metody predykcji błędu
+\end{itemize}
+Identyfikacja dwiema metodami pozwoli na ich porównanie. W zadaniu wykonane zostanie również sprawdzenie czy reszty modelu zastosowanego dla metody najmniejszych kwadratów są białym szumem. 
+
+\subsubsection{Metoda najmniejszych kwadratów}
+Zadanie rozpoczęto od zastosowanie metody najmniejszych kwadratów. W metodzie tej model reprezentowany jest równaniem:
+\begin{equation*}
+y_i = -a_1y_{i-1} + b_0u_{i-1} + v_i
+\end{equation*}
+
+Współczynniki \( a_0 \) oraz \( b_0 \) wyznaczono korzystając z równania
+\begin{equation}\label{01_eq}
+\theta =  ( \Phi ^T \cdot \Phi )^{-1} \cdot \Phi ^T \cdot Y 
+\end{equation}
+gdzie
+\begin{align*}
+& \Phi _{i1} = y_i, \ i=1,2,...,n-1 \\
+& \Phi _{j2} = u_j, \ j=1,2,...,n-1 \\
+& Y _k = y_k, \ k=2,3,...,n
+\end{align*}
+\( u \) oraz \( y \) to dane zmierzone podczas eksperymentu. 
+
+Z równania (\ref{01_eq}) otrzymano wartości parametrów:
+\begin{equation}
+\begin{bmatrix}
+a_1 \\
+b_0 
+\end{bmatrix}
+=
+\begin{bmatrix}
+-0,9162 \\
+0,0582
+\end{bmatrix}
+\end{equation}
+Dane z eksperymentu oraz uzyskane z symulacji modelu przedstawia Rysunek \ref{fig:01_kwad_mod}. Różnice pomiędzy modelem a pomiarami przedstawia histogram \ref{fig:01_kwad_hist}. 
+
+Za pomocą testu Kołmogorowa - Smirnowa i testu Lillieforsa sprawdzono czy rozkład danych jest normalny. Pierwszy z nich dał wynik pozytywny, drugi negatywny. Na podstawie otrzymanego histogramu i wyników testów można uznać, że reszty modelu zastosowanego do metody najmniejszych kwadratów są szumem białym. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{01_kwad_mod.jpg}}
+\centering
+\caption{Porównanie modelu oraz danych z eksperymentu dla parametrów otrzymanych metodą najmniejszych kwadratów.}
+\label{fig:01_kwad_mod}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{02_kwad_hist.jpg}}
+\centering
+\caption{Histogram prezentujący różnice pomiędzy modelem a danymi z eksperymentu.}
+\label{fig:01_kwad_hist}
+\end{figure}
+
+\subsubsection{Metoda predykcji błędów i porównanie modeli}
+Metoda ta została zrealizowana w zadaniu numerycznie poprzez użyciu funkcji \textit{armax} matlaba oraz wybór odpowiednich stopni wielomianu, dla modelu pierwszego rzędu stopnie te wynoszą 1.
+
+Otrzymano następujące wartości parametrów
+\begin{equation}
+\begin{bmatrix}
+a_1 \\
+b_0 
+\end{bmatrix}
+=
+\begin{bmatrix}
+-0,8613 \\
+0,0923
+\end{bmatrix}
+\end{equation}
+
+Oceny jakości modeli dokonano przy użyciu funkcji matlaba \textit{compare}. Funkcja ta oblicza estymator błędu modelu przy użyciu NRMSE ( normalized root mean square ). Funkcję tą zastosowano dla modelu otrzymanego z metody najmniejszych kwadratów oraz predykcji błędów. Wyniki prezentują Rysunki poniżej. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{03_comp_kwad.jpg}}
+\centering
+\caption{Metoda najmniejszych kwadratów}
+\label{fig:01_kwad_hist}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{04_comp_pred.jpg}}
+\centering
+\caption{Metoda predykcji}
+\label{fig:01_kwad_hist}
+\end{figure}
+
+Lepsze dopasowanie uzyskano dla metody predykcji, wynosi ono 49,33 \% w porównaniu do metody najmniejszych kwadratów dla której wynosi 47,63 \%. 
+
+
+
+
+\subsubsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 1, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+close all;
+
+t = 1:1:10000;
+
+load('data_01.mat');
+
+phiMatrix(:,1) = y(1:end-1);
+phiMatrix(:,2) = u(1:end-1);
+
+Y = y(2:length(y));
+
+params = ( phiMatrix' * phiMatrix ) \ phiMatrix' * Y;
+
+figure()
+plot(t,y);
+
+yMod(1) = y(1);
+
+for i = 2:length(y)
+    yMod(i) = params(1) * yMod(i-1) + params(2) * u(i-1);
+end
+
+hold on;
+plot(t,yMod, 'r')
+
+figure()
+e = yMod' - y;
+plot(t,e);
+
+figure()
+histfit(e);
+
+kstestResult = kstest(e);
+lilietestResult = lillietest(e);
+
+T0 = 1;
+dat = iddata(y,u,T0); 
+na = 1;
+nb = 1;
+nc = 1;
+nk = 0;
+M = armax(dat, [na nb nc nk]);
+np = Inf;
+figure()
+[YH, FIT, X0] = compare(dat,M,np);
+compare(dat,M,np);
+figure()
+compare(dat,tf(params(1),[params(2) 1]),np) 
+\end{lstlisting}
+
+\subsection{Zadanie 2 }
+W zadaniu przyjęto metodykę analogiczną do tej wprowadzonej w zadaniu 1. Jedyną zmianą w tym przypadku jest model, którego rząd jest w tym zadaniu równy 2.
+
+W zadaniu rozważany jest model ARMAX o strukturze:
+\begin{equation*}
+y_i = -a_1y_{i-1}-a_2y_{i-2}+b_0u_{i-1}+b_1u{i-2}+e_i+c_1e_{i-1}
+\end{equation*}
+
+\subsubsection{Metoda najmniejszych kwadratów}
+Dla metody najmniejszych kwadratów model ten reprezentuje równanie:
+\begin{equation*}
+y_i = -a_1y_{i-1}-a_2y_{i-2}+b_0u_{i-1}+b_1u_{i-2}+v_i
+\end{equation*}
+
+Współczynniki \( a_0 \) oraz \( b_0 \) wyznaczono korzystając z równania
+\begin{equation}\label{01_eq}
+\theta =  ( \Phi ^T \cdot \Phi )^{-1} \cdot \Phi ^T \cdot Y 
+\end{equation}
+gdzie
+\begin{align*}
+& \Phi _{i1} = y_i, \ i=2,3...,n-1 \\
+& \Phi _{l2} = y_l, \ l=1,2,...,n-2 \\
+& \Phi _{m3} = u_m, \ m=2,3,...,n-1 \\
+& \Phi _{j4} = u_j, \ j=1,2,...,n-2 \\
+& Y _k = y_k, \ k=3,4,...,n
+\end{align*}
+\( u \) oraz \( y \) to dane zmierzone podczas eksperymentu. 
+
+Z równania (\ref{01_eq}) otrzymano wartości parametrów:
+\begin{equation}
+\begin{bmatrix}
+a_1 \\
+a_2 \\
+b_0 \\
+b_1
+\end{bmatrix}
+=
+\begin{bmatrix}
+-1,5523 \\
+0,9037 \\
+0,1823 \\
+0,1694   
+\end{bmatrix}
+\end{equation}
+Dane z eksperymentu oraz uzyskane z symulacji modelu przedstawia Rysunek \ref{fig:01_kwad_mod}. Różnice pomiędzy modelem a pomiarami przedstawia histogram \ref{fig:01_kwad_hist}. 
+
+Za pomocą testu Kołmogorowa - Smirnowa i testu Lillieforsa sprawdzono czy rozkład danych jest normalny. Pierwszy z nich dał wynik pozytywny, drugi negatywny. Na podstawie otrzymanego histogramu i wyników testów można uznać, że reszty modelu zastosowanego do metody najmniejszych kwadratów są szumem białym. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{05_kwad_mod.jpg}}
+\centering
+\caption{Porównanie modelu oraz danych z eksperymentu dla parametrów otrzymanych metodą najmniejszych kwadratów.}
+\label{fig:01_kwad_mod}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{06_kwad_hist.jpg}}
+\centering
+\caption{Histogram prezentujący różnice pomiędzy modelem a danymi z eksperymentu.}
+\label{fig:01_kwad_hist}
+\end{figure}
+
+\subsubsection{Metoda predykcji błędów i porównanie modeli}
+Metoda ta została zrealizowana w zadaniu numerycznie poprzez użyciu funkcji \textit{armax} matlaba oraz wybór odpowiednich stopni wielomianu, dla modelu pierwszego rzędu stopnie te wynoszą 1.
+
+Otrzymano następujące wartości parametrów
+\begin{equation}
+\begin{bmatrix}
+a_1 \\
+a_2 \\
+b_0 \\
+b_1 
+\end{bmatrix}
+=
+\begin{bmatrix}
+-1,5519 \\
+0,8873 \\
+0,0185 \\
+0,3158
+\end{bmatrix}
+\end{equation}
+
+Oceny jakości modeli dokonano przy użyciu funkcji matlaba \textit{compare}. Funkcja ta oblicza estymator błędu modelu przy użyciu NRMSE ( normalized root mean square ). Funkcję tą zastosowano dla modelu otrzymanego z metody najmniejszych kwadratów oraz predykcji błędów. Wyniki prezentują Rysunki poniżej. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{08_comp_kwad.jpg}}
+\centering
+\caption{Metoda najmniejszych kwadratów}
+\label{fig:01_kwad_hist}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{07_comp_pred.jpg}}
+\centering
+\caption{Metoda predykcji}
+\label{fig:01_kwad_hist}
+\end{figure}
+
+Lepsze dopasowanie uzyskano ponownie dla dla metody predykcji, wynosi ono 77.85 \% w porównaniu do metody najmniejszych kwadratów dla której wynosi 68,4 \%. 
+
+
+
+
+\subsubsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 2, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+close all;
+
+t = 1:1:10000;
+
+load('data_02.mat');
+
+phiMatrix(:,1) = y(2:end-1);
+phiMatrix(:,2) = y(1:end-2);
+phiMatrix(:,3) = u(2:end-1);
+phiMatrix(:,4) = u(1:end-2);
+
+Y = y(3:length(y));
+
+params = ( phiMatrix' * phiMatrix ) \ phiMatrix' * Y;
+
+figure()
+plot(t,y);
+
+yMod(1) = y(1);
+yMod(2) = y(2);
+
+for i = 3:length(y)
+    yMod(i) =  params(1) * yMod(i-1) + params(2) * 
+    yMod(i-2) + params(3) * u(i-1) + params(4) * u(i-2) ;
+end
+
+hold on;
+plot(t,yMod, 'r')
+
+figure()
+e = yMod' - y;
+plot(t,e);
+
+figure()
+histfit(e);
+
+kstestResult = kstest(e);
+lilietestResult = lillietest(e);
+
+T0 = 1;
+dat = iddata(y,u,T0); 
+na = 2;
+nb = 2;
+nc = 1;
+nk = 0;
+M = armax(dat, [na nb nc nk]);
+np = Inf;
+figure()
+[YH, FIT, X0] = compare(dat,M,np);
+compare(dat,M,np);
+figure()
+compare(dat,tf([ params(2) params(1)],[params(4) params(3) 1]),np) 
+
+\end{lstlisting}
+
+
+
+\section{Wnioski końcowe}
+W obu przypadkach nieznacznie lepsza okazała się metoda predykcji. Metoda ta okazała się dokładniejsza w przypadku modelu większego rzędu. Obie metody różnią się pod względem działania, dla badanego zagadnienia warto zastosować obydwie w celu porównania otrzymanych podczas identyfikacji parametrów.
+
+ 
+\end{document}

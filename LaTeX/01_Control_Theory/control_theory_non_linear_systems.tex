@@ -1,0 +1,406 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+ 
+\begin{document}
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Pierwsza metoda Lapunowa}} \\ \hline Dominik Wróbel & \textbf{27 III 2018} & \textbf{Wt 09:30} \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest zastosowanie pierwszej metody Lapunowa do badania systemów nieliniowych. Zostaną zbadane trzy różne nieliniowe systemy dynamiczne :
+\begin{itemize}
+\item Układ mechaniczny z masą i nieliniową sprężyną,
+\item Wahadło tłumione,
+\item Układ równań Van der Pola
+\end{itemize} 
+Zastosowanie pierwszej metody Lapunowa pozwoli na wnioskowanie o stabilności punktów równowagi \(x^{*}\) tych systemów. Zostaną również przedstawione portrety fazowe systemów nieliniowych oraz ich liniowych przybliżeń.
+\section{Przebieg ćwiczenia}
+\subsection{Układ mechaniczny z masą i nieliniową sprężyną}
+Układ mechaniczny z nieliniową sprężyną jest opisany równaniem różniczkowym drugiego rzędu postaci: 
+\begin{equation*}
+\ddot{y}(t)+b\dot{y}(t)+cy(t)+dy^{3}(t)=0
+\end{equation*}
+W równaniu tym zmienna y oraz współczynniki b, c i d oznaczają :
+\begin{itemize}
+\item y - odchylenie drgającej masy od położenia równowagi, 
+\item b - tarcie występujące w układzie,
+\item c, d - własności sprężyny o nieliniowej charakterystyce
+\end{itemize} 
+Aby równanie opisywało rzeczywisty układ należy przyjąć dodatkowo założenia : \\ 
+\begin{equation*}
+b, c > 0,\quad |{c}|<|{d}|
+\end{equation*}
+Równanie tego układu zapisane przy użyciu modelu równania stanu: \\
+\begin{equation*}
+x_{1}=y, \quad x_{2}=\dot{y}
+\end{equation*}
+\begin{equation*}
+\dot{x_{1}}=x_{2}, \quad \dot{x_{2}}=-bx_{2}-cx_{1}-dx_{1}^{3}
+\end{equation*}
+\begin{equation*}
+\begin{bmatrix}
+\dot{x_{1}} \\
+\dot{x_{2}}
+\end{bmatrix} =
+\begin{bmatrix}
+0 & 1 \\
+-c-dx_{1}^{2} & -b 
+\end{bmatrix}
+\begin{bmatrix}
+x_{1} \\
+x_{2}
+\end{bmatrix}
+\end{equation*}
+Macierz Jacobiego : 
+\begin{equation*}
+J=\begin{bmatrix}
+0 & 1 \\
+-c-3dx_{1}^{2} & -b 
+\end{bmatrix}
+\end{equation*}
+Wyznaczenie punktów równowagi: \\
+\begin{equation*}
+\begin{cases}
+x_{2}=0 \\
+-bx_{2}-cx_{1}-dx_{1}^{3}=0
+\end{cases} \implies
+\begin{cases}
+x_{2}=0 \\
+x_{1}=0 \lor x_{1}^{2}=\frac{-c}{d}
+\end{cases}
+\end{equation*}
+Jeżeli \(x_{1}^{2}=\frac{-c}{d}\), a wiadomo, że \(c>0\), to implikuje, że \(d<0\), a zatem punkty równowagi wynikające z tego równania będą rozważane tylko dla sprężyny miękkiej.
+\subsubsection{Układ mechaniczny - sprężyna twarda d > 0}
+Dla \(d>0\) istnieje tylko jeden punkt równowagi \(x^{*}=(0,0)\). Macierz stanu A liniowego przybliżenia po podstawieniu wartości  \(x^{*}\):
+\begin{equation*}
+\begin{bmatrix}
+0 & 1 \\
+-c & -b 
+\end{bmatrix}
+\end{equation*}
+Równanie charakterystyczne: 
+\begin{equation*}
+\det{(\lambda I-A)}=\lambda^{2}+b\lambda+c
+\end{equation*}
+Powyższe równanie opisuje system drugiego rzędu, aby punkt równowagi był asymptotycznie stabilny części rzeczywiste wszystkich wartości pierwiastków tego równania muszą być ujemne. Dla systemu drugiego rzędu warunek ten jest spełniony, jeśli wszystkie współczynniki równania charakterystycznego są dodatnie. Z założenia wiemy, że b oraz c są większe od zera, a zatem warunek ten jest spełniony i punkt (0,0) jest asymptotycznie stabilnym punktem równowagi systemu nieliniowego.
+Pierwiastki równania charakterystycznego to : 
+\begin{equation*}
+\lambda_{1}=\frac{-b}{2}-\frac{\sqrt{b^{2}-4c}}{2}
+\end{equation*}
+\begin{equation*}
+\lambda_{2}=\frac{-b}{2}+\frac{\sqrt{b^{2}-4c}}{2}
+\end{equation*}
+Przy założeniu dodatniości współczynników b oraz c równanie to może mieć :\\
+\begin{itemize}
+\item Dwa pierwiastki rzeczywiste ujemne dla \(b\geqslant2\sqrt{c}\)
+\item Dwa pierwiastki zespolone sprzężone dla \(0<b<2\sqrt{c}\)
+\end{itemize}
+
+Dla obu tych przypadków dla systemu liniowego oraz nieliniowego narysowano portrety fazowe. Dla parametrów \(b=4.5,\quad c=4,\quad d=1\) ( dwa pierwiastki rzeczywiste ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:mech_1}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:mech_2}. Uzyskany portret to węzeł stabilny. 
+\begin{figure}[h!]
+\centerline{\includegraphics[scale=0.5]{mech_1.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:mech_1}
+\end{figure}
+\begin{figure}[h!]
+\centerline{\includegraphics[scale=0.5]{mech_2.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:mech_2}
+\end{figure}
+\newpage
+W celu analizy zachowania modelu nieliniowego zbudowano model w przyborniku Simulink, który przedstawia Rysunek \ref{fig:simu_1}.
+\begin{figure}[!]
+\centerline{\includegraphics[scale=0.8]{simu_1.jpg}}
+\centering
+\caption{Model równania nieliniowego systemu dynamicznego sprężyny i masy.}
+\label{fig:simu_1}
+\end{figure}
+
+Dla parametrów \(b=2,\quad c=4,\quad d=1\) ( dwa pierwiastki zespolone sprzężone ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:mech_3}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:mech_4}. Uzyskany portret to ognisko stabilne.
+\begin{figure}[h!]
+\centerline{\includegraphics[scale=0.5]{mech_3.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:mech_3}
+\end{figure}
+\begin{figure}[h!]
+\centerline{\includegraphics[scale=0.5]{mech_4.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:mech_4}
+\end{figure}
+\newpage
+
+W obu przypadkach wszystkie badane punkty początkowe należą do obszaru atrakcji. Badanie doświadczalne pozwala przypuszczać, że obszarem atrakcji jest cały zbiór \(R^{2}\) . 
+\subsubsection{Układ mechaniczny - sprężyna miękka d < 0}
+Dla \(d<0\) istnieją dwa punkty równowagi, które spełniają równania \(x^{*}=(0,0)\) lub \(x_{2}=0\) i \(x_{1}^{2}=\frac{-c}{d}\). W drugim przypadku macierz A ma postać : 
+\begin{equation*}
+\begin{bmatrix}
+0 & 1 \\
+2c & -b 
+\end{bmatrix}
+\end{equation*}
+Równanie charakterystyczne: 
+\begin{equation*}
+\det{(\lambda I-A)}=\lambda^{2}+b\lambda-2c
+\end{equation*}
+Z postaci tego równania wynika, że punkt ten nie jest asymptotycznie stabilny, ponieważ jeden ze współczynników jest ujemny więc nie jest spełniony warunek konieczny stabilności asymptotycznej punktu równowagi. 
+Stabilnym punktem równowagi jest \(x^{*}=(0,0)\). Do analizy pozostaje więc przypadek gdy dla \(d<0\) punkt równowagi jest równy \(x^{*}=(0,0)\). \\
+
+Warto zauważyć, że zmiana współczynnika d na ujemny nie ma wpływu na zachowanie modelu liniowego. Dlatego w tym punkcie prezentowane są tylko porównania modelu liniowego i nieliniowego dla parametrów takich jak analizowane dla sprężyny twardej. Dla parametrów \(b=4.5,\quad c=4,\quad d=-1\) porównanie portretów przedstawia Rysunek  \ref{fig:mech_5} , a dla parametrów \(b=2,\quad c=4,\quad d=-1\) ( dwa pierwiastki zespolone sprzężone ) porównanie portretów przedstawia Rysunek \ref{fig:mech_6}.
+
+Widać, że w obu przypadkach obszar przyciągania nie jest całą przestrzenią \(R^{2}\). Podjęto próbę wyznaczenia obszaru przyciągania oraz trajektorii separujących. Przybliżone obszary przyciągania przedstawiają Rysunki \ref{fig:mech_7} oraz \ref{fig:mech_8}.
+\begin{figure}[h!]
+\centerline{\includegraphics[scale=0.5]{mech_5.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:mech_5}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{mech_6.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:mech_6}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{mech_7.jpg}}
+\centering
+\caption{Doświadczalnie wyznaczony obszar przyciągania}
+\label{fig:mech_7}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{mech_8.jpg}}
+\caption{Doświadczalnie wyznaczony obszar przyciągania}
+\label{fig:mech_8}
+\end{figure}
+
+\subsection{Wahadło tłumione}
+Model wahadła tłumionego jest opisany równaniem różniczkowym drugiego rzędu postaci: 
+\begin{equation*}
+\ddot{y}(t)+\frac{g}{l}\sin y(t)+\frac{c}{lm}\dot{y}(t)=0
+\end{equation*}
+W równaniu tym zmienna y oraz współczynniki g, l, m i c oznaczają :
+\begin{itemize}
+\item y - kąt wychylenia wahadło z położenia równowagi, 
+\item m - masa wahadła,
+\item l - długość wahadła,
+\item g - współczynnik przyśpieszenia ziemskiego
+\item c - współczynnik tłumienia
+\end{itemize} 
+Aby równanie opisywało rzeczywisty układ należy przyjąć dodatkowo założenia : \\ 
+\begin{equation*}
+m, l, g, c  > 0
+\end{equation*}
+Równanie tego układu zapisane przy użyciu modelu równania stanu: \\
+\begin{equation*}
+x_{1}=y, \quad x_{2}=\dot{y}
+\end{equation*}
+\begin{equation*}
+\dot{x_{1}}=x_{2}, \quad \dot{x_{2}}=\frac{-g}{l}\sin x_{1}-\frac{c}{lm}x_{2}
+\end{equation*}
+Macierz Jacobiego : 
+\begin{equation*}
+J=\begin{bmatrix}
+0 & 1 \\
+-\frac{g}{l}\cos x_{1} & -\frac{c}{lm} 
+\end{bmatrix}
+\end{equation*}
+Wyznaczenie punktów równowagi: \\
+\begin{equation*}
+\begin{cases}
+x_{2}=0 \\
+-\frac{g}{l}\sin x_{1}-\frac{c}{lm}x_{2}=0
+\end{cases} \implies
+\begin{cases}
+x_{2}=0 \\
+x_{1}=k\pi, \quad k\in\mathbb{Z}
+\end{cases}
+\end{equation*}
+Wielomian charakterystyczny dla dowolnego punktu równowagi:
+\begin{equation*}
+\det{(\lambda I-A)}=\lambda^{2}+\frac{c}{lm}\lambda+\frac{g}{l}\cos x_{1}
+\end{equation*}
+Aby punkty równowagi były asymptotycznie stabilne wielomian musi mieć wszystkie współczynniki nieujemne, co będzie zachodzić gdy \(\cos x_{1} \neq -1 \). Zatem punktami równowagi są:
+\begin{equation*}
+x^{*}=
+\begin{cases}
+(2k\pi+\pi,0), \quad k\in\mathbb{Z}, \quad niestabilny \\
+(2k\pi,0), \quad k\in\mathbb{Z}, \quad stabilny \quad asymptotycznie
+\end{cases} 
+\end{equation*}
+Dalej rozważamy tylko punkty równowagi stabilne asymptotycznie. Jako, że punkt równowagi jest okresowy, to rozważany jest tylko jeden punk (0,0).
+Podstawiając \(\frac{g}{l}=b\) oraz \(\frac{c}{lm}=a\) otrzymamy, że równanie ma postać:
+\begin{equation*}
+\det{(\lambda I-A)}=\lambda^{2}+a\lambda+b
+\end{equation*}
+gdzie \(b>0\) oraz \(a\geqslant0\). Pierwiastki to: 
+\begin{equation*}
+\lambda_{1}=\frac{-a}{2}-\frac{\sqrt{a^{2}-4b}}{2}
+\end{equation*}
+\begin{equation*}
+\lambda_{2}=\frac{-a}{2}+\frac{\sqrt{a^{2}-4b}}{2}
+\end{equation*}
+Przy ograniczeniach na a oraz b równanie charakterystyczne może mieć :\\
+\begin{itemize}
+\item Dwa pierwiastki urojone sprzężone dla \(a=0\),
+\item Dwa pierwiastki zespolone sprzężone o ujemnych częściach rzeczywistych dla \mbox{ \(0<a<2\sqrt{b}\) },
+\item Dwa pierwiastki rzeczywiste ujemne dla \(a>2\sqrt{b}\)
+\end{itemize}
+Dla parametrów \(b=5,\quad a=0\) ( dwa pierwiastki urojone sprzężone ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:wah_1}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:wah_2}. Uzyskany portret to środek. W tym przypadku nie wiadomo czy system nieliniowy jest stabilny.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_1.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:wah_1}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_2.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:wah_2}
+\end{figure}
+Dla parametrów \(b=4,\quad a=2\) ( dwa pierwiastki zespolone sprzężone ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:wah_3}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:wah_4}. Uzyskany portret to ognisko.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_3.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:wah_3}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_4.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:wah_4}
+\end{figure}
+Dla parametrów \(b=4,\quad a=10\) ( dwa pierwiastki rzeczywiste ujemne ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:wah_5}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:wah_6}. Uzyskany portret to węzeł.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_5.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:wah_5}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_6.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:wah_6}
+\end{figure}
+Obszary przyciągania dla tych przypadków przedstawiają Rysunki \ref{fig:wah_7} i \ref{fig:wah_8}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_7.jpg}}
+\centering
+\caption{Obszary przyciągania wyznaczone doświadczalnie}
+\label{fig:wah_7}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{wah_8.jpg}}
+\caption{Obszary przyciągania wyznaczone doświadczalnie)}
+\label{fig:wah_8}
+\end{figure}
+\subsection{Układ Van der Pola}
+Układ Van der Pola to układ dwóch równań:
+\begin{equation*}
+\begin{cases}
+\dot{x_{1}}(t)=x_{2}(t)-x_{1}^{3}(t)-ax_{1}(t) \\
+\dot{x_{2}}(t)=-x_{1}(t)
+\end{cases}
+\end{equation*}
+Macierz Jacobiego : 
+\begin{equation*}
+J=\begin{bmatrix}
+-3x_{1}^{2}-a & 1 \\
+-1 & 0 
+\end{bmatrix}
+\end{equation*}
+Wyznaczenie punktów równowagi: \\
+\begin{equation*}
+\begin{cases}
+-x_{1}=0 \\
+x_{2}-x_{1}^{3}-ax_{1}=0
+\end{cases} \implies
+\begin{cases}
+x_{1}=0 \\
+x_{2}=0
+\end{cases}
+\end{equation*}
+Wielomian charakterystyczny dla punktu równowagi (0, 0):
+\begin{equation*}
+\det{(\lambda I-A)}=\lambda^{2}+a\lambda+1
+\end{equation*}
+Aby punkty równowagi były asymptotycznie stabilne wielomian musi mieć wszystkie współczynniki nieujemne, co będzie zachodzić gdy \(a\geq0\), wtedy punkt równowagi (0, 0) jest punktem stabilnym asymptotycznie.
+Pierwiastki to: 
+\begin{equation*}
+\lambda_{1}=\frac{-a}{2}-\frac{\sqrt{a^{2}-4}}{2}
+\end{equation*}
+\begin{equation*}
+\lambda_{2}=\frac{-a}{2}+\frac{\sqrt{a^{2}-4}}{2}
+\end{equation*}
+Przy ograniczeniu \( a\geq0 \) równanie charakterystyczne może mieć :\\
+\begin{itemize}
+\item Dwa pierwiastki urojone sprzężone dla \(a=0\),
+\item Dwa pierwiastki zespolone sprzężone o ujemnych częściach rzeczywistych dla \mbox{ \(0<a<2\) },
+\item Dwa pierwiastki rzeczywiste ujemne dla \(a>2\)
+\end{itemize}
+
+Dla parametru \(a=0\) ( dwa pierwiastki urojone sprzężone ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:van_1}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:van_2}. Uzyskany portret to środek. W tym przypadku nie wiadomo czy system nieliniowy jest stabilny czy nie.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{van_1.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:van_1}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{van_2.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:van_2}
+\end{figure}
+Dla parametru \(a=1\) ( dwa pierwiastki zespolone sprzężone ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:van_3}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:van_4}. Uzyskany portret to ognisko.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{van_3.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:van_3}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{van_4.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:van_4}
+\end{figure}
+Dla parametru \(a=10\) ( dwa pierwiastki rzeczywiste ujemne ) portret fazowy systemu liniowego przedstawia Rysunek \ref{fig:van_5}, a porównanie portretów systemów liniowego i nieliniowego Rysunek \ref{fig:van_6}. Uzyskany portret to węzeł.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{van_5.jpg}}
+\centering
+\caption{Portret fazowy systemu po linearyzacji}
+\label{fig:van_5}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{van_6.jpg}}
+\caption{Porównanie portretu fazowego systemu liniowego i nieliniowego ( kolor zielony )}
+\label{fig:van_6}
+\end{figure}
+
+\section{Wnioski końcowe}
+Linearyzacja przy pomocy pierwszej metody Lapunowa pozwala na dokładne przybliżenie zachowania układu nieliniowego w okolicy stabilnego punktu równowagi. Przybliżenie to jest tym lepsze im bliżej punktu równowagi znajdują się trajektorie systemu. \\
+Pierwsza metoda Lapunowa pozwala na określenie stabilności punktów równowagi systemu nieliniowego na podstawie analizy tego systemu po linearyzacji. Nie zawsze jest to jednak możliwe - przypadek gdy części rzeczywiste pierwiastków wielomianu charakterystycznego są równe 0. 
+Narysowane portrety fazowe pozwalają na zauważenie różnić pomiędzy rzutami trajektorii na płaszczyznę stanu, widoczne jest, że im bliżej punktu równowagi tym różnice te są mniejsze. \\
+W rzeczywistych układach gdy system dynamiczny pracuje tylko w niewielkim zakresie odchyłek od punktów równowagi można zamiast systemu nieliniowego analizować system liniowy. \\
+Obszar przyciągania nie zawsze jest całą przestrzenią stanu. Dla wielu punktów równowagi każdy z nich może mieć własny obszar przyciągania będący podzbiorem przestrzeni stanu.
+\end{document}

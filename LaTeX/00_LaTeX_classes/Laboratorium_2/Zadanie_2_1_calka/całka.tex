@@ -1,0 +1,38 @@
+\documentclass[a4paper,11pt,fleqn]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[cp1250]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{wrapfig}
+ 
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{0.5cm}{0.5cm}{3cm}{3cm}
+\sloppy
+
+\begin{document}
+\section*{Ca³ka Riemanna}
+\begin{wrapfigure}{r}{0.25\textwidth}
+\includegraphics[width=0.9\linewidth]{wiki} 
+\caption{Przyk³ad sum Riemanna  przy wyborze punktu poœredniego w prawym koñcu podprzedzia³u (niebieski), w wartoœci minimalnej (czerwony) i maksymalnej (zielony) funkcji w podprzedziale i lewego koñca podprzedzia³u (¿ó³ty). Wartoœæ wszystkich czterech przypadków zbli¿a siê do 3,76 przy powiêkszaniu liczby podprzedzia³ów od 2 do 10 (w domyœle, równie¿ nieograniczenie).}
+\label{fig:wiki}
+\end{wrapfigure}
+Niech dana bêdzie funkcja ograniczona \( f\colon [a,b] \rightarrow \mathbb{R} \). Sum¹ czêœciow¹ (Riemanna) nazywa siê liczbê
+\begin{equation*}
+R_{f,P(q_1,. . .,q_n)} = \sum_{i = 1}^{n} f(q_i) \cdot \Delta p_i
+\end{equation*}
+Funkcjê \( f \) nazywa siê ca³kowaln¹ w sensie Riemanna lub krótko R-ca³kowaln¹, jeœli dla dowolnego ci¹gu normalnego \( ( P^k ) \) podzia³ów przedzia³u \([ a , b ]\) , istnieje istnieje (niezale¿na od wyboru punktów poœrednich) granica
+\begin{equation*}
+R_f = \lim_{k \to \infty} R_{f,P^k(q_{1}^{k}, . . . , q_{n_{k}}^{k})}
+\end{equation*}
+nazywana wtedy \textbf{ca³k¹ Riemanna} tej funkcji. Równowa¿nie: je¿eli istnieje taka liczba \( R_{f} \), ¿e dla dowolnej liczby rzeczywistej \( \varepsilon >0 \) istnieje taka liczba rzeczywista \( \delta >0 \), ¿e dla dowolnego podzia³u \(P(q_{1},\dots ,q_{n}) \) o œrednicy \( \mathrm {diam} \;P(q_{1},\dots ,q_{n})<\delta ; \) b¹dŸ te¿ w jêzyku rozdrobnieñ: ¿e dla dowolnej liczby rzeczywistej \( \varepsilon >0 \) istnieje taki podzia³ \( S(t_{1},\dots ,t_{m}) \) przedzia³u \( [a,b] \) ¿e dla ka¿dego podzia³u \( P(q_{1},\dots ,q_{n}) \) rozdrabniaj¹cego \( S(t_{1},\dots ,t_{m}) \) zachodzi
+\begin{equation*}
+\left|R_{{f,P(q_{1},\dots ,q_{n})}}-R_{f}\right|<\varepsilon
+\end{equation*} 
+Funkcjê \(f\) nazywa siê wtedy ca³kowaln¹ w sensie Riemanna (R-ca³kowaln¹), a liczbê \(R_{f}\) jej \textbf{ca³k¹ Riemanna}.
+
+\end{document}

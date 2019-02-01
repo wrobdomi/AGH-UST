@@ -1,0 +1,472 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+
+\newpagestyle{mypage}{%
+  \headrule
+  \sethead{\MakeUppercase{\thesection\quad \sectiontitle}}{}{\thesubsection\quad \subsectiontitle}
+  \setfoot{}{}{\thesubsubsection\quad \subsubsectiontitle}
+}
+\settitlemarks{section,subsection,subsubsection}
+\pagestyle{mypage}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+
+\tableofcontents
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Wewnętrzna funkcja kary}} \\ \hline Dominik Wróbel & \textbf{14 V 2018} & \textbf{Pon 08:00, s. 111} \\ \hline
+\multicolumn{2}{|l|}{Numery zadań} & A, B \\ \hline 
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest rozwiązanie zadań optymalizacyjnych z wykorzystaniem podejścia opartego o wewnętrzną funkcje kary. Metoda ta pozwala na rozwiązywanie zadań programowania nieliniowego, polega na generowaniu rozwiązań zadania bez ograniczeń i wprowadzaniu kary za przekroczenie tych graniczeń przy pomocy tzw. wewnętrznej funkcji kary. \\
+W odróżnieniu od zewnętrznej funkcji kary, wewnętrzna funkcja kary osiąga rozwiązanie znajdując kolejno rozwiązania znajdujące się w zbiorze dopuszczalnym - działa od 'wnętrza' zbioru dopuszczalnego.
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie A - Minimalizacja funkcjonału z ograniczeniami liniowymi }
+\subsubsection{Rozwiązania programowe bez metody wew. f. kary}
+W zadaniu rozważany jest funkcjonał postaci \( ( n = 16 ) \) :
+\begin{equation*}
+f(x_{1},x_{2})=\frac{1}{3}(x_{1}+n+1)^{3}+x_{2}+n = \frac{1}{3}(x_{1}+17)^{3}+x_{2}+16 \rightarrow min
+\end{equation*}  
+przy danych ograniczeniach nierównościowych
+\begin{equation*}
+\begin{cases}
+g_{1}(x) = x_{1}-1+n = x_{1} + 15 \geq 0 \\
+g_{1}(x) = x_{2}+n = x_{2} + 16 \geq 0
+\end{cases}
+\end{equation*}
+Nie trudno zauważyć, że minimum tego funkcjonału przy przyjętych ograniczeniach jest osiągane dla 
+\( x = \begin{bmatrix}
+& -15 & -16 &
+\end{bmatrix} \). 
+Zadanie najpierw rozwiązano przy użyciu funkcji matlaba \textit{fmincon}. Funkcja ta znajduje rozwiązanie optymalne przy określonych ograniczeniach nierównościowych. Rozwiązanie zadania przy pomocy tej funkcji odpowiada rozwiązaniu Zadania Programowania Nieliniowego ( ZPN ), które opisuje model matematyczny :
+\begin{equation*}
+f(x) \rightarrow min
+\end{equation*}
+\begin{equation*}
+x \in X \subset \mathbb{R}^{n}
+\end{equation*} 
+\begin{equation*}
+X = \{ x: g_{i}(x) \leq 0 , \quad i = 1, \dotsc ,m \}
+\end{equation*} 
+\begin{equation*}
+f(x): \mathbb{R}^{n} \rightarrow \mathbb{R}^{1}, \quad g_{i}(x): \mathbb{R}^{n} \rightarrow \mathbb{R}^{1} \quad \forall i = 1, \dotsc ,m
+\end{equation*}
+
+W tym celu konieczne było przekształcenie ograniczeń do postaci odpowiadającej nierówności mniejszościowej słabej. \vspace{7pt}
+Implementację powyższych obliczeń przedstawia Listing \ref{lis1}.
+
+\begin{lstlisting}[caption=Znalezienie minimum z ograniczeniami ( fmincon ), captionpos=b,label=lis1, firstnumber=12,frame=single]
+% znalezienie minimum z ograniczeniami
+n = 16;
+x0 = [ 5, 5]; 
+
+fun = @(x)1/3*( x(1)+1+n )^3 + x(2) + n;
+
+A = [-1, 0;
+     0  -1];
+ 
+b = [ 15;
+      16];
+
+[x_opt, f_opt] = fmincon(fun,x0,A,b);
+
+\end{lstlisting}
+Zgodnie z oczekiwaniami znalezione przez funkcję minimum to \\
+\begin{equation}
+x^{*} = [ -15 \quad -16 ] 
+\end{equation}
+
+\subsubsection{Rozwiązanie analityczne}
+Następnie zadanie rozwiązano przy użyciu kilku iteracji metodą wewnętrznej funkcji kary, która polega na generowaniu ciągu punktów będących minimum kolejnych wyznaczanych funkcji \(P(x,k)\). W zadaniu rozważana jest funkcja 
+\begin{equation*}
+P(x,k)=f(x)+ k \cdot \sum_{i=1}^{r}\frac{1}{ g_{i}(x)} \rightarrow min
+\end{equation*}
+\begin{equation*}
+P(x,k)= \frac{1}{3}(x_{1}+17)^{3}+x_{2}+16 + k\frac{1}{x_{1}+15} + k\frac{1}{x_{2}+16} \rightarrow min
+\end{equation*}
+z funkcją kary:
+\begin{equation*}
+\phi(x,k) = k \cdot \sum_{i=1}^{r}\frac{1}{ g_{i}(x)}
+\end{equation*}
+\begin{equation*}
+\phi(x,k) = k\frac{1}{x_{1}+15} + k\frac{1}{x_{2}+16}
+\end{equation*}
+Definiując dwa zbiory: \\
+\begin{equation*}
+X=\{x: g_{i}(x) \geq 0 ; \quad i =1,2, \dots ,r\}
+\end{equation*}
+\begin{equation*}
+X_{0}=\{x: g_{i}(x) > 0 ; \quad i =1,2, \dots ,r\}
+\end{equation*}
+\begin{equation*}
+X=\{x: x_{1} \geq -15 \land x_{2} \geq -16 \}
+\end{equation*}
+\begin{equation*}
+X_{0}=\{x: x_{1} > -15 \land x_{2} > -16 \}
+\end{equation*}
+W przypadku z zadania spełnione są konieczne założenia: 
+\begin{itemize}
+\item \( X_{0} \) jest niepusty,
+\item \( f(x) \) oraz \(-g_{i}(x) \) są wypukłe i dwukrotnie różniczkowalne
+\item zbiory poziomicowe \( \{ x: f(x) \leq \alpha \} \) są ograniczone dla każdego skończonego \( \alpha \).
+\item Dla każdego \( k > 0 \) , \( P(x,k) \) jest ściśle wypukła 
+\end{itemize}
+Spełnienie powyższych założeń daje gwarancję, że każda funkcja \( P(x,k) \) niezależnie od k osiąga minimum na \( X_{0} \) i gradient \( P(x,k) \) po zmiennej x jest w tym punkcie równy 0 oraz, że ciąg punktów znajdywanych w kolejnych iteracjach jest zbieżny do minimum. 
+
+Rozwiązanie rozpoczęto od obliczenia pochodnych cząstkowych funkcji \(P(x,k)\) : 
+\begin{equation*}
+\frac{\partial P(x,k)}{\partial x_{1}} = (x_{1}+17)^{2}-\frac{k}{(x_{1}+15)^{2}}
+\end{equation*}
+\begin{equation*}
+\frac{\partial P(x,k)}{\partial x_{2}} = 1 - \frac{k}{(x_{2}+16)^{2}}
+\end{equation*}
+\begin{equation*}
+\begin{cases}
+(x_{1}+17)^{2}-\frac{k}{(x_{1}+15)^{2}} = 0 \\
+\frac{\partial P(x,k)}{\partial x_{2}} = 1 - \frac{k}{(x_{2}+16)^{2}} = 0 
+\end{cases}
+\implies
+\begin{cases}
+x_{1} = \sqrt{k^{2}+1}-16 \\
+x_{2} = \sqrt{k}-16 \vee -\sqrt{k}-16
+\end{cases}
+\end{equation*}
+Dokonując przejścia granicznego otrzymano, że:
+\begin{equation*}
+\lim_{k \rightarrow 0 }  = \sqrt{k^{2}+1}-16 = -15
+\end{equation*}
+\begin{equation*}
+\lim_{k \rightarrow 0 }  = \sqrt{k}-16 = -16
+\end{equation*}
+Stąd wyznaczone analitycznie rozwiązania zgadza się z obliczonym programowo i wynosi : \\
+\begin{equation*}
+x^{*} = [ -15 \quad -16 ]
+\end{equation*}
+
+\subsubsection{Rozwiązania programowe z metodą wew. f. kary}
+Implementacje powyższych obliczeń przedstawia Listing \ref{lis2}.
+\begin{lstlisting}[caption=Znalezienie minimum przy użyciu wewnętrznej funkcji kary, captionpos=b,label=lis2, firstnumber=12,frame=single]
+% znalezienie minimum przy uzyciu wewnetrznej f. kary
+
+x0 = [ 5, 5]; 
+max_iter = 20;
+points = [ x0 ];
+f_values = [ 0 ];
+diff_table = [ 0 ];
+
+c=20;
+k=10;
+
+k_table = [ k ];
+fun_1 = @(x)1/3*( x(1)+1+n )^3 + x(2) + n + k*( 1/( x(1)+15 ) ) +...
+ k*( 1/( x(2)+16 ) );
+
+for n = 1:max_iter
+    [x_opt_k, fval] = fmincon(fun_1,x0,A,b);
+    %[x_opt_k, fval] = fminunc(fun_1,x0);
+    
+    diff = abs( f_opt - fval );
+    diff_table = [ diff_table; diff ];
+    f_values = [ f_values ; fval ];  
+    points = [ points ; x_opt_k ];
+    
+    x0 = x_opt_k;
+    k= k/c;
+    k_table = [ k_table ; k ];
+    fun_1 = @(x)1/3*( x(1)+1+n )^3 + x(2) + k*( 1/( x(1)+15 ) ) +...
+     k*( 1/( x(2)+16 ) );
+
+end
+
+\end{lstlisting}
+
+Następnie znalezione przed metodę punkty zostały zaznaczone na wykresie przy pomocy kodu przedstawionego na Listingu \ref{rys}
+\begin{lstlisting}[caption=Rysowanie punktów, captionpos=b,
+label=rys, firstnumber=12,frame=single]
+% Rysowanie punktow 
+
+[x1, x2] = meshgrid( -20:0.1:10, -20:0.1:8 ); 
+rys_war = 1/3*( x1+1+n ).^3 + x2 + n;
+contour(x1, x2, rys_war, [1, 2, 5, 10, 20, 30, 50, 70, 100, 250, 500, 1000, ...
+ 2000, 3500, 5500, 7500 ], 'ShowText', 'on');
+hold on; 
+plot(points(:,1),points(:,2),'-o');
+xlabel('x1') % x-axis label
+ylabel('x2') % y-axis label
+axis([-20 10 -20 8]);
+\end{lstlisting}
+
+
+Wyniki wraz z poziomicami przedstawia Rysuneki \ref{fig:wkara_1} i \ref{fig:wkara_2}.
+
+\begin{figure}[H]
+
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{wkara_1.jpg}
+  \caption{c = 20, k0 = 10}
+  \label{fig:wkara_1}
+
+\endminipage\hfill
+\minipage{0.5\textwidth}%
+
+  \includegraphics[width=\linewidth]{wkara_2.jpg}
+  \caption{c = 2, k0 = 200}
+  \label{fig:wkara_2}
+
+\endminipage
+
+\end{figure}
+
+Znalezione przez metodą rozwiązania wraz z numerem iteracji dla c = 20 przedstawiono w poniższej tabeli.  
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{wkara_3.jpg}}
+\centering
+\caption{Tabela z wynikami działania metody wewnętrznej funkcji kary dla c =20.}
+\label{fig:wkara_3}
+\end{figure}
+
+Porównując otrzymany w ostatniej iteracji wynik z analitycznie wyznaczonym minimum stwierdzono, że błąd jest niewielki, rzędu 2 miejsca po przecinku dla \( x_{2} \), \( x_{1} \) zostało natomiast obliczone poprawnie i wynosi \( -15 \).   
+
+Na rysunkach widać, że wewnętrzna funkcja kary osiąga minimum znajdując w kolejnych iteracjach rozwiązania z obszaru dopuszczalnego. 
+ 
+\subsection{Zadanie B - Minimalizacja funkcjonału z ograniczeniami nieliniowymi }
+\subsubsection{Rozwiązania analityczne}
+W zadaniu rozważany jest funkcjonał postaci \( ( n = 16 ) \) :
+\begin{equation*}
+f(x_{1},x_{2})=x_{1} + 2x_{2} + 3n = x_{1} + 2x_{2} + 48 \rightarrow min
+\end{equation*}  
+przy danych ograniczeniach nierównościowych
+\begin{equation*}
+\begin{cases}
+g_{1}(x) = -x_{1}^{2} + x_{2} + n(1 - 2x_{1} ) - n^{2} = -x_{1}^{2} + x_{2} -32x_{1} - 240 \geq 0 \\
+g_{1}(x) = \frac{1}{4}x_{1} + 1 + \frac{1}{4}n = \frac{1}{4}x_{1} + 5 \geq 0
+\end{cases}
+\end{equation*}
+Najpierw zadanie zostało rozwiązane analitycznie metodą Karusha-Kuhna-Tuckera. 
+\begin{equation*}
+f(x)=x_{1}+2x_{2}+48
+\end{equation*}
+\begin{equation*}
+\frac{\partial f}{\partial x_{1}} = 1 > 0
+\end{equation*}
+\begin{equation*}
+\frac{\partial f}{\partial x_{2}} = 2 > 0
+\end{equation*}
+Ograniczenia zamienione zostały na nierówności mniejszościowe słabe aby były zgodne z warunkami twierdzenia KKT. 
+\begin{equation*}
+F(x, \lambda) = x_{1}+2x_{2}+48+\lambda_{1}(x_{1}^{2}+32x_{1}+x_{2}-240)-\lambda_{2}(\frac{x_{1}}{4}+5)
+\end{equation*}
+\begin{equation*}
+\frac{\partial F(x,\lambda)}{\partial x_{1}} = 1-\lambda_{1}(-2x_{1}-32)-\frac{\lambda_{2}}{4}
+\end{equation*}
+\begin{equation*}
+\frac{\partial F(x,\lambda)}{\partial x_{2}} = - \lambda_{1}+2
+\end{equation*}
+Warunki konieczne twierdzenia KKT :
+\begin{equation*}
+\begin{cases}
+1-\lambda_{1}(-2x_{1}-32)- \frac{ \lambda_{2} }{4} = 0 \\
+- \lambda_{1}+2 = 0 \\
+\lambda_{2}(\frac{1}{4}x_{1}+5) = 0 \\
+\lambda_{1}(-x_{1}^{2}+x_{2}-32x_{1}-240) = 0
+\end{cases}
+\implies 
+\begin{cases}
+x_{1} = \frac{\frac{\lambda_{2}}{4}-1-32\lambda_{1}}{2\lambda_{1}} \\
+\lambda_{1} = 2 \\
+x_{1} = -20 \vee \lambda_{2} = 0 \\
+x_{2} = x_{1}^{2}+32x_{1}+240
+\end{cases}
+\end{equation*}
+Z równania na \( x_{1} \) podstawiając \( \lambda_{1} = 2 \) praz \( \lambda_{2} = 0 \) otrzymujemy \( x_{1} = -16.25 \). Następnie z równania ostatniego otrzymujemy \( x_{2} = -15,9375 \). Dla \( x_{1} = -20 \) otrzymujemy sprzeczność w równaniu pierwszym, ponieważ wówczas \( \lambda_{2} < 0 \). 
+
+Ostatecznie pokazano, że minimum tego funkcjonału przy przyjętych ograniczeniach jest osiągane dla 
+\( x^{*} = \begin{bmatrix}
+& -16,25 & -15,9375 &
+\end{bmatrix} \). 
+\subsubsection{Rozwiązania programowe bez metody wew. f. kary}
+W implementacji programowej zadanie najpierw rozwiązano przy użyciu funkcji matlaba \textit{fmincon}. Funkcja ta znajduje rozwiązanie optymalne przy określonych ograniczeniach nierównościowych. W tym przypadku konieczne było napisanie dodatkowej funkcji, która określa ograniczenie nieliniowe. Konieczne było również przekształcenie ograniczeń do postaci odpowiadającej nierówności mniejszościowej słabej. \vspace{7pt}
+Implementację i funkcję ograniczającą przedstawiają Listingi \ref{lis3} i \ref{lis4}.
+
+\begin{lstlisting}[caption=Znalezienie minimum z ograniczeniami ( fmincon ), captionpos=b,label=lis3, firstnumber=12,frame=single]
+% znalezienie minimum z ograniczeniami
+n = 16;
+
+x0 = [ -17, 10]; 
+
+fun = @(x) x(1) + 2 * x(2) + 3*n ;
+
+A = [-1, 0 ];
+ 
+b =  20 ;
+
+[x_opt, f_opt] = fmincon(fun,x0,A,b,[],[],[],[],@non_lin);
+
+
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Ograniczenie nieliniowe, captionpos=b,label=lis4, firstnumber=12,frame=single]
+function [c, ceq] = non_lin(x)
+% Nonlinear inequality constraints
+% Pamietac, ze tu musi byc mniejsze lub rowne
+c = x(1)^2 - x(2) - 16*( 1-2*x(1) ) + 256;
+% Nonlinear equality constraints
+ceq = [];
+
+
+\end{lstlisting}
+
+
+Zgodnie z rozwiązaniem analitycznym znalezione przez program minimum to \\
+\begin{equation}
+x^{*} = [ -16,25  \quad -15,9375  ] 
+\end{equation}
+\subsubsection{Rozwiązania programowe z metodą wew. f. kary}
+Następnie zadanie rozwiązano przy użyciu kilku iteracji metodą wewnętrznej funkcji kary, która polega na generowaniu ciągu punktów będących minimum kolejnych wyznaczanych funkcji \(P(x,k)\). W zadaniu rozważana jest funkcja 
+\begin{equation*}
+P(x,k)=f(x)+ k \cdot \sum_{i=1}^{r}\frac{1}{ g_{i}(x)} \rightarrow min
+\end{equation*}
+\begin{equation*}
+P(x,k)= x_{1} + 2x_{2} + 48 + k\frac{1}{-x_{1}^{2} + x_{2} -32x_{1} - 240} + k\frac{1}{\frac{1}{4}x_{1} + 5} \rightarrow min
+\end{equation*}
+z funkcją kary:
+\begin{equation*}
+\phi(x,k) = k \cdot \sum_{i=1}^{r}\frac{1}{ g_{i}(x)}
+\end{equation*}
+\begin{equation*}
+\phi(x,k) = k\frac{1}{x_{1}+15-x_{1}^{2} + x_{2} -32x_{1} - 240} + k\frac{1}{\frac{1}{4}x_{1} + 5}
+\end{equation*}
+Definiując dwa zbiory: \\
+\begin{equation*}
+X=\{x: g_{i}(x) \geq 0 ; \quad i =1,2, \dots ,r\}
+\end{equation*}
+\begin{equation*}
+X_{0}=\{x: g_{i}(x) > 0 ; \quad i =1,2, \dots ,r\}
+\end{equation*}
+które określają fragment paraboli opisanej ograniczeniem \( g_{1}(x) \) i 'uciętej' przez prostą \( x_{1} = -20 \) można stwierdzić, że zachodzą założenia: 
+\begin{itemize}
+\item \( X_{0} \) jest niepusty,
+\item \( f(x) \) oraz \(-g_{i}(x) \) są wypukłe i dwukrotnie różniczkowalne
+\item zbiory poziomicowe \( \{ x: f(x) \leq \alpha \} \) są ograniczone dla każdego skończonego \( \alpha \).
+\item Dla każdego \( k > 0 \) , \( P(x,k) \) jest ściśle wypukła 
+\end{itemize}
+Spełnienie powyższych założeń daje gwarancję, że każda funkcja \( P(x,k) \) niezależnie od k osiąga minimum na \( X_{0} \) i gradient \( P(x,k) \) po zmiennej x jest w tym punkcie równy 0 oraz, że ciąg punktów znajdywanych w kolejnych iteracjach jest zbieżny do minimum. 
+
+Implementacje powyższych obliczeń przedstawia Listing \ref{lis5}.
+\begin{lstlisting}[caption=Znalezienie minimum przy użyciu wewnętrznej funkcji kary, captionpos=b,label=lis5, firstnumber=12,frame=single]
+% znalezienie minimum przy uzyciu wewnetrznej f. kary
+
+x0 = [ -17, 10 ]; 
+max_iter = 20;
+points = [ x0 ];
+f_values = [ 0 ];
+diff_table = [ 0 ];
+
+c=20;
+k=10;
+
+k_table = [ k ];
+fun = @(x) x(1) + 2 * x(2) + 3*n + k/(-x(1)^2+x(2)+n*(1-2*x(1))-n^2) + ...
+    +k/( 1/4*x(1) +1 + 1/4*n );
+
+for i = 1:max_iter
+    [x_opt_k, fval] = fmincon(fun,x0,A,b,[],[],[],[],@non_lin);
+    
+    
+    diff = abs( f_opt - fval );
+    diff_table = [ diff_table; diff ];
+    f_values = [ f_values ; fval ];  
+    points = [ points ; x_opt_k ];
+    
+    x0 = x_opt_k;
+    k= k/c;
+    k_table = [ k_table ; k ];
+    fun = @(x) x(1) + 2 * x(2) + 3*n + k*1/(-x(1)^2+x(2)+n*(1-2*x(1))-n^2) + ...
+    +k*(1/( 1/4*x(1) +1 + 1/4*n ));
+
+end
+
+\end{lstlisting}
+
+Następnie znalezione przed metodę punkty zostały zaznaczone na wykresie przy pomocy kodu analogicznego do użytego w zadaniu A.
+
+Wyniki wraz z poziomicami przedstawia Rysunek \ref{fig:wkara_4}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{wkara_4.jpg}}
+\caption{c = 20, k0 = 10}
+\label{fig:wkara_4}
+
+\end{figure}
+
+Znalezione przez metodą rozwiązania wraz z numerem iteracji dla c = 20 przedstawiono w poniższej tabeli.  
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{wkara_5.jpg}}
+\centering
+\caption{Tabela z wynikami działania metody wewnętrznej funkcji kary dla c =20.}
+\label{fig:wkara_5}
+\end{figure}
+
+Porównując otrzymany w ostatniej iteracji wynik z analitycznie wyznaczonym minimum stwierdzono, że program dał dokładnie ten sam wynik.
+ 
+
+\section{Wnioski końcowe}
+
+Idea działania metoda wewnętrznej funkcji kary polega na generowaniu ciągu rozwiązań dopuszczalnych. Metoda ta daje szybko dobre rezultaty, należy pamiętać, że ma też swoje ograniczenia, ponieważ we wnętrze obszaru dopuszczalnego musi być możliwe wpisanie kuli, co nie jest konieczne dla zewnętrznej funkcji kary, co oznacza, że metoda wewnętrznej funkcji kary nie może być stosowana dla ograniczeń równościowych. 
+
+Podobnie jak przy metodzie zewnętrznej funkcji kary na jakość działania algorytmu mają wpływ parametry algorytmu, najbardziej znaczące wydają się być parametry k oraz c, które decyduje o tym jak duża kara jest nałożona na daną funkcję za wyjście oraz jak szybko zmienia się wartość k. Prawdziwość tego stwierdzenia potwierdzają rysunki \ref{fig:wkara_1} i \ref{fig:wkara_2} .
+\end{document}

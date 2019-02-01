@@ -1,0 +1,80 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{listings}
+\lstloadlanguages{Ada,C++}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{2.5cm}{2.5cm}{2.5cm}{2.5cm}
+
+\definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+
+
+\begin{document}
+
+\lstset{
+language=C++,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+\section{Silnia}
+Program przedstawiony na listingu \ref{lis1} jest przykładem obliczania silni przy pomocy pętli while.
+\begin{lstlisting}[caption=Przykład obliczania silni przy pomocy pętli while, captionpos=b,
+label=lis1, firstnumber=12,frame=single]
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int s, n, i;
+  cout << "Prosze podac liczbe naturalna n : ";
+  cin >> n;
+  i = 1;
+  s = 1;
+  
+  while( i < n ) 
+  {
+  	i++;
+  	s *= i;
+  }
+  
+  cout << "Silnia n: " << s << endl;  	
+}
+\end{lstlisting}
+Program przedstawiony na listingu \ref{lis2} jest przykładem obliczania silni przy pomocy pętli for. 
+\begin{lstlisting}[caption=Przykład obliczania silni przy pomocy pętli for, captionpos=b,
+label=lis2, firstnumber=12,frame=single]
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int s, n, i;
+  cout << "Prosze podac liczbe naturalna n : ";
+  cin >> n;
+  s = 1;
+  
+  for(i = 2; i <= n ; i++ ) s *= i;
+  
+  cout << "Silnia n: " << s << endl;  	
+}
+\end{lstlisting}
+\end{document}
+

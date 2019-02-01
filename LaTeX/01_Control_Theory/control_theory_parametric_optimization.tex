@@ -1,0 +1,240 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{tikz}
+
+\usetikzlibrary{calc,through,backgrounds,positioning,fit}
+\usetikzlibrary{shapes,arrows,shadows}
+
+\tikzstyle{place}=[shape=circle, draw, minimum height=10mm]
+\tikzstyle{place_1}=[shape=circle, draw, minimum height=5mm]
+\tikzstyle{trig}=[shape=circle, draw, dashed, minimum height=10mm]
+\tikzstyle{trans}=[shape=rectangle, draw, minimum height=15mm, minimum width=16mm]
+
+
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Teoria Sterowania - Laboratorium}}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\pagestyle{mypage_1}
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+ 
+\begin{document}
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Optymalizacja parametryczna}} \\ \hline Dominik Wróbel & \textbf{ 22 V 2018} & \textbf{Wt 09:30} \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+\tableofcontents
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest zapoznanie się z różnymi sposobami doboru optymalnych nastaw regulatorów. W pierwszej części rozważane będą różne całkowe wskaźniki jakości i zbadane zostaną różnice pomiędzy nimi, podjęta zostanie próba wyznaczenia najlepiej działającego wskaźnika dla tego rozważanego problemu. W dalszej części zadania zostaną wyznaczone nastawy dla których obiekt osiąga zadaną wartość zapasu modułu. 
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 1}
+\subsubsection{Zadanie 1 - Opis zagadnienia}
+W zadaniu rozważany jest obiekt opisany transmitancją:
+\begin{equation} \label{eq:transfer}
+G(s)=\frac{2s+3}{s^{3}+2s^{2}+s}
+\end{equation}
+Obiekt znajduje się w systemie z ujemnym sprzężeniem zwrotnym i regulatorem PID. Schemat systemu przedstawia Rysunek \ref{fig:opt_par_1}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1,inner sep=0.4mm]
+
+\node (sum)[place_1, label=below right:{$-$}] at (-1,0) {};
+\node (pid) [trans,label=below:{$PID$}] at (2,0) {$K_{p}+K_{i}\frac{1}{s}+K_{d}s$};
+\node (sum1)[place_1, label=below right:{}] at (5,0) {};
+\node (objekt) [trans,label=below:{$Obiekt$}] at (6.7,0) {$\frac{2s+3}{s^{3}+2s^{2}+s}$};
+% \node (env) [trans] at (3.75,1.5) {$env_{1}$};
+
+% \draw [->] (sum) to (pid);
+\path[->] (sum) edge node [above ] {$e(t)$} (pid);
+\path[->] (pid) edge node [above ] {$u(t)$} (sum1);
+\path[->] (-3,0) edge node [above ] {$r(t)$} (sum);
+\path[->] (sum1) edge node [above ] {} (objekt);
+\path[->] (objekt) edge node [above ] {$y(t)$} (10,0);
+\path[->] (5,2) edge node [left ] {$z(t)$} (sum1);
+%\path[->]  (10,0) - (10,-3) - (-1,-3) - (sum);
+\draw [->] (8,0) -- (8,-2) -- (-1,-2) -- (sum);
+\end{tikzpicture}
+\caption{Schemat rozważanego układu regulacji}
+\label{fig:opt_par_1}
+\end{figure}
+\pagestyle{mypage}
+Dla przedstawionego układu regulacji postawiony jest problem znalezienia optymalnych nastaw regulatora PID minimalizujących przyjęty wskaźnik jakości. 
+
+Rozważane są wskaźniki: \\
+\begin{enumerate}
+\item \( J_{1} = \int_{0}^{T}e(t)^{2}dt \)
+\item \( J_{2} = \int_{0}^{T}e(t)^{2}tdt \)
+\item \( J_{3} = \int_{0}^{T}|e(t)|dt \)
+\item \( J_{4} = \int_{0}^{T}|e(t)|tdt \)
+\item \( J_{5} = \int_{0}^{T}e(t)dt \)
+\end{enumerate}
+
+Dla każdego z powyższych wskaźników zostaną wyznaczone programowo optymalne nastawy regulator PID, a następnie zostaną porównane na przykładzie odpowiedzi skokowej układu na sygnał testowy - skok jednostkowy.
+
+W zadaniu przyjęto następujące założenia:
+\begin{itemize}
+\item Wskaźnik jakości to jeden ze wskaźników całkowych 1-5 wypisanych powyżej,
+\item Wartość zadana to skok jednostkowy,
+\item Wartości początkowe dla regulatora i obiektu są zerowe,
+\item Brak zakłóceń w układzie
+\end{itemize}
+
+\subsubsection{Realizacja programowa optymalizacji parametrycznej}
+W celu implementacji optymalizacji parametrycznej posłużono się funkcją \textit{fminsearch} w programie Matlab. Jako jej argument użyto funkcji w której zawarto symulowanie modelu układu regulacji z Simulinka. Model układu przedstawia Rysunek \ref{fig:opt_par_2}. W modelu zawarto obliczenia wszystkich pięciu wskaźników przedstawionych w poprzednim punkcie. 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{opt_par_2.jpg}}
+\caption{Model rozważanego układu regulacji w programie Matlab/Simulink}
+\label{fig:opt_par_2}
+\end{figure}
+
+Przyjęto czas symulacji \(T=25\) jako czas po którym odchyłki od wartości \(y_{\infty}\) są już relatywnie małe i nie mają większego wpływu na wartość całkowania. Warunki początkowe dla nastaw regulatora to \( K_{p} = 1 \), \(K_{i}=0.1\) i \(K_{d}=0.1\).
+\subsubsection{Porównanie znalezionych optymalnych nastaw}
+Znalezione nastawy regulatora dla wszystkich wskaźników przedstawia poniższa Tabela.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|l|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+\multicolumn{4}{|c|}{\textbf{Znalezione optymalne nastawy regulatora PID}} 
+\\ \hline 
+Wskaźnik jakości & \( K_{p} \) & \( K_{i} \) & \( K_{d} \) 
+\\ \hline
+\( J_{1} = \int_{0}^{T}e(t)^{2}dt \) & \(1,0627\) & \( 0,0859 \) & \( 0,1083\) 
+\\ \hline
+\( J_{2} = \int_{0}^{T}e(t)^{2}tdt \) & \( 1,0345 \) & \( 0,0653 \) & \( 0,1379 \) 
+\\ \hline
+\( J_{3} = \int_{0}^{T}|e(t)|dt \) & \( 1,0050 \) & \( 0,0395 \) & \( 0,1172 \) 
+\\ \hline
+\( J_{4} = \int_{0}^{T}|e(t)|tdt \) & \( 1,0020 \) & \( 0,0282 \) & \( 0,1871 \) 
+\\ \hline
+\( J_{5} = \int_{0}^{T}e(t)dt \) & \( 4.5897 \) & \( 0,4744 \) & \( 0,1993 \) 
+\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+Porównanie odpowiedzi skokowych przy znalezionych optymalnych nastawach regulatora PID przedstawia Rysunek \ref{fig:opt_par_3}.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.37]{opt_par_3.jpg}}
+\caption{Porównanie odpowiedzi skokowych dla różnych nastaw regulatora PID}
+\label{fig:opt_par_3}
+\end{figure}
+
+\newpage
+\subsubsection{Wnioski do zadania 1}
+Po zbadaniu kilku wariantów wskaźników od razu można zauważyć, że przyjęty wskaźnik wpływa na wartość nastaw, co można od razu stwierdzić, po analizie wyników nastaw z tabeli. \\
+
+Z wykresów na Rysunku \ref{fig:opt_par_3} od razu widać, że największe oscylacje otrzymano przy zastosowaniu wskaźnika, który brał pod uwagę tylko uchyb. Wynika to z faktu, że wskaźnik ten w ogólnym  przypadku rozróżnia znak, a więc całka dla ujemnych i dodatnich wartości 'znosi się' i wartość wskaźnika jest zafałszowana.  \\
+
+Znacznie lepiej wyglądają przebiegi uzyskane dla wskaźnika całki z kwadratu uchybu zarówno z czasem jak i bez. Dzieję się ten tak ponieważ wskaźnik ten naprawia wadę wskaźnika, który bierze pod uwagę tylko sam uchyb poprzez podniesienie wartości do kwadratu, a tym samym nie bierze pod uwagę znaku, a jedynie wartość odchyłki. Co więcej widać, że gdy wskaźnik bierze pod uwagę także czas, to znalezione nastawy spowodowały, że dla późniejszych chwil czasu amplituda w stosunku do przebiegu dla parametrów wskaźnika bez czasu maleje tym bardziej względem amplitudy wskaźnika bez czasu im późniejsza chwila.   \\
+
+Najlepiej ze wszystkich przebiegów wygląda przebieg dla wskaźnika biorącego pod uwagę moduł z uchybu. Wskaźnik ten wydaje się być najlepszym w praktyce, ponieważ neutralizuje wadę wskaźnika biorącego pod uwagę tylko uchyb, a jednocześnie nie fałszuje wartości uchybu tak jak robi to wskaźnik kwadratowy poprzez podniesienie do kwadratu. Dodając do wskaźnika czas otrzymujemy podobne zjawisko jak przy analizie wskaźnika kwadratowego. 
+
+\subsection{Zadanie 2}
+\subsubsection{Zadanie 2 - Opis zagadnienia}
+Problemem w tym zadaniu polega na doborze odpowiedniego wskaźnika jakości, a następnie obliczeniu odpowiednich nastaw dla układu regulacji dla którego chcemy osiągnąć zadany zapas modułu. Zapas ten ma być osiągany dla wyznaczonej częstotliwości. 
+
+W zadaniu przyjęto dane:
+\begin{itemize}
+\item Zapas modułu \( \Delta L = 20 dB \),
+\item Zapas ten osiągany jest dla częstotliwości \( \omega = 100 \) 
+\end{itemize}
+
+Analizowanym układem jest ten sam, który był analizowany a Zadaniu 1, jest on przedstawiony na Rysunku \ref{fig:opt_par_1}.
+
+\subsubsection{Przyjęty wskaźnik jakości}
+Wskaźnikiem jakości w tym problemie nie jest żaden z typowych wskaźników jakości, ponieważ celem zadania jest osiągnięcie odpowiedniego zapasu modułu układu zamkniętego dla zadanej pulsacji. Chcemy więc aby odległość poziomu modułu od wartości \( -20 dB \) była jak najmniejsza dla pulsacji \( \omega = 100 \), co da zapas modułu równy \( 20 dB \). \\
+Aby to osiągnąć przyjęto wskaźnik jakości: 
+\begin{equation*}
+Q(K_{p},K_{i},K_{d})=|A(\omega) - ( - \Delta L ) | \rightarrow min
+\end{equation*}
+Wyrażenia \( A(\omega) \) określa poziom modułu transmitancji widmowej  \( G_{F}(s) \) ( zostanie ona wyznaczona w następnym punkcie ) wyrażony w decybelach.
+
+\subsubsection{Wyznaczenie \( A(\omega) \)}
+Aby wyznaczyć poziom modułu pozwalający na określenie zapasu stabilności obliczono transmitancję układu otwartego składającego się z regulatora i obiektu:
+\begin{equation}\label{eq:2}
+G_{F}(s) = G_{o}(s)G_{r}(s) = \frac{(2s+3)}{s^{3}+2s^{2}+s}(K_{p}+K_{i}\frac{1}{s}+K_{d}s)=\frac{(K_{d}s^{2}+K_{p}s+K_{i})(2s+3)}{s(s^{3}+2s^{2}+s)}
+\end{equation}
+Następnie podstawiając \( s = j \omega = j100\) uzyskano transmitancję widmową. Na podstawie tej transmitancji została wyznaczona część rzeczywista i urojona w zależności od parametrów \( K_{p} \), \(K_{i} \) i \( K_{d} \). Na tej podstawie wyznaczono wielkość \( A( \omega) = 20log_{10} |G_{F}(jw)| \)  Obliczenia te zostały przeprowadzone programowo.
+
+Kolejnym etapem przeprowadzenia obliczeń było napisanie funkcji, która zwraca wartość wskaźnika jakości i zastosowanie optymalizacji przy uzyciu funkcji \textit{fmincon}, na nastawy regulatora narzucono ograniczenie aby były one wartościami dodatnimi.
+
+\subsubsection{Analiza wyniku działania optymalizacji parametrycznej}
+
+W wyniku przeprowadzenia minimalizacji funkcji obliczającej wskaźnik jakości otrzymano następujące nastawy regulatora:
+\begin{equation*}
+K_{p} = 386,7212 \quad K_{i} = 600,2870, \quad K_{d} = 3,2293
+\end{equation*}
+Jako, że same wartości tych nastaw nie niosą same w sobie informacji o poprawności działania metody, dla systemu o transmitancji (\ref{eq:2}) z regulatorem PID dla znalezionych optymalnych z punkt widzenia wskaźnika jakości nastaw została narysowana charakterystyka Bodego, którą przedstawia Rysuenk \ref{fig:opt_par_4}.
+
+Na rysunku tym widać, że zamierzony zapas modułu został osiągnięty dla przyjętej pulsacji. Dla porównania ze wskaźnikami całkowymi z Zadania 1 zamieszczono również Rysunek \ref{fig:opt_par_5}, który przedstawia odpowiedź skokową układu zamkniętego.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{opt_par_4.jpg}}
+\caption{Charakterystyki Bodego układu o transmitancji \(G_{F}(j \omega )\)  }
+\label{fig:opt_par_4}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{opt_par_5.jpg}}
+\caption{Odpowiedź na skok jednostkowy układu zamkniętego}
+\label{fig:opt_par_5}
+\end{figure}
+
+\subsubsection{Wnioski do zadania 2}
+W zadaniu 2 z Rysunku \ref{fig:opt_par_4} widać, że przyjęty wskaźnik jakości okazał się dobry dla zapasu modułu, ale zapas fazy jest o wiele mniejszy, co dowodzi, że aby osiągnąć zarówno zapas modułu jak i fazy należy wziąć pod uwagę we wskaźniku obie te wielkości. Wówczas prawdopodobne jest, że nie byłoby możliwe wyznaczenie nastaw, które w tak dokładny sposób jak w tym przypadku pozwoliłby na osiągnięcie zapasu \(20dB\), ponieważ pod uwagę byłyby brane dwie wielkości i musiałby zostać osiągnięty kompromis pomiędzy nimi.  \\
+
+Wskaźnik jakości przyjmowany dla konkretnej częstotliwości jest dobry dla niewielkiego otoczenia tej częstotliwości - zapas modułu jest równy około 20dB dla niewielkiego otoczenia pulsacji \( \omega = 100 \), można zatem wysunąć wniosek, że przy stosowaniu tego typu podejścia w praktyce konieczne jest także określenie zakresu częstotliwości sygnałów występujących w układzie. \\
+
+W zależności od przyjętego wskaźnika jakości zostaje optymalizowana pewna cecha systemu, co można zaobserwować porównując Rysunki \ref{fig:opt_par_5} oraz \ref{fig:opt_par_3}. W zadaniu 1 gdzie brany był pod uwagę uchyb, nastawy zostały dobrane tak, że odpowiedź skokowa układu szybko zanika do wartości ustalonej wykonując przy tym relatywnie małe oscylacje w porównaniu do oscylacji występujących w układzie z Rysunku \ref{fig:opt_par_5}. 
+
+\end{document}

@@ -1,0 +1,26 @@
+\begin{thebibliography}{1}
+
+\bibitem{Alur:1990:AMR:90397.90438}
+Rajeev Alur and D.~L. Dill.
+\newblock Automata for modeling real-time systems.
+\newblock In {\em Proceedings of the Seventeenth International Colloquium on
+  Automata, Languages and Programming}, pages 322--335, New York, NY, USA,
+  1990. Springer-Verlag New York, Inc.
+
+\bibitem{Fencott:CCS:95}
+C.~Fencott.
+\newblock {\em Formal Methods for Concurrency}.
+\newblock International Thomson Computer Press, Boston, MA, USA, 1995.
+
+\bibitem{Sommerville10}
+Ian Sommerville.
+\newblock {\em Software Engineering}.
+\newblock Addison-Wesley, Harlow, England, 9 edition, 2010.
+
+\bibitem{formalne}
+Szpyrka~M. Szmuc~T.
+\newblock {\em Metody formalne w inżynierii oprogramowania systemów czasu
+  rzeczywistego}.
+\newblock Helion, Kraków, 2010.
+
+\end{thebibliography}

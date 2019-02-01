@@ -1,0 +1,417 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Identyfikacja procesów przemysłowych }}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+%\thispagestyle{mypage_1}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Identyfikacja procesów przemysłowych}} \\ \hline Dominik Wróbel & 30 X 2018 & Wt. 13:45, s. 111 \\ \hline
+\multicolumn{3}{|c|}{Laboratorium 3} \\ \hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 1 }
+
+Zadanie polega na badaniu zachowania układu inercyjnego pierwszego rzędu z wymuszeniem losowym w postaci białego szumu, które jest dodawane do sterowania na wejściu do układu. 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{01_schemat.jpg}}
+\centering
+\caption{Układ rozważany w zadaniu}
+\label{fig:01_schemat}
+\end{figure}
+Układ taki opisany jest równaniem Ito:
+\begin{align*}
+& dx = (-ax + bu)dt + \sqrt{g}dw,\quad u=\sin \omega_1 t \\
+& a = 2, \ b = 3, \ g = 0,01, \ \omega_1 = \pi
+\end{align*}
+Warunek początkowy to zmienna losowa o rozkładzie \( N(x_0, K_0) \), gdzie \( x_0=10 \), \(K_0=4\).
+
+\subsubsection{Wyznaczenie średniej i wariancji procesu}
+
+Pierwszą czynnością w zadaniu było rozwiązanie numeryczne równań opisujących wartość średnią oraz wariancje procesu:
+\begin{align*}
+\dot{\mu} = -a\mu + bu, \ \mu(0)=x_0, \\
+\dot{K} = -2Ka+g, \ K(0)=K_0
+\end{align*}
+Równania zostały rozwiązane przy użyciu solvera ode45 dla czasu \( t \in [0,6]\).
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{02_solution.jpg}}
+\centering
+\caption{Rozwiązania równań opisujących średnią i wariancję}
+\label{fig:02_solution}
+\end{figure}
+
+\subsubsection{Wyznaczenie odchylenie standardowego}
+Następnie wyznaczono odchylenie standardowe korzystając ze wzoru \( \sigma (t) = \sqrt{K(t)} \). Na jednym wykresie przedstawiono średnią procesu oraz linie \( m(t) = \mu (t) \pm 3\sigma (t) \ , t \in [0,6] \). Rezultat przedstawia \mbox{Rysunek \ref{fig:03_odchylenie}}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.45]{03_odchylenie.jpg}}
+\centering
+\caption{Wartość średnia wraz z liniami \( m(t) \).}
+\label{fig:03_odchylenie}
+\end{figure}
+Rozważany układ jest jednowymiarowy, wzór na rozkład prawdopodobieństwa procesu w chwili t wyraża się wzorem:
+\begin{align*}
+& p(x,t) = \frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(x-\mu)^2}{2\sigma ^2}}
+\end{align*}
+
+Prawdopodobieństwo, że \( x(t) \in [\mu(t) - 3\sigma(t), \mu(t) + 3\sigma(t) ] \) oblicza się przy pomocy dystrybuanty rozkładu normalnego:
+\begin{align*}
+P(  E - 2 \sigma < X < E + 3\sigma ) = \Phi (3) - \Phi (-3) = 2\Phi (3) - 1 = 99,7\%
+\end{align*}
+
+Asymptotyczne odchylenie standardowe \( \lim _{ t \rightarrow \infty } \sqrt{K(t)} \) można obliczyć na podstawie równania różniczkowego przy założeniu, że \( \dot{K} = 0 \) dla \( t \rightarrow \infty \). Wtedy \( K = \frac{g}{2a} = 0,0025 \).
+
+\subsubsection{Badania zachowania układu dla różnych warunków początkowych}
+Następnie na jednym wykresie przedstawiono kilka różnych przebiegów procesu dla różnych warunków początkowych. Jak widać, wszystkie z eksperymentów zawierają się w wyznaczonych liniach \( m(t) \). Wyniki przedstawia Rysunek \ref{fig:04_symulacja}. 
+Kolorem szarym oznaczono sygnał wejściowy.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.45]{04_symulacja.jpg}}
+\centering
+\caption{Przeprowadzone eksperymenty dla różnych warunków początkowych.}
+\label{fig:04_symulacja}
+\end{figure}
+
+
+\subsubsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 1, captionpos=b,label=lis1, firstnumber=1,frame=single]
+close all;
+clear all;
+
+tspan = 0:0.01:6;
+
+a=2;
+b=3;
+g = 0.01;
+w1 = pi;
+
+mi0 = 10;
+[t1,mi] = ode45(@(t,mi) -a*mi + b*sin(w1*t), tspan, mi0);
+
+figure();
+plot(t1,mi);
+
+K0 = 4;
+[t2,K] = ode45(@(t,K) -2*a*K + g, tspan, K0);
+
+hold on;
+plot(t2,K);
+
+
+sigma = sqrt(K);
+sigmaPlus = mi + 3*sigma;
+sigmaMinus = mi - 3*sigma;
+
+figure();
+plot(t2,mi);
+hold on;
+plot(t2,sigmaPlus)
+hold on;
+plot(t2,sigmaMinus)
+
+A = -a;
+B = 1;
+C = 1;
+D = 0;
+
+figure()
+uSin = sin(w1*t1);
+noise = randn(length(t1),1);
+
+uControl = b*uSin + sqrt(g)*noise; 
+
+
+sys = ss(A,B,C,D);
+
+x0 = 10;
+lsim(sys,uControl,tspan,x0) 
+
+hold on;
+plot(t2,sigmaPlus,'m');
+hold on;
+plot(t2,sigmaMinus,'m');
+
+hold on;
+x0 = 5;
+lsim(sys,uControl,tspan,x0) 
+
+hold on;
+x0 = 7;
+lsim(sys,uControl,tspan,x0)
+
+hold on;
+x0 = 14;
+lsim(sys,uControl,tspan,x0) 
+
+\end{lstlisting}
+
+\subsection{Zadanie 2 }
+Zadanie jest analogiczne do zadania 1, które schematycznie przedstawia Rysunek \ref{fig:01_schemat}, tym razem analizowanym układem jest układ II rzędu, opisany równaniem Ito:
+\begin{align*}
+& dx = ( Ax + Bu ) dt + Gdw \\
+& A = 
+\begin{bmatrix}
+0 & 1  \\
+- \omega _0^2 & -2\xi \omega _0 
+\end{bmatrix} \
+B = 
+\begin{bmatrix}
+0 \\
+b
+\end{bmatrix} \
+G = 
+\begin{bmatrix}
+0 \\
+\sqrt{g}
+\end{bmatrix} \
+u = 0 \\
+& \omega _0 = 1, \ \xi = 0,1, \ b=1, \ g=1
+\end{align*}
+Warunkiem początkowym jest zmienna losowa o rozkładzie normalnym \( N(x_0, K_0) \), przy czym \mbox{\( x_0 = \begin{bmatrix} 15 & 0 \end{bmatrix} \)}, \( K_0 = 10^{-1}diag(1,1)\).
+
+\subsubsection{Średnia i macierz kowariancji}
+Zadanie rozpoczęto od numerycznego rozwiązania równań opisujących średnią oraz macierz kowariancji:
+\begin{align*}
+& \dot{\mu} = A\mu + Bu, \ \mu(0)=x_0 \\
+& \dot{K} = KA^T + AK +GG^T, \ K(0)=K_0
+\end{align*}
+Macierz K jest symetryczna więc równanie opisujące macierz kowariancji sprowadza się do układu równań:
+\begin{align*}
+& \dot{K_{11}} = 2K_{12}, \ K_{11}(0)=10^{-3} \\
+& \dot{K_{12}} = K_{22} - 2\xi\omega _0 K_{12} - \omega _{0}^{2}K_{12}, \ K_{12}(0)=0 \\
+& \dot{K_{22}} = -2\omega _0^2 K_{12} - 4\xi \omega_0 K_{22} +g , \ K_{22}(0)=10^{-3}
+\end{align*}
+Równanie opisujące średnią oraz układ równań opisujący macierz kowariancji rozwiązano numerycznie przy użyciu solvera ode45. Otrzymane rozwiązania przedstawiają Rysunki \ref{fig:05_srednia2} oraz \ref{fig:06_kowariancja2}.
+s
+
+\begin{figure}[H]
+  \begin{minipage}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{05_srednia2.jpg}
+    \caption{Średnia}
+    \label{fig:05_srednia2}
+  \end{minipage}
+  \begin{minipage}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{06_kowariancja2.jpg}
+    \caption{Kowariancja \( K_{11}, K_{12}, K_{22} \) } 
+    \label{fig:06_kowariancja2}
+  \end{minipage}
+\end{figure}
+
+\subsubsection{Portret fazowy i rozkład prawdopodobieństwa}
+Rozkład prawdopodobieństwa procesu w chwili t opisuje wzór:
+\begin{align*}
+p(t,x) = \frac{1}{2\pi|K(t)|}e^{0,5(x-\mu(t))^TK(t)^{-1}(x-\mu(t))}
+\end{align*}
+Na podstawie tego wzoru można narysować poziomice rozkładu w chwilach \( t = 0,1,2,3,4,5,6 \) wraz z portretem fazowym średniej. Wyniki prezentuje Rysunek \ref{fig:07_portret}.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.45]{07_portret.jpg}}
+\centering
+\caption{Portret fazowy wraz z poziomicami rozkładu prawdopodobieństwa w kolejnych chwilach czasu \( t = 0,1,2,3,4,5,6 \). }
+\label{fig:07_portret}
+\end{figure}
+
+Na podstawie zadania 1 obliczono prawdopodobieństwo \( P(|x_{1}(t)-\mu _1(t)| > 3\sqrt{K_{11}(t)}), \ t=6 \). Z zadania 1 wiadomo, że 
+\begin{align*}
+& P(  E - 2 \sigma < X < E + 3\sigma ) = \Phi (3) - \Phi (-3) = 2\Phi (3) - 1 = 99,7\%
+\end{align*}
+więc na tej podstawie łatwo stwierdzić, że \( P(|x_{1}(t)-\mu _1(t)| > 3\sqrt{K_{11}(t)})=0,03\%, \ t=6 \)
+
+\subsubsection{Asymptotyczna kowariancja i średnia procesu}
+Podobnie jak w zadaniu 1, zakłada się, że w nieskończoności zmiany średniej i kowariancji są równe zero, a zatem w celu obliczenia asymptotycznych wartości tych wielkości przyrównano równania je opisujące do 0.
+\begin{align*}
+& 0 = A\mu \rightarrow \mu = \begin{bmatrix}
+0 \\ 0
+\end{bmatrix}
+\end{align*}
+\begin{align*}
+& 0 = 2K_{12} \\
+& 0 = K_{22} - 2\xi\omega _0 K_{12} - \omega _{0}^{2}K_{12} \\
+& 0 = -2\omega _0^2 K_{12} - 4\xi \omega_0 K_{22} +g 
+\end{align*}
+\begin{align*}
+K_{asm} = \begin{bmatrix}
+\frac{g}{4\xi \omega _0^3} & 0 \\
+0 & \frac{g}{4\xi \omega _0}
+\end{bmatrix}
+=
+\begin{bmatrix}
+2,5 & 0 \\
+0 & 2,5
+\end{bmatrix}
+\end{align*}
+
+\subsubsection{Badanie układu dla \( \xi = 0 \).}
+Dla tej wartości współczynnika tłumienia narysowano przebieg średniej położenia oraz prędkości. Z wykresów widać, że wielkości te mają przebieg sinusoidalny przy czym wartości prędkości odpowiadające położeniom są sinusami różniącymi się w fazie. Takie zachowanie jest uzasadnione ponieważ układ dla \( \xi =0 \) jest układem nietłumionym i wykonuje drgania o niezmieniającej się amplitudzie.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.45]{08_xi0.jpg}}
+\centering
+\caption{Położenie oraz prędkość w dziedzinie czasu dla \( \xi = 0 \). }
+\label{fig:08_xi0}
+\end{figure}
+
+\subsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 1, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+close all;
+
+tspan = 0:0.01:6;
+
+w0 = 1;
+ksi = 0; % dla ksi = 0
+b = 1;
+g = 1;
+
+A = [ 0 1 ; -w0^2 -2*ksi*w0 ];
+B = [ 0 ; b ];
+G = [ 0 ; sqrt(g) ];
+u = 0; 
+
+x0 = [15, 0]';
+K0 = (10^-1) * diag(1,1);
+
+mi0 = x0;
+
+[t1,miMatrix] = ode45(@(t,mi) A*mi + B*u, tspan, mi0);
+
+for i = 1:length(t1)-1
+    v(i,1) = (miMatrix(i+1,1)-miMatrix(i,1))/(t1(i+1)-t1(i)) ;
+    v(i,2) = (miMatrix(i+1,2)-miMatrix(i,2))/(t1(i+1)-t1(i)) ;
+end
+tv = t1(1:600);
+
+figure()
+plot(t1, miMatrix(:,1));
+hold on;
+plot(t1, miMatrix(:,2));
+
+
+
+[t2,kMatrix] = ode45(@vdp1,tspan,[0.01; 0; 0.01]);
+figure()
+plot(t2, kMatrix(:,1));
+hold on;
+plot(t2, kMatrix(:,2));
+hold on;
+plot(t2, kMatrix(:,3));
+
+
+figure();
+plot(t1, miMatrix(:,1), 'b');
+hold on;
+plot(t1, miMatrix(:,2), 'r');
+hold on;
+plot(tv, v(:,1), 'm');
+hold on;
+plot(tv, v(:,2), 'g');
+
+hold on;
+mu = [miMatrix(1,1) miMatrix(1,2)];
+Sigma = [kMatrix(1,1) kMatrix(1,2); kMatrix(1,2)  kMatrix(1,3)];
+x1 = -15:0.01:20; x2 = -15:.01:20;
+[X1,X2] = meshgrid(x1,x2);
+F = mvnpdf([X1(:) X2(:)],mu,Sigma);
+F = reshape(F,length(x2),length(x1));
+
+mvncdf([0 0],[1 1],mu,Sigma);
+contour(x1,x2,F,[0.000001 0.00001 0.0001 0.001 0.01 1 2 10 50 100 1000]);
+xlabel('x'); ylabel('y');
+
+
+
+\end{lstlisting}
+
+\section{Wnioski końcowe}
+Przeprowadzone eksperymenty pozwalają na uzyskanie informacji o wyjściu układu przy zakłóceniach obecnych na wejściu układu. Informacja taka pozwala stwierdzić w jakim przedziale znajdować będzie się wartość zmiennej procesowej w danej chwili czasu. 
+
+ 
+\end{document}

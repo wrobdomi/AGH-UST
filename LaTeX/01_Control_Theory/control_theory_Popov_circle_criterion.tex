@@ -1,0 +1,304 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+
+\newpagestyle{mypage}{%
+  \headrule
+  \sethead{\MakeUppercase{\thesection\quad \sectiontitle}}{}{\thesubsection\quad \subsectiontitle}
+  \setfoot{}{}{\thesubsubsection\quad \subsubsectiontitle \quad  \thepage }
+}
+\settitlemarks{section,subsection,subsubsection}
+\pagestyle{mypage}
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+ 
+\begin{document}
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Kryterium Koła i Popova}} \\ \hline Dominik Wróbel & \textbf{ 24 IV 2018} & \textbf{Wt 09:30} \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+\tableofcontents
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest zapoznanie się z działaniem i stosowaniem dwóch twierdzeń - kryterium koła oraz twierdzenia Popova. Oba te twierdzenia mogą być stosowane do układów z nieliniowym sprzężeniem zwrotnym w celu określenia stabilności tych systemów pod warunkiem spełnienia pewnych dodatkowych założeń.  
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 5.1}
+W zadaniu rozważany jest system dynamiczny opisany transmitancją:
+\begin{equation} \label{eq:transfer}
+G(s)=\frac{4(1-5s)}{(1+3s)(1+2s)}=\frac{-20s+4}{6s^{2}+5s+1}
+\end{equation}
+\newpage
+W zadaniu zostaną wykonane następujące punkty :
+\begin{itemize}
+\item Wyznaczenie jak największego sektora dopuszczalnego na podstawie kryterium koła 
+\item Wyznaczenie sektora Popova 
+\end{itemize}
+\subsubsection{Kryterium koła - podstawowe założenia}
+System opisany transmitancją (\ref{eq:transfer}) spełnia założenia :
+\begin{itemize}
+\item Jest systemem liniowym, stacjonarnym, skończenie wymiarowym,
+\item Jest systemem SISO,
+\item System objęty jest sprzężeniem zwrotnym \( u(t)=f(t,y(t)) \), 
+\item Macierz stanu A nie posiada wartości własnych na osi urojonej
+\end{itemize}
+Ostatnie ze stwierdzeń można łatwo uzasadnić na podstawie obliczenia pierwiastków wielomianu charakterystycznego rozważanego systemu. Pierwiastki obliczono korzystając z polecenia \textit{roots} w programie matlab i otrzymano następujące wyniki:
+\begin{equation*}
+s_{1} = -0.5000
+\quad s_{2} = -0.3333
+\end{equation*}
+Dodatkowo zakładamy, że sprzężenie zwrotne opisane jest funkcją \(f\) taką, że równanie  \\ \( \dot{x}(t)=Ax(t)+bf(t,c^{T}x(t)) \) ma jednoznaczne rozwiązanie.
+\subsubsection{Kryterium koła - wyznaczenie obszaru dopuszczalnego}
+W celu wyznaczania obszaru dopuszczalnego w pierwszym kroku zmodyfikowano transmitancję tak aby była odpowiednia dla rozważań z ujemnym sprzężeniem zwrotnym, poprzez pomnożenie jej przez \(-1\). Wykonano charakterystykę Nyquista, którą przedstawia Rysunek \ref{fig:kopo_1}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{kopo_1.jpg}}
+\caption{Charakterystyka amplitudowo-fazowa systemu z zadania 5.1}
+\label{fig:kopo_1}
+\end{figure}
+Postać charakterystyki sugeruje, że dla wyznaczenia największego możliwego obszaru należy stworzyć koło w którym będzie zawierać się charakterystyka. \\
+Zadanie rozpoczęto od wyznaczenia maksymalnej co do modułu wartości osiąganej na osi urojonej. W tym celu posłużono się wektorem wartości zwracanych przez funkcje \textit{Nyquist} matlaba. Maksymalna wartość osiągana na osi urojonej wynosi
+\begin{equation*}
+Q(\omega)=4.4699, \quad dla \quad P(\omega)=0.3619
+\end{equation*}
+Aby móc objąć kołem tą wartość potrzebne jest koło o promieniu \(r = 4.4699 \) oraz środku w punkcie \( (0.3619, 0) \). Stworzenie takiego koła daje gwarancje, że punkty najbardziej wysunięte na osi urojonej będą mieć dokładnie jeden punkt wspólny z tym kołem, jest to równoważne stwierdzeniu, że nie można stworzyć mniejszego koła, które zawierałoby te punkty. Charakterystykę wraz z kołem przedstawia Rysunek \ref{fig:kopo_2} \\
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{kopo_2.jpg}}
+\caption{Charakterystyka amplitudowo-fazowa systemu z zadania 5.1 wraz z wyznaczonym kołem}
+\label{fig:kopo_2}
+\end{figure}
+Kolejnym krokiem będzie pokazanie, że tak stworzone koło zawiera w sobie wszystkie pozostałe punkty charakterystyki. \\
+Aby to udowodnić przesunięto wykres charakterystyki amplitudowo-fazowej wzdłuż osi rzeczywistej tak aby środek wyznaczonego koła znajdował się w środku układu współrzędnych dzięki czemu możliwe będzie określenie odległość dowolnego punktu charakterystyki od punktu \( (0.3619, 0) \) na podstawie wartości modułu nowej charakterystyki. Wykonano podstawienie \\ \( P_{1}(\omega) = P(\omega)- 0.3619 \). Dla tak określonej charakterystyki obliczono jej moduł z równania \(|G_{1}(j\omega)|=\sqrt{P_{1}(\omega)^2+Q(\omega)^2} \). \\ Wykonanie takiego podstawienia i obliczenie modułu pozwala na określenie odległości każdego punktu charakterystyki amplitudowo-fazowej od środka wyznaczonego okręgu \( (0.3619, 0) \) .
+\\ Z obliczonych przy pomocy programu matlab modułów wybrano moduł maksymalny, którego wartość wynosi \( 4.4699 \), jest więc równa wyznaczonemu promieniowi koła, co dowodzi, że wszystkie punkty charakterystyki amplitudowo-fazowej leżą wewnątrz lub na krawędzi wyznaczonego koła. \\ 
+Twierdzenie zakłada, że każdy punkt charakterystyki musi znajdować się w całości we wnętrzu okręgu więc ostatecznie współczynniki \( m_{1} oraz m_{2} \) muszą spełniać nierówności : 
+\begin{equation*}
+\frac{1}{m_{1}} < 0.3619 - 4.4699 = -4.1080 \quad
+\frac{1}{m_{2}} > 0.3619 + 4.4699 = 4.8318  
+\end{equation*}
+\begin{equation*}
+m_{1}>-0,2434 \quad m_{2}<0,2070  
+\end{equation*}
+Uzyskany obszar dopuszczalny przedstawia Rysunek \ref{fig:kopo_3}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{kopo_3.jpg}}
+\caption{Maksymalny obszar dopuszczalny zaznaczony kolorem niebieskim - twierdzenie koła, \(m_{1}=-0,2434\) , \(m_{2}=0,2070\) }
+\vspace{10pt}
+Jeżeli funkcja \( f(t,y(t)) \) zawiera się w wyznaczonym obszarze, to zerowe rozwiązanie układu zamkniętego jest globalnie jednostajnie wykładniczo stabilne. 
+\label{fig:kopo_3}
+\end{figure}
+\subsubsection{Twierdzenie Popova - podstawowe założenia}
+System opisany transmitancją (\ref{eq:transfer}) spełnia założenia :
+\begin{itemize}
+\item Jest systemem liniowym, stacjonarnym, skończenie wymiarowym,
+\item Jest systemem SISO,
+\item System objęty jest sprzężeniem zwrotnym \( u(t)=f(y(t)) \), 
+\item Macierz stanu A jest wykładniczo asymptotycznie stabilna,
+\end{itemize}
+Ostatnie ze stwierdzeń można łatwo uzasadnić na podstawie obliczenia pierwiastków wielomianu charakterystycznego rozważanego systemu. Pierwiastki obliczono korzystając z polecenia \textit{roots} w programie matlab i otrzymano następujące wyniki:
+\begin{equation*}
+s_{1} = -0.5000
+\quad s_{2} = -0.3333
+\end{equation*}
+Oba pierwiastki leżą w lewej półpłaszczyźnie więc macierz stanu A jest wykładniczo asymptotycznie stabilna.
+\subsubsection{Twierdzenie Popova - wyznaczenie sektora Popova}
+W celu wyznaczania obszaru dopuszczalnego w pierwszym kroku zmodyfikowano transmitancję tak aby była odpowiednia dla rozważań z ujemnym sprzężeniem zwrotnym, poprzez pomnożenie jej przez \(-1\).
+Kolejną czynnością było wyznaczenie transmitancji widmowej i zmodyfikowanej transmitancji widmowej, czyli zmiana \(Q(\omega)
+\) na \(\omega Q(\omega)\) w nowej transmitancji. Charakterystykę amplitudowo-fazową transmitancji zmodyfikowanej dla dodatnich wartości \( \omega \) przedstawia Rysunek \ref{fig:kopo_4}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{kopo_4.jpg}}
+\centering
+\caption{Charakterystyka amplitudowo-fazowa transmitancji zmodyfikowanej}
+\label{fig:kopo_4}
+\end{figure}
+Aby spełniona była nierówność częstotliwościowa konieczne jest znalezienie prostej, której miejsce zerowe równe \( \frac{1}{m} \) będzie leżeć jak najbliżej punktu \( (0,0) \). Wyznaczona na rysunku część charakterystyki musi leżeć w całości na lewo od tej prostej, przykładowe proste przedstawia Rysunek \ref{fig:kopo_5}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{kopo_5.jpg}}
+\centering
+\caption{Przykładowe proste spełniające warunki zadania}
+\label{fig:kopo_5}
+\end{figure}
+Żadna z tych prostych nie może mieć punktu wspólnego z wyznaczoną charakterystyką. Aby wyznaczyć wartość m najpierw wyznaczono największą osiąganą wartość \( P(\omega)\). W tym celu z wektora wartości w programie matlab została wybrana największa wartość równa \\ 
+\(P_{max}(\omega)  = 4.1602  \),
+co odpowiada 
+\(Q_{max}(\omega)  = 0.4674  \)
+
+Każde możliwe \(m\) musi spełniać warunek 
+\begin{equation*}
+\frac{1}{m}>4.1602=P_{max}(\omega)
+\end{equation*}
+Uzasadnienie : Jeżeli miejsce zerowe prostej będzie większe od wyznaczonej wartości granicznej \(P_{max}(\omega) \), a dla  \(P_{max}(\omega)  = 4.1602  \) wartość na prostej będzie większa od \(Q_{max}(\omega)  = 0.4674  \), to prosta ta będzie spełniać wszystkie konieczne założenia twierdzenia i nierówność częstotliwościowa będzie spełniona więc ostatecznie: 
+\begin{equation*}
+m<0.2404
+\end{equation*}
+Sektor Popova przedstawia Rysunek \ref{fig:kopo_6}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{kopo_6.jpg}}
+\centering
+\caption{Maksymalny sektor Popova zaznaczono kolorem niebieskim, \( m = 0,2404 \) }
+\label{fig:kopo_6}
+\end{figure}
+
+
+\subsection{Zadanie 5.2}
+W zadaniu rozważany jest liniowy układ dynamiczny opisany macierzami: 
+\begin{equation}\label{eq:transfer_2}
+A = 
+\begin{bmatrix}
+-2 & 1 & 0 \\
+-1 & 0 & 1 \\
+-1 & 0 & 0 
+\end{bmatrix}
+\quad
+b = \begin{bmatrix}
+-1 \\
+0 \\
+0 
+\end{bmatrix}
+\quad
+c^{T}=
+\begin{bmatrix}
+1 & 0 & 0
+\end{bmatrix}
+\end{equation}
+System objęty jest dodatnim sprzężeniem zwrotnym za pomocą nieliniowego, statycznego, stacjonarnego elementu o charakterystyce :
+\begin{equation*}
+u(t) = M \arctan y(t), \quad M>0
+\end{equation*}
+\newpage
+W zadaniu zostaną wykonane następujące punkty :
+\begin{itemize}
+\item Określenie sektora Popova,
+\item Określenie maksymalnej możliwej wartości parametru M dla którego charakterystyka elementu nieliniowego mieście się jeszcze w sektorze Popova,
+\item Eksperyment symulacyjny w Simulinku
+\end{itemize}
+\subsubsection{Twierdzenie Popova - podstawowe założenia}
+System opisany macierzami (\ref{eq:transfer_2}) spełnia założenia :
+\begin{itemize}
+\item Jest systemem liniowym, stacjonarnym, skończenie wymiarowym,
+\item Jest systemem SISO,
+\item System objęty jest sprzężeniem zwrotnym \( u(t)=f(y(t)) \), 
+\item Macierz stanu A jest wykładniczo asymptotycznie stabilna,
+\end{itemize}
+Ostatnie ze stwierdzeń można łatwo uzasadnić na podstawie obliczenia wartości własnych macierzy A przy pomocy polecenia \textit{eig(A)} matlaba. Otrzymano następujące wartości :
+\begin{equation*}
+\lambda_{1} =  -1.7549 + 0.0000i \quad
+\lambda_{2} =  -0.1226 + 0.7449i \quad 
+\lambda_{3} =  -0.1226 - 0.7449i 
+\end{equation*}
+Wszystkie wartości własne leżą w lewej półpłaszczyźnie, co uzasadnia ostatnie z wypisanych powyżej założeń.
+\subsubsection{Twierdzenie Popova - wyznaczenie sektora Popova}
+Wyznaczenie sektora Popova rozpoczęto od wyznaczenia transmitancji z równania : 
+\begin{equation*}
+G(s) = \frac{-s^{2}}{s^{3}+2s^{2}+s+1}
+\end{equation*}
+Następnie wyznaczono charakterystykę amplitudowo - fazową dla tej transmitancji oraz dla transmitancji zmodyfikowanej. 
+Charakterystyki te przedstawia Rysunek \ref{fig:kopo_7} i \ref{fig:kopo_8}.
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[b]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{kopo_7.jpg}
+    \caption{Charakterystyka transmitancji przed modyfikacją}
+    \label{fig:kopo_7}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.47\textwidth}
+    \includegraphics[width=\textwidth]{kopo_8.jpg}
+    \caption{Charakterystyka transmitancji po modyfikacji}
+    \label{fig:kopo_8}
+  \end{minipage}
+\end{figure}
+Aby wyznaczyć sektor Popova poprowadzono prostą styczną do otrzymanego wykresu charakterystyki amplitudowo-fazowej. Prosta ta przechodzi przez punkt (0,j) oraz przecina oś rzeczywistą w punkcie \( \frac{1}{M_{0}} \). Graficznie tą prostą przestawia Rysunek \ref{fig:kopo_9}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{kopo_9.jpg}}
+\centering
+\caption{Prosta styczna do zmodyfikowanej charakterystyki amplitudowo-fazowej.  }
+\label{fig:kopo_9}
+\end{figure}
+Najpierw wyznaczono wartość \( M_{0} \). Bezpośrednio z wykresu z Rysunku \ref{fig:kopo_9} widać, że wartość \( M_{0} \) można wyznaczyć z równania ( Kudrewicz 1970, s. 178 ) :
+\begin{equation*}
+\frac{1}{M_{0}}=\underset{0<\omega< \frac{1}{m}}{max} \quad \frac{Re\overline{G}(\omega)}{1-Im\overline{G}(\omega)}
+\end{equation*}
+co po przekształceniach prowadzi do wyniku 
+\begin{equation*}
+M_{0}=\underset{0<\xi< \frac{1}{m}}{min} \quad \frac{1+2\xi}{\xi}+\frac{1-\xi}{1-2\xi}=1+2\sqrt{2-1} = 3
+\end{equation*}
+Kontynuując obliczenia można wyznaczyć zakres wartości \( m \) :
+\begin{equation*}
+\frac{1}{m}>\frac{1}{3} \Leftrightarrow m < 3
+\end{equation*}
+Uzyskany sektor Popova przedstawia Rysunek \ref{fig:kopo_10}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{kopo_10.jpg}}
+\centering
+\caption{Sektor Popova}
+\label{fig:kopo_10}
+\end{figure}
+\subsubsection{Wyznaczenie maksymalnej wartości M}
+Aby wyznaczyć maksymalną wartość stałej M należy znaleźć takie M dla których funkcja \\ \( u = M\arctan y \) w całości zawiera się w obszarze Popova wyznaczonym na Rysunku \ref{fig:kopo_10}.
+Aby było to spełnione musi zachodzić:
+\begin{equation} \label{eq:ineq}
+M\arctan y < 3y \quad \forall y > 0 \quad \wedge \quad M\arctan y \geq 0 \quad \forall y \geq 0
+\end{equation}
+\begin{equation*}
+\arctan y < \frac{3}{M} y \quad \forall y > 0 \quad \wedge \quad M\arctan y \geq 0 \quad \forall y \geq 0
+\end{equation*}
+\begin{equation*}
+y < \tan \frac{3}{M} y \quad \forall y > 0 \quad \wedge \quad M\arctan y \geq 0 \quad \forall y \geq 0
+\end{equation*}
+Z drugiego warunku powyższej koniunkcji wynika, że \( M \geq 0 \), z założeń zadania wiadomo, że \( M > 0 \). 
+\begin{equation*}
+x = \tan cx
+\end{equation*}
+ma dla x = 1 jedno zerowe rozwiązanie, a dla c > 1 nie ma rozwiązań, stąd nierówność (\ref{eq:ineq}) będzie spełniona dla 
+\begin{equation*}
+\frac{3}{M} \geq 1
+\end{equation*}
+i ostatecznie 
+\begin{equation*}
+0 < M \leq 3
+\end{equation*}
+\subsubsection{Eksperyment symulacyjny w Simulinku}
+W celu przeprowadzenia eksperymentu zbudowano model przedstawiony na Rysunku \ref{fig:kopo_11}. 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{kopo_11.jpg}}
+\centering
+\caption{Model systemu}
+\label{fig:kopo_11}
+\end{figure}
+Uzyskane wyniki dla różnych parametrów M przedstawiają Rysunki \ref{fig:kopo_12}, \ref{fig:kopo_13} i \ref{fig:kopo_14}.
+\begin{figure}[H]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{kopo_12.jpg}
+  \caption{M=2}\label{fig:kopo_12}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{kopo_13.jpg}
+  \caption{M=4}\label{fig:kopo_13}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{kopo_14.jpg}
+  \caption{M=10}\label{fig:kopo_14}
+\endminipage
+\end{figure}
+\section{Wnioski końcowe}
+Z obliczeń i rysunków w zadania 5.2 wynika, że system pozostaje stabilny nawet dla większych M niż wynikałoby to z twierdzenia Popova. Powodem takiego zachowania może być fakt, że twierdzenie Popova formułuje jedynie warunki dostateczne, a nie konieczne, a zatem gdy nie są spełnione założenia tego twierdzenia, to nie można wnioskować o stabilności systemu. 
+
+
+Kryterium koła jest w wielu przypadkach łatwiejsze w zastosowaniu, ale często kryterium Popova daje lepsze rezultaty niż kryterium koła. Można to zaobserwować w zadaniu 5.1 gdzie pochylenie prostej w kryterium Popova umożliwiło wyznaczenie wartości \( m \) większej od \( m_{2} \). 
+\end{document}

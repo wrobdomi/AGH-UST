@@ -1,0 +1,310 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+
+\newpagestyle{mypage}{%
+  \headrule
+  \sethead{\MakeUppercase{\thesection\quad \sectiontitle}}{}{\thesubsection\quad \subsectiontitle}
+  \setfoot{}{}{\thesubsubsection\quad \subsubsectiontitle}
+}
+\settitlemarks{section,subsection,subsubsection}
+\pagestyle{mypage}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+
+\tableofcontents
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Zewnętrzna funkcja kary}} \\ \hline Dominik Wróbel & \textbf{07 V 2018} & \textbf{Pon 08:00, s. 111} \\ \hline
+\multicolumn{2}{|l|}{Numery zadań} & 1, 2 \\ \hline 
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest rozwiązanie zadań optymalizacyjnych z wykorzystaniem podejścia opartego o zewnętrzną funkcje kary. Metoda ta pozwala na rozwiązywanie zadań programowania nieliniowego, polega na generowaniu rozwiązań zadania bez ograniczeń i wprowadzaniu kary za przekroczenie tych graniczeń przy pomocy tzw. zewnętrznej funkcji kary.  \\ Działanie funkcji kary można w uproszczeniu opisać jako funkcję, która ma wartość 0 jeśli dana zmienna \( x \in D \), daje natomiast wartość większą od zera gdy znalezione optimum nie zawiera się w rozwiązaniach dopuszczalnych.
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 1 - Minimalizacja funkcjonału z ograniczeniem równościowym }
+W zadaniu rozważany jest funkcjonał postaci 
+\begin{equation*}
+f(x_{1},x_{2})=x_{1}^{2}+x_{2}^{2} \rightarrow min
+\end{equation*}  
+przy danym ograniczeniu równościowym ( numer na liście n = 16 )
+\begin{equation*}
+x_{2} = n = 16 
+\end{equation*}
+Nie trudno zauważyć, że minimum tego funkcjonału przy przyjętym ograniczeniu jest osiągane dla 
+\( x = \begin{bmatrix}
+& 0 & 16 &
+\end{bmatrix} \). 
+Zadanie najpierw rozwiązano przy użyciu funkcji matlaba \textit{fmincon}. Funkcja ta znajduje rozwiązanie optymalne przy określonych ograniczeniach nierównościowych. Rozwiązanie zadania przy pomocy tej funkcji odpowiada rozwiązaniu Zadania Programowania Nieliniowego ( ZPN ), które opisuje model matematyczny :
+\begin{equation*}
+f(x) \rightarrow min
+\end{equation*}
+\begin{equation*}
+x \in X \subset \mathbb{R}^{n}
+\end{equation*} 
+\begin{equation*}
+X = \{ x: g_{i}(x) \leq 0 , \quad i = 1, \dotsc ,m \}
+\end{equation*} 
+\begin{equation*}
+f(x): \mathbb{R}^{n} \rightarrow \mathbb{R}^{1}
+\end{equation*}
+\begin{equation*}
+g_{i}(x): \mathbb{R}^{n} \rightarrow \mathbb{R}^{1} \quad \forall i = 1, \dotsc ,m
+\end{equation*}
+Następnie zadanie rozwiązano przy użyciu kilku iteracji funkcją \textit{fminunc}. Podejście to odpowiada metodzie zewnętrznej funkcji kary, polega na generowaniu ciągu punktów będących rozwiązaniami zadania minimalizacji bez ograniczeń (ZMB). W zadaniu rozważana jest funkcja 
+\begin{equation*}
+P(x,k)=f(x)+ k^{j} \cdot \sum_{i=1}^{m}max[0, g_{i}(x)]^{2}
+\end{equation*}
+z kwadratową funkcją kary:
+\begin{equation*}
+\phi(x,k) = k^{j} \cdot \sum_{i=1}^{m}max[0, g_{i}(x)]^{2}
+\end{equation*}
+W ZPN występują ograniczenia nierównościowe z nierównością słabą, na takich ograniczeniach działa też funkcja matlaba \textit{fmincon}, dlatego konieczna jest zamiana ograniczenia równościowego na dwa ograniczenia nierównościowe w następując sposób: 
+\begin{equation*}
+x_{2} = 1 \iff 
+\begin{cases}
+x_{2} \leq 1 \\
+x_{2} \geq 1
+\end{cases} 
+\end{equation*}
+W implementacji umieszczono następujące wzory :
+Funkcja celu: 
+\begin{equation*}
+f(x) = x_{1}^{2}+x_{2}^{2} \rightarrow min
+\end{equation*}
+Ograniczenia :
+\begin{equation*}
+g_{1}(x) = 1 - x_{2} \leq 0
+\end{equation*}
+\begin{equation*}
+g_{2}(x) = x_{2} - 1 \leq 0
+\end{equation*}
+Dla powyższych ograniczeń funkcja kary z zadania spełnia założenia konieczne do spełnienia przez funkcję kary : 
+\begin{itemize}
+\item \( \phi(x,k^{j}) = 0 \quad \forall x \in X \)
+\item \( \phi(x,k^{j}) > 0 \quad \forall x \not\in X \)
+\item \( \phi(x,k^{j}) \rightarrow \infty \quad dla \quad k \rightarrow \infty \quad \forall x \in X \)
+\item \( \phi(x,k^{j}) > \phi(x,k^{j+1}) \quad \forall x \not\in X \) 
+\end{itemize}
+gdzie
+\begin{equation*}
+\phi(x,k) = k^{j} \cdot max[0, (1-x_{2})]^{2} + k^{j} \cdot max[0, (x_{2} - 1)]^{2}
+\end{equation*}
+\begin{equation*}
+X = \{ (x_{1},x_{2}) : x_{2} = 16 \}
+\end{equation*}
+Implementacje powyższych obliczeń przedstawiają Listing \ref{lis1} i Listing \ref{lis2}.
+\begin{lstlisting}[caption=Znalezienie minimum z ograniczeniami ( fmincon ), captionpos=b,label=lis1, firstnumber=12,frame=single]
+% znalezienie minimum z ograniczeniami
+
+x0 = [ 2, 1]; 
+
+fun = @(x)x(1)^2 + x(2)^2;
+A = [0,-1;
+     0  1];
+ 
+b = [ -1;
+       1];
+
+[x_opt, f_opt] = fmincon(fun,x0,A,b);
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Znalezienie minimum przy użyciu zewnętrznej funkcji kary ( fminunc ), captionpos=b,label=lis2, firstnumber=12,frame=single]
+
+% znalezienie minimum przy uzyciu zewnetrznej f. kary
+
+x0 = [ 2, 1]; 
+max_iter = 10;
+points = [ 0 0 ];
+f_values = [ 0 ];
+diff_table = [ 0 ];
+
+k=1;
+k_table = [ k ];
+fun_1 = @(x)x(1)^2 + x(2)^2 + k*( ( max( 0, 1-x(2) ) ) ) +  k*( ( max( 0, x(2)-1 ) ) );
+
+for n = 1:max_iter
+    [x_opt_k, fval] = fminunc(fun_1,x0);
+    
+    diff = abs( f_opt - fval );
+    diff_table = [ diff_table; diff ];
+    f_values = [ f_values ; fval ];  
+    points = [ points ; x_opt_k ];
+    
+    x0 = x_opt_k;
+    k= k*1.15;
+    k_table = [ k_table ; k ];
+    fun_1 = @(x)x(1)^2 + x(2)^2 + k*( ( max( 0, 1-x(2) ) ) ) +  k*( ( max( 0, x(2)-1 ) ) );
+
+end
+
+\end{lstlisting}
+
+Po znalezieniu wartości wyniki zostały przedstawione na wykresie, realizujący to kod przedstawia Listing \ref{lis3}
+\begin{lstlisting}[caption=Stworzenie wykresu z wynikami, captionpos=b,label=lis3, firstnumber=12,frame=single]
+
+% Rysowanie punktow 
+
+[x1, x2] = meshgrid( -3:0.1:13, -1:0.1:17 ); 
+rys_war = x1 .^ 2 + x2 .^ 2; 
+contour(x1, x2, rys_war, ...
+[0.1, 1, 2, 10, 20, 30, 50, 100, 200, 300 ], 'ShowText', 'on');
+hold on; 
+plot(points(:,1),points(:,2),'-o');
+xlabel('x1') % x-axis label
+ylabel('x2') % y-axis label
+
+\end{lstlisting}
+
+Wyniki wraz z poziomicami przedstawia Rysunek \ref{fig:zkara_1}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{zkara_1.jpg}}
+\centering
+\caption{Znalezione przez metodę zewnętrznej funkcji kary punkty w kolejnych iteracjach.}
+\label{fig:zkara_1}
+\end{figure}
+
+Znalezione przez metodą rozwiązania wraz z numerem iteracji przedstawiono w poniższej tabeli.  
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{zkara_2.jpg}}
+\centering
+\caption{Tabela z wynikami działania metody zewnętrznej funkcji kary.}
+\label{fig:zkara_2}
+\end{figure}
+
+Porównując otrzymany w ostatniej iteracji wynik z analitycznie wyznaczonym minimum stwierdzono, że błąd jest niewielki, rzędu 6 miejsca po przecinku dla \( x_{1} \), narzucone ograniczenie \(x_{2} = 16 \) została natomiast osiągnięte w procesie szukania minimum.  
+
+Z wyników można wyciągnąć wniosek, że im 'dalej' od obszaru dopuszczalnego znajduje się rozwiązanie tym większa wartość funkcji kary, a tym samym większa zmiana rozwiązania w kolejnej iteracji, im bliżej wartości optymalnej tym zmiany i wartość funkcji kary są mniejsze. 
+ 
+\subsection{Zadanie 2 - Minimalizacja odległości od punktu}
+W zadaniu należy zminimalizować odległość od punktu \( (0,0) \) przy danych ograniczeniach. W pierwszej kolejności napisano funkcję celu odpowiadającą zagadnieniu. W tym celu wykorzystano metrykę euklidesową: 
+\begin{equation*}
+f_{1}(x_{1},x_{2}) = \sqrt{(x_{1}-0)^{2}+(x_{2}-0)^{2}}
+\end{equation*}
+Wyrażenie z pierwiastkiem będzie mieć wartość minimalną gdy wyrażenie pod pierwiastkiem będzie mieć wartość minimalną dlatego w zadaniu rozważana jest funkcja celu :
+\begin{equation*}
+f(x_{1},x_{2}) = (x_{1}-0)^{2}+(x_{2}-0)^{2}
+\end{equation*}
+Następnie sprawdzono poprawność postawionego zadania. Zadanie ma dwa ograniczenia równościowe :
+\begin{equation*}
+g_{1}(x) = x_{1}+x_{2}-1 = 0
+\end{equation*}
+\begin{equation*}
+g_{2}(x) = x_{1}+x_{2}-2 = 0
+\end{equation*}
+Wyznaczając z pierwszego z tych ograniczeń wartość \( x_{1} \):
+\( x_{1}=1-x_{2} \) i wstawiając do drugiego równania otrzymamy sprzeczność, dlatego \textbf{zadanie jest źle postawione}. 
+
+Od razu można więc stwierdzić, że zbiór rozwiązań dopuszczalnych jest zbiorem pustym, co będzie pociągać za sobą błąd w działaniu algorytmu, ponieważ funkcja kary zawsze będzie dawać wartość niezerową. Aby to udowodnić przetestowano działanie algorytmu dla zadania źle postawionego. 
+
+Ograniczenia równościowe zamieniono na ograniczenia nierównościowe analogicznie jak w zadaniu 1. 
+Funkcja celu : 
+\begin{equation*}
+f(x) = (x_{1}-0)^{2}+(x_{2}-0)^{2} \rightarrow min
+\end{equation*}
+Ograniczenia :
+\begin{equation*}
+g_{1}(x) = x_{1} + x_{2} -1 \leq 0
+\end{equation*}
+\begin{equation*}
+g_{2}(x) = -x_{1} - x_{2} + 1 \leq 0
+\end{equation*}
+\begin{equation*}
+g_{3}(x) = x_{1} + x_{2} - 2 \leq 0
+\end{equation*}
+\begin{equation*}
+g_{4}(x) = -x_{1} - x_{2} + 2 \leq 0
+\end{equation*}
+Implementację metod przeprowadzono tak jak w Zadaniu 1, zmieniona została jedynie funkcja kary i celu, co przedstawia Listing \ref{lis4}.
+\begin{lstlisting}[caption=Funkcja celu dla zadania 2, captionpos=b,
+label=lis4, firstnumber=12,frame=single]
+
+fun_1 = @(x)x(1)^2 + x(2)^2 + k*( ( max( 0, x(1)+x(2)-1 )^2 )  ) + ...
+k*(  ( max( 0, -x(1)-x(2)+1 )  )^2 ) + ...
+k*( ( max( 0, x(1)+x(2)-2 )^2 )  ) +  k*(  ( max( 0, -x(1)-x(2)+2 )^2 ) ) ;
+\end{lstlisting}
+
+ 
+
+Wyniki wraz z poziomicami przedstawia Rysunek \ref{fig:zkara_3}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{zkara_3.jpg}}
+\centering
+\caption{Znalezione przez metodę zewnętrznej funkcji kary punkty w kolejnych iteracjach.}
+\label{fig:zkara_3}
+\end{figure}
+
+\newpage
+Znalezione przez metodą rozwiązania wraz z numerem iteracji przedstawiono w poniższej tabeli. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{zkara_4.jpg}}
+\centering
+\caption{Tabela z wynikami działania metody zewnętrznej funkcji kary.}
+\label{fig:zkara_4}
+\end{figure}
+
+
+Metoda znajduje pewne optimum, ale nie spełnia ono założeń, co łatwo sprawdzić poprzez podstawienie otrzymanego minimum do ograniczeń. Metoda nie jest więc odporna na zadania w których obszar dopuszczalny jest zbiorem pustym.
+
+Analityczne rozwiązanie tego zadania nie dałoby również wyniku zgodnego z ograniczeniami więc trudno w tym przypadku o porównanie z rzeczywistą wartością minimum.
+
+
+\section{Wnioski końcowe}
+
+Metoda zewnętrznej funkcji kary pozwala na rozwiązywanie zadań optymalizacji z ograniczeniami poprzez zastosowanie funkcji, która daje wartość niezerową gdy znalezione rozwiązanie nie znajduje się w obszarze dopuszczalnym. Pomimo to, otrzymany wynik należy zawsze zweryfikować, ponieważ nie zawsze metoda daje wynik zgodny z ograniczeniami, co można zauważyć w zadaniu 1 ( potrzebna jest odpowiednia liczba iteracji aby osiągnąć wynik zwierający się w zbiorze dopuszczalnym ) oraz w zadaniu 2 ( metoda znajduje wynik, który nie zawiera się w zbiorze dopuszczalnym dla dowolnej liczby iteracji ). 
+
+Nie bez znaczenia dla jakości wykonywania metody są parametry algorytmu, najbardziej znaczącym wydaje się być parametr k, który decyduje o tym jak duża kara jest nałożona na daną funkcję za wyjście poza obszar dopuszczalny. Z moich obserwacji wynika, że wartość tą najlepiej dobierać eksperymentalnie, ponieważ zasada, że im większa wartość tym lepiej nie zawsze działa dla wszystkich funkcji.
+  
+\end{document}

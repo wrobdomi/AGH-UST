@@ -1,0 +1,305 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+
+\newpagestyle{mypage}{%
+  \headrule
+  \sethead{\MakeUppercase{\thesection\quad \sectiontitle}}{}{\thesubsection\quad \subsectiontitle}
+  \setfoot{}{}{\thesubsubsection\quad \subsubsectiontitle}
+}
+\settitlemarks{section,subsection,subsubsection}
+\pagestyle{mypage}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Metody gradientowe}} \\ \hline Dominik Wróbel & \textbf{09 IV 2018} & \textbf{Pon 08:00, s. 111} \\ \hline
+\multicolumn{2}{|l|}{Numery zadań} & 1, 2, 5 \\ \hline 
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest zapoznanie się z metodami gradientowymi poszukiwania minimum funkcji. Analiza działania różnych metod  dla różnych funkcji pozwoli na określenie słabych i mocnych stron tych metod. Porównanie metod pozwoli na wybranie najlepszej dla danego problemu. 
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 1 - obserwacja zjawiska zygzakowania}
+W zadaniu poszukiwane jest minimum funkcji celu danej wzorem:
+\begin{equation*}
+Q(x_{1},x_{2})=x_{1}^{2}+ax_{2}^{2}
+\end{equation*}
+W tym celu wykorzystywana jest metoda najszybszego spadku. Rozważane są różne postacie funkcji celu dla parametru \(a\):
+\begin{itemize}
+\item \(a=1\),
+\item \(a=0.5\),
+\item \(a=0.3\)
+\end{itemize}
+Zmiana parametru \(a\) powoduje zmianę kształtu poziomic funkcji celu. Dzięki temu możliwe jest obserwowanie wpływu wydłużania zbiorów poziomicowych i punktów startowych na działanie metody najszybszego spadku. \par
+W funkcjach wprowadzono modyfikacje w celu dostosowania działania metody do zadania. Zmieniono funkcję kosztu tak aby obliczała wartość funkcji celu zgodnie ze wzorem podanym na początku zadania: 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{KOSZT.jpg}}
+\centering
+\caption{Funkcja obliczająca wartość funkcji celu w danym punkcie}
+\label{fig:KOSZT}
+\end{figure}
+Zmodyfikowano także plik obliczający gradient podstawiając wzór na gradient funkcji z zadania:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{grad_2.jpg}}
+\centering
+\caption{Funkcja obliczająca gradient w danym punkcie}
+\label{fig:grad_2}
+\end{figure}
+Napisano skrypt umożliwiający wywoływanie funkcji granad oraz rysowanie znalezionych rozwiązań wraz z kierunkami gradientów:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{grad_1.jpg}}
+\centering
+\caption{Funkcja rysująca działanie metody}
+\label{fig:grad_1}
+\end{figure}
+\newpage
+
+\subsubsection{Zadanie 1 - Parametr a = 1}
+Dla parametru a = 1 poziomice są okręgami. Nie trudno zauważyć, że minimum funkcji celu jest punkt (0,0). Punkt startowy przyjęto dla różnych wartości parametru a taki sam zgodnie z numerem na liście ćwiczeniowej : 
+\begin{equation*}
+x_{0}=\left[n,\frac{n}{2}\right]=\left[16,8\right]
+\end{equation*}
+Uzyskane wyniki przedstawia Rysunek \ref{fig:grad_3}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{grad_3.jpg}}
+\centering
+\caption{a = 1, poszukiwanie minimum dla różnych punktów początkowych}
+\label{fig:grad_3}
+\end{figure}
+
+\subsubsection{Zadanie 1 - Parametr a = 0.3}
+Dla parametru a = 0.3 poziomice są elipsami. Nie trudno zauważyć, że minimum funkcji celu jest punkt (0,0). Punkt startowy przyjęto dla różnych wartości parametru a taki sam zgodnie z numerem na liście ćwiczeniowej : 
+\begin{equation*}
+x_{0}=\left[n,\frac{n}{2}\right]=\left[16,8\right]
+\end{equation*}
+Uzyskane wyniki przedstawia Rysunek \ref{fig:grad_4}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{grad_4.jpg}}
+\centering
+\caption{a = 0,3, poszukiwanie minimum dla różnych punktów początkowych}
+\label{fig:grad_4}
+\end{figure}
+
+\subsubsection{Zadanie 1 - Parametr a = 0.5}
+Dla parametru a = 0.5 poziomice są elipsami. Nie trudno zauważyć, że minimum funkcji celu jest punkt (0,0). Punkt startowy przyjęto dla różnych wartości parametru a taki sam zgodnie z numerem na liście ćwiczeniowej : 
+\begin{equation*}
+x_{0}=\left[n,\frac{n}{2}\right]=\left[16,8\right]
+\end{equation*}
+Uzyskane wyniki przedstawia Rysunek \ref{fig:grad_5}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{grad_5.jpg}}
+\centering
+\caption{a = 0.5, poszukiwanie minimum dla różnych punktów początkowych}
+\label{fig:grad_5}
+\end{figure}
+
+\subsection{Zadanie 2 - Porównanie gradientowych metod optymalizacji}
+Zadanie to polega na porównaniu gradientowych metod optymalizacji. Badana funkcja celu to :
+\begin{equation*}
+Q(x_{1},x_{2})=6x_{1}^{2}+6x_{1}x_{2}+x_{2}^{2}+4.5(e^{x_{1}}-x_{1}-1)+1.5(e^{x_{2}}-x_{2}-1)
+\end{equation*}
+W zadaniu tym ponownie zmodyfikowano funkcje koszt.m oraz gradie.m aby dostosować je do funkcji celu z zadania.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{grad_6.jpg}}
+\centering
+\caption{Funkcja koszt.m dla zadania 2}
+\label{fig:grad_6}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{grad_7.jpg}}
+\centering
+\caption{Funkcja gradie.m dla zadania 2}
+\label{fig:grad_7}
+\end{figure}
+W niewielkim zakresie konieczna była także modyfikacja skryptu granad, tak aby odpowiednio dopasować rozmiary mnożonych macierzy dla poprawnego działania metody. Do wykonania wykresów została wykorzystana funkcja z zadania poprzedniego.
+
+Przeanalizowane zostaną metody:
+\begin{itemize}
+\item Metoda najszybszego spadku,
+\item Metoda Fletchera - Reevesa
+\item Metoda Polaka - Ribiere'a,
+\item Metoda z pełną formułą na współczynnik \( \beta \)
+\end{itemize}
+W zadaniu zostały przyjęte następujące założenia:
+\begin{itemize}
+\item Punkt startowy zgodnie z listą ćwiczeniową ( n = 16 ) to \( (-48,16) \)
+\item Max. liczba iteracji to 20
+\item \( x^{apr} \) - aktualne przybliżenie rozwiązania optymalnego,
+\item \( Q^{apr} = Q(x^{apr}) \)
+\item \( x^{*} \) - rozwiązanie optymalne ( wyznaczone analitycznie )
+\item \( Q^{*}=Q(x^{*})\)
+\item Norma gradientu nie mniejsza od \( 0.001 \) 
+\end{itemize}
+Na rysunkach wynikowych w celu lepszej widoczności działania metody kolejne kierunki zaznaczono strzałkami.
+\newpage
+\subsubsection{Zadanie 2 - Metoda najszybszego spadku}
+Dla punktu startowego (-48,16) działanie metody przedstawia Rysunek \ref{fig:grad_8}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{grad_8.jpg}}
+\centering
+\caption{Metoda najszybszego spadku, punkt początkowy ( -48 , 16 )}
+\label{fig:grad_8}
+\end{figure}
+\subsubsection{Zadanie 2 - Metoda Fletchera - Reevesa }
+Dla punktu startowego (-48,16) działanie metody przedstawia Rysunek \ref{fig:grad_10}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{grad_10.jpg}}
+\centering
+\caption{Metoda Fletchera - Reevesa, punkt początkowy (-48,16) }
+\label{fig:grad_10}
+\end{figure}
+\subsubsection{Zadanie 2 - Metoda Polaka - Ribiere'a }
+Dla punktu startowego (-48,16) działanie metody przedstawia Rysunek \ref{fig:grad_11}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{grad_11.jpg}}
+\centering
+\caption{Metoda Polaka - Ribiere'a, punkt początkowy (-48,16) }
+\label{fig:grad_11}
+\end{figure}
+\subsubsection{Zadanie 2 - Metoda z pełną formułą na współczynnik beta }
+Dla punktu startowego (-48,16) działanie metody przedstawia Rysunek \ref{fig:grad_12}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{grad_12.jpg}}
+\centering
+\caption{Metoda z pełną formułą na współczynnik beta, punkt początkowy (-48,16) }
+\label{fig:grad_12}
+\end{figure}
+\subsubsection{Zadanie 2 - Tabelaryczne porównanie metod}
+Zestawienie porównawcze metod przedstawiają Tabele 1, 2, 3, 4 i 5.  
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{met_1.jpg}}
+\centering
+\caption{Metoda najszybszego spadku }
+\label{fig:met_1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{met_2.jpg}}
+\centering
+\caption{Metoda Fletchera - Reevesa }
+\label{fig:met_2}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{met_3.jpg}}
+\centering
+\caption{Metoda Polaka - Ribiere'a }
+\label{fig:met_3}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{met_4.jpg}}
+\centering
+\caption{Z pełną formułą na współczynnik beta }
+\label{fig:met_4}
+\end{figure}
+
+\subsection{ Zadanie 5 - Dolina bananowa Rossenbrocka }
+W tym zadaniu wyznaczane jest minimum funkcji celu:
+\begin{equation*}
+Q(x_{1},x_{2})=100(x_{2}-x_{1}^{2})^{2}+(1-x_{1})^2
+\end{equation*}
+Zgodnie z numerem na liście ćwiczeniowej przyjęto, że punkt startowy to
+\begin{equation*}
+x_{0}=\left[n,\frac{n}{2}\right]=\left[16,8\right]
+\end{equation*}
+Zmodyfikowaną funkcję koszt.m przedstawia Rysunek \ref{fig:grad_13}. Zmodyfikowaną funkcję gradie.m przedstawia Rysunek \ref{fig:grad_14}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{grad_13.jpg}}
+\centering
+\caption{koszt.m dla zadania 5}
+\label{fig:grad_14}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{grad_14.jpg}}
+\centering
+\caption{gradie.m dla zadania 5}
+\label{fig:grad_13}
+\end{figure}
+Zbadano metody:
+\begin{itemize}
+\item Metoda najszybszego spadku,
+\item Metoda Fletchera - Reevesa
+\item Metoda Polaka - Ribiere'a,
+\item Metoda z pełną formułą na współczynnik \( \beta \)
+\end{itemize}
+\newpage
+\subsubsection{Zadanie 5 - Metoda najszybszego spadku}
+Dla punktu startowego (32,16) działanie metody przedstawia Rysunek \ref{fig:gradd_8}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{gradd_8.jpg}}
+\centering
+\caption{Metoda najszybszego spadku, punkt początkowy ( 32 , 16 )}
+\label{fig:gradd_8}
+\end{figure}
+\subsubsection{Zadanie 5 - Metoda Fletchera - Reevesa }
+Dla punktu startowego (32,16) działanie metody przedstawia Rysunek \ref{fig:gradd_10}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{gradd_10.jpg}}
+\centering
+\caption{Metoda Fletchera - Reevesa, punkt początkowy (32, 16) }
+\label{fig:gradd_10}
+\end{figure}
+\subsubsection{Zadanie 5 - Metoda Polaka - Ribiere'a }
+Dla punktu startowego (32,16) działanie metody przedstawia Rysunek \ref{fig:gradd_11}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{gradd_11.jpg}}
+\centering
+\caption{Metoda Polaka - Ribiere'a, punkt początkowy (32,16) }
+\label{fig:gradd_11}
+\end{figure}
+\subsubsection{Zadanie 5 - Metoda z pełną formułą na współczynnik beta }
+Dla punktu startowego (32,16) działanie metody przedstawia Rysunek \ref{fig:gradd_12}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{gradd_12.jpg}}
+\centering
+\caption{Metoda z pełną formułą na współczynnik beta, punkt początkowy (32,16) }
+\label{fig:gradd_12}
+\end{figure}
+
+Zestawienie porównawcze metod przedstawia Tabela 5.  
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.9]{met_5.jpg}}
+\centering
+\caption{Porównanie metod - Zadanie 5 }
+\label{fig:met_5}
+\end{figure}
+
+\section{Wnioski końcowe}
+Zadanie 1 pozwala na zaobserwowanie wad metody najszybszego spadku, dla poziomic będących okręgami metoda ta bardzo szybko znajduje minimum, wystarczy jedna iteracja, natomiast dla poziomic będących elipsami kierunki gradientów zmieniają się w sposób 'zygzakowaty', co powoduje, że metoda ta jest dość wolna w użyciu.
+
+W zadaniu drugim zostało wykonane porównanie czterech metod gradientowych. Metoda najszybszego spadku nie znalazła minimum z określoną dokładnością przed osiągnięciem limitu iteracji ( max. 20 ). Inne metody znacznie dokładniej i szybciej były w stanie znaleźć minimum, wynika to z innego sposobu obliczania przez te metody gradientu. Zadanie 2 pokazuje również różnice pomiędzy gradientami obliczanymi przez różne metody. Zależnie od wybory metody kierunki te są inne, co prowadzi do różnych rezultatów i różnych szybkości zbieżności do punktu optymalnego.
+
+W zadaniu 5 żadna z metod nie dała zadowalających rezultatów, pomimo, że metoda najszybszego spadku poradziła sobie najgorzej, a inne metody lepiej, to każda z nich wykorzystała maksymalną liczbę 20 iteracji. 
+\end{document}

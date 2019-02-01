@@ -1,0 +1,384 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Identyfikacja procesów przemysłowych }}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+%\thispagestyle{mypage_1}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Identyfikacja procesów przemysłowych}} \\ \hline Dominik Wróbel & 27 XI 2018 / 04 XII 2018 & Wt. 13:45, s. 111 \\ \hline
+\multicolumn{3}{|c|}{Laboratorium 7} \\ \hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\section{Przebieg ćwiczenia}
+
+Laboratorium polega na identyfikacji parametrów modelu serwomechanizmu z silnikiem prądu stałego. Rozważany w zadaniu model jest uproszczonym modelem, który otrzymywany jest z równań mechanicznego i elektrycznego po pominięciu indukcyjności.
+  
+\subsection{Zadanie 1 }
+Celem zadania jest wyznaczenia parametrów \( H \) oraz \( K \), których znaczenie wynika z poniższych wzorów uzyskanych z równania wyjściowego. 
+Wyjściowe uproszczone równanie serwomechanizmu z silnikiem prądu stałego wyraża się wzorem
+\begin{align*}
+& \frac{d\omega}{dt} = \frac{k_m}{JR}(u-k_e\omega -\frac{R}{k_m}f_t(\omega)) \\
+& k_m - \text{stała mechanicza} \\
+& J - \text{ moment bezwładności } \\
+& R - \text{rezystancja silnika} \\
+& k_e - \text{stała elektryczna} \\
+& f_t - \text{funkcja opisująca wypadkowy moment sił oporu}
+\end{align*}
+
+Wielkością mierzoną w laboratorium której pomiary użyte są w obliczeniach jest kąt obrotu wału silnika. 
+
+Wprowadzając oznaczenia:
+\begin{align*}
+& x_1 = \varphi  - \text{kąt obrotu w radianach} \\
+& x_2 = \omega
+\end{align*}
+model przekształcony może zostać do postaci:
+\begin{align*}
+& \dot{x}_1 = x_2, \ x_1(0)=x_{10} \\
+& \dot{x}_2 = K(u-H(x_2)), x_2(0)=x_{20} \\
+& H(\omega) = k_e\omega-\frac{R}{k_m} \\
+& K = \frac{k_m}{JR}
+\end{align*}
+
+Zadanie rozpoczęto od wyznaczenia wartości funkcji H metodą najmniejszych kwadratów. W pierwszej kolejności na podstawie pomiarów wyznaczono zależność obrotów silnika od sterowania w stanie ustalonym. Na jej podstawie przy pomocy metody najmniejszych kwadratów ( \textit{polyfit} ) wyznaczono współczynniki wielomianu drugiego stopnia który przybliża funkcję H:
+\begin{align*}
+H(\omega) = 
+\begin{cases}
+a^+\omega^2 + b^+\omega + c^+, & \omega>10^{-2}rad/s \\
+a^-\omega^2 + b^-\omega + c^-, & \omega<10^{-2}rad/s \\
+0, & poza tym
+\end{cases}
+\end{align*}
+
+Otrzymane wartości współczynników to:
+\begin{align*}
+& a^+ = -1,56e-10 \	b^+ = 2,93e-05	\ c^+ = 0,10 \\
+& a^- = -1,86	\ b^- = 2,17 \ c^- = -0,042
+\end{align*}
+
+Wykres funkcji wraz z naniesionymi wartościami pomiarów przedstawia Rysunek \ref{fig:7_01}.
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{7_01.jpg}}
+\centering
+\caption{Funkcja \( H(\omega) \) wraz z naniesionymi punktami pomiarowymi}
+\label{fig:7_01}
+\end{figure}
+
+Kolejnym krokiem w rozwiązaniu było wyznaczenie parametru K. Parametr ten wyznaczono minimalizując wskaźnik jakości:
+\begin{align*}
+Q(K,x_{10},x_{20}) = \frac{1}{2N}\sum _{k=1}^N(x_1(kT_0)-y(kT_0))^2
+\end{align*}
+Minimalizację przeprowadzono korzystając z funkcji matlaba \textit{lsqnonlin} oraz całkowania metodą stało-krokową Rungego-Kutty. Porównanie wartości prędkości i położenia dla danych z modelu i pomiarów przedstawia Rysunek \ref{fig:7_02}. Uzyskana wartość parametru K = 5.45e+04.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.25]{7_02.jpg}}
+\centering
+\caption{Porównanie modelu oraz pomiarów dla prędkości i położenia. Kolor czerwony - model.}
+\label{fig:7_02}
+\end{figure}
+
+W celu porównania, wszystkie wykonane czynności powtórzono dla modelu liniowego:
+\begin{align*}
+& \dot{x}_1 = x_2 \\
+& \dot{x}_2 = -\frac{1}{T}x_2+\frac{k}{T}u
+\end{align*}
+
+Otrzymano wartości parametrów T = 2.91e-04 oraz k = 13.85.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.4]{7_04.jpg}}
+\centering
+\caption{Funkcja \( H(\omega) \) wraz z naniesionymi punktami pomiarowymi - model liniowy}
+\label{fig:7_04}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.25]{7_03.jpg}}
+\centering
+\caption{Porównanie modelu liniowego oraz pomiarów dla prędkości i położenia. Kolor czerwony - model.}
+\label{fig:7_03}
+\end{figure}
+
+
+
+\subsubsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 1, captionpos=b,label=lis1, firstnumber=1,frame=single]
+close all;
+clear all;
+
+load('data_01.mat')
+
+timeInterval = 0.01;
+
+for n=1:20
+    
+    % reading data
+    un = data(n).u;
+    yn = data(n).y;
+    
+    % Y Axis - U %
+    % last 20 samples 
+    un_20 = un(end-19:end);
+    % mean of last 20 samples
+    un_20Mean = mean(un_20);
+    % add mean of last 20 samples to vector 
+    uLast20(n) = un_20Mean; 
+    
+    % X Axis - Velocity %
+    
+    % diff of samples
+    yn_diff = diff(yn);
+    % calculating velocity
+    %yn_velocity = yn_diff / timeInterval;
+    yn_velocity = yn_diff./timeInterval;
+    % last 20 samples 
+    yn_velocity = yn_velocity(end-20:end);
+    
+    % mean velocity 
+    meanVelocity(n) = mean(yn_velocity);
+    
+end
+
+figure();
+plot( meanVelocity, uLast20, 'o');
+
+
+% Calculating a+, b+, c+ coef
+pPlus = polyfit(meanVelocity(12:20),uLast20(12:20),2)
+% Calculating a-, b-, c- coef
+pMinus = polyfit(meanVelocity(2:10),uLast20(2:10),2)
+
+xPlus = 0:0.1:50000;
+xMinus = -50000:0.1:0;
+
+yPlusResult = pPlus(1)*xPlus.^2 + pPlus(2)*xPlus + pPlus(3);
+
+yMinusResult = pMinus(1)*xMinus.^2 + pMinus(2)*xMinus + pMinus(3);
+
+hold on;
+grid on;
+xlabel('\omega');
+ylabel('U');
+plot(xPlus, yPlusResult, 'r');
+plot(xMinus, yMinusResult, 'r');
+
+LB=-inf;
+UB=inf;
+X0=1;  
+xopt1=lsqnonlin('cel',X0,LB,UB,[],data(22).u(1:5000),
+data(22).t(1:5000),(data(22).y(1:5000))); 
+tf=data(22).t(end); 
+[t,x]=rk42([0;0],data(22).u,tf,K1); 
+\end{lstlisting}
+
+\subsection{Zadanie 2 }
+
+W zadaniu tym identyfikowanym obiektem jest silnik prądu stałego napędzający śmigło. Prędkość obrotowa śmigła jest mierzona za pomocą tachoprądnicy o stałej \( \frac{0.52V}{1000obr.} \). Napięcie jest wzmacniane i mierzone przy pomocy przetwornika A/D. Model silnika i śmigła ma postać:
+\begin{align*}
+& \dot{x}=K(u-H(x)), \ x(0)=x_0
+\end{align*}
+
+Zależność pomiędzy prędkością obrotową śmigła, a wyjściem przetwornika A/D ma postać:
+\begin{align*}
+\omega = au + b
+\end{align*}
+W pierwszej kolejności wyznaczono parametry a i b prostej. Prędkość otrzymano korzystając ze zmierzonego napięcia oraz stałej tachoprądnicy. Następnie skorzystano w metody najmniejszych kwadratów w celu wyznaczenia parametrów a oraz b. Otrzymano wartości a = 319,59 oraz b = -20,08. Prostą wraz z pomiarami prezentuje Rysunek \ref{fig:7_05}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{7_05.jpg}}
+\centering
+\caption{Prosta \( \omega = au + b \)}
+\label{fig:7_05}
+\end{figure}
+
+Kolejną czynnością było wyznaczenie współczynników funkcji \( H(\omega) \). W tym zadaniu funkcja ta jest modelowana wielomianem 3 stopnia:
+\begin{align*}
+& H(\omega)=az^3+bz^2+cz+d \\
+& z = 10^{-3}\omega
+\end{align*}
+W tym celu ponownie skorzystano z metody najmniejszych kwadratów oraz wcześniej wyznaczonej prędkości. Otrzymano następujące wartości współczynników:
+\begin{align*}
+& a = 0,022 \\
+& b = 0,00027 \\
+& c = 0,149 \\
+& d = 0,00018 \\
+\end{align*}
+
+Otrzymaną funkcję przedstawia Rysunek \ref{fig:7_06}.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{7_06.jpg}}
+\centering
+\caption{Prosta \( H(\omega) \)}
+\label{fig:7_06}
+\end{figure}
+
+Następnie wyznaczono parametr K metodą opisaną w Zadaniu 1. Otrzymano wartość parametru k równą 7,064. Porównanie modelu z pomiarami przedstawia Rysunek \ref{fig:7_07}.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.45]{7_07.jpg}}
+\centering
+\caption{Prosta \( Pomiar - kolor czerwony, Model - kolor niebieski. \)}
+\label{fig:7_07}
+\end{figure}
+
+
+\subsubsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 2, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+close all;
+
+load('data_01_ident.mat')
+
+% --- READING DATA ---- % 
+u = [-1.560 -1.490 -1.375 -1.321 -1.204 -1.087 -0.945 -0.783 
+-0.587 -0.347 0 0.350 0.583 0.765 0.924 1.054 1.172 1.263 1.347 1.429 1.493];
+u_ad = [-9.5 -8.9 -8.3 -7.6 -7.1 -6.4 -5.6 -4.6 -3.5 -2.1 0 2.1 
+3.4 4.6 5.6 6.4 7.1 7.7 8.2 8.8 9.1];
+
+
+% --- CALCULATING a and b --- %
+scale = 0.52 / 1000;
+velocity = u ./ scale;
+abCoefs = polyfit(u_ad,velocity,1);
+% --- CALCULATING f(u_ad) = Omega --- %
+Hw = control;
+figure();
+hold on;
+grid;
+xlabel('u_{ad}');
+ylabel('\omega')
+plot(u_ad,velocity,'or');
+plot(u_ad, polyval(abCoefs, u_ad),'-');
+hold off;
+
+
+% --- CALCULATING H(w) = f(w) --- %
+% --- CALCULATING a, b, c and d H(w) --- %
+wH = velocity;
+wH = 10^-3 .* wH;
+abcdCoefs = polyfit(wH,control,4);
+
+figure()
+hold on;
+grid;
+xlabel('\omega');
+ylabel('H(\omega)');
+plot(wH, control, 'or');
+plot(wH, polyval(abcdCoefs, wH),'-');
+hold off;
+
+
+load('data_02_ident.mat')
+
+
+figure()
+wID=polyval(velocity,u_ad)/1000;
+hold on;
+
+plot(t,u,'g');
+plot(t,wID,'r');
+
+
+LB = [-100 -100]; 
+UB = [100 100]; 
+x0 = 3;
+K = 7;
+Kopt = lsqnonlin('cel', [x0 K]', LB, UB, [], u, t, wID, abcdCoefs);
+
+\end{lstlisting}
+
+
+
+\section{Wnioski końcowe}
+W badanym zagadnieniu zgodnie z oczekiwaniami sprawdziły się modele wyższego rzędu.  Ważnym i ciekawym aspektem rozważanego zagadnienia było modelowanie funkcji na dwóch rozłącznych przedziałach. Takie podejście daje przewagę nad rozważaniem jednego przedziału w przypadku gdy funkcja jest silnie nieliniowa w danym przedziale. Między innymi z tego też powodu funkcja liniowa dała gorsze rezultaty w Zadaniu 1.
+
+ 
+\end{document}

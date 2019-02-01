@@ -1,0 +1,275 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Identyfikacja procesów przemysłowych }}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+%\thispagestyle{mypage_1}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Identyfikacja procesów przemysłowych}} \\ \hline Dominik Wróbel & 23 X 2018 & Wt. 13:45, s. 111 \\ \hline
+\multicolumn{3}{|c|}{Laboratorium 2} \\ \hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 1 }
+
+Zadanie polega na wyznaczeniu parametrów obiektu opisanego transmitancją 
+\begin{align*}
+& G(s)=\frac{k}{Ts+1}
+\end{align*}
+który pobudzany jest białym szumem Gaussa o wariancji \( \sigma ^2 = 1 \). Częstotliwość próbkowania jest równa \( f_0 = 1kHz \). Sygnałem mierzonym jest sygnał wyjściowy układu. Parametry wyznaczone zostaną na podstawie funkcji autokorelacji oraz widma mocy sygnału wyjściowego. 
+
+Zadanie rozpoczęto od wyznaczenia teoretycznego widma mocy sygnału. 
+\begin{align*}
+& S(\omega) = |G(i\omega)|^2 \\
+& |G(i\omega)|^2 = \frac{|k|^2}{|T\omega j + 1|^2} = \frac{\sqrt{k^2}^2}{\sqrt{T^2\omega ^2 + 1}^2} = \frac{k^2}{1+T^2\omega ^2}
+\end{align*}
+
+Następnie przy użyciu matlaba narysowano widmo mocy na podstawie pomiarów z zadania przy użyciu estymatora Yule’a-Walker’a . Na podstawie tych danych wybrano dwa punktu z widma na podstawie których wyznaczone zostały parametry k oraz T modelu. 
+\begin{align*}
+& 10\log _{10} S(\omega) = 10 \log _{10} \frac{k^2}{1+T^2 \omega ^2} \\
+& S(\omega ) = \frac{k^2}{T^2 \omega ^2 + 1} \\
+& \omega = 0 \rightarrow \sqrt{S(\omega)} = \frac{k}{1+0} = k \\
+& \omega = 1 \rightarrow S(\omega) = \frac{k^2}{1+T^2} \rightarrow T = \sqrt{\frac{k^2}{S(\omega)}-1}
+\end{align*}
+Z danych otrzymanych metodą Yule’a-Walker’a odczytano wyznaczone wartości widma dla częstotliwości \( \omega = 0 \) oraz \( \omega = 1 \).
+\begin{align*}
+& \omega = 0, \quad S(\omega) = 0,0084 \\
+& \omega = 1,0071, \quad S(\omega) = 0,00012985 \\
+\end{align*}
+Podstawiając te wartości do wzorów na wartość k oraz T otrzymano:
+\begin{align*}
+& k = 0,0917 \\
+& T = 7,9811
+\end{align*}
+Dla wyznaczonych parametrów k oraz T narysowano na jednym wykresie estymowane oraz teoretyczne widmo mocy. Wykresy przedstawia Rysunek \ref{fig:01_widmo}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.47]{01_widmo.jpg}}
+\centering
+\caption{Teoretyczne ( kolor czerwony ) oraz estymowane ( kolor niebieski ) widmo mocy.}
+\label{fig:01_widmo}
+\end{figure}
+
+W zadaniu wyznaczona została również funkcja autokorelacji badanego sygnału, została ona narysowana przy użyciu funkcji matlaba xcorr.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.47]{02_auto.jpg}}
+\centering
+\caption{Funkcja autokorelacji}
+\label{fig:02_auto}
+\end{figure}
+
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 1, captionpos=b,label=lis1, firstnumber=1,frame=single]
+close all;
+clear all;
+load('data_01.mat');
+Fs = 1000; % czestotliwosc probkowania w Hz
+% x - sygnal mierzony
+
+h = spectrum.yulear;
+Hpsd = psd(h,x,'Fs',Fs);
+values = Hpsd.Data;
+freq = Hpsd.Frequencies;
+
+semilogy(freq, values);
+
+
+k = sqrt(values(1));
+T = sqrt(k^2/values(34) - 1);
+
+w=0:0.01:500;
+s = k^2 ./ ( 1 + T^2*w.^2 );
+
+hold on;
+% wyrysowanie teoretycznego widma mocy
+semilogy(w, s, 'r');
+
+% wyrysowanie funkcji autokorelacji
+figure();
+plot(xcorr(x));
+
+\end{lstlisting}
+
+
+\newpage
+\subsection{Zadanie 2 }
+Zadanie ma takie same założenia jak zadanie numer 1, zmianie ulega tylko badany obiekt. W zadaniu tym przyjęto tą samą metodykę wyznaczania parametrów obiektu, co w zadaniu numer 1, tym razem badany jest obiekt o transmitancji:
+\begin{align*}
+G(s) = \frac{k}{s^2+2\xi \omega _0 s + \omega _0 ^2}
+\end{align*}
+
+Zadanie rozpoczęto od wyznaczenia teoretycznego widma mocy sygnału. 
+\begin{align*}
+& S(\omega) = |G(i\omega)|^2 \\
+& G(i\omega) = \frac{k}{i^2\omega ^2 + 2\xi \omega _0 \omega i + \omega _0^2} =
+\frac{k}{-\omega ^2 + 2\xi\omega _0 \omega i + \omega _0^2} = \\
+& = \frac{k}{\omega _0^2 - \omega^2 + 2\xi\omega _0 \omega i} \\
+& |G(i\omega)| = \frac{\sqrt{k^2}}{\sqrt{(\omega _0 ^2 - \omega ^2) ^2 + (2\xi\omega _0 \omega)^2}} \\
+& |G(i\omega)|^2 = \frac{k^2}{(\omega _0 - \omega ^2 ) ^2 + 4\xi ^2 \omega _0 ^2 \omega ^2}
+\end{align*}
+
+W zadaniu częstotliwość własna \( \omega _0 \) została wyznaczona w oparciu o analizę estymowanego widma mocy sygnału. Odpowiada ona częstotliwości dla której widmo osiąga największą wartość. Estymowane widmo przedstawia Rysunek \ref{fig:03_widmo}. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.47]{03_widmo.jpg}}
+\centering
+\caption{Estymowane widmo mocy sygnału.}
+\label{fig:03_widmo}
+\end{figure}
+
+Znaleziona przy pomocy programu wartość \( \omega _0 \) jest równa  246.6125 Hz.
+
+
+\begin{align*}
+& 10\log _{10} S(\omega) = 10 \log _{10} \frac{k^2}{(\omega _0 - \omega ^2 ) ^2 + 4\xi ^2 \omega _0 ^2 \omega ^2} \\
+& S(\omega ) = \frac{k^2}{(\omega _0 - \omega ^2 ) ^2 + 4\xi ^2 \omega _0 ^2 \omega ^2} \\
+& \omega = 0 \rightarrow k =  \omega _0^2 \sqrt{S(\omega)} \\
+& \xi = \sqrt{\frac{k^2 - S(\omega)(\omega _0^2 - \omega^2)^2}{4S(\omega)(\omega _0^2)\omega^2}}
+\end{align*}
+Z danych otrzymanych metodą Yule’a-Walker’a odczytano wyznaczone wartości widma dla częstotliwości \( \omega = 0 \) oraz \( \omega = 250 \).
+Podstawiając te wartości do wzorów na wartość k oraz \( \xi \) otrzymano:
+\begin{align*}
+& k = 0.022124 \\
+& \xi = 0.026941
+\end{align*}
+
+Następnie narysowano widmo teoretyczne i estymowane na jednym wykresie w celu ich porównania.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.47]{04_widmo.jpg}}
+\centering
+\caption{Estymowane ( kolor niebieski ) oraz teoretyczne ( kolor czerwony ) widmo mocy sygnału.}
+\label{fig:04_widmo}
+\end{figure}
+
+
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 2, captionpos=b,label=lis1, firstnumber=1,frame=single]
+close all;
+clear all;
+load('data_02.mat');
+Fs = 1000; % czestotliwosc probkowania w Hz
+% x - sygnal mierzony
+
+h = spectrum.yulear;
+Hpsd = psd(h,x,'Fs',Fs);
+
+values = Hpsd.Data;
+freq = Hpsd.Frequencies;
+
+semilogy(freq, values);
+
+% wyznacznie w0
+w0 = freq(find(values == max(values)));
+k = w0^2 * sqrt(values(1));
+licz = k^2 -  values(8193)*( w0^2 - freq(8193)^2 )^2 ;
+mian = 4 * values(8193) * w0^2 * freq(8193)^2;
+ksi = sqrt(licz/mian);
+
+w=0:0.01:500;
+s = (k^2)./( (w0^2 - w.^2).^2 + 4*ksi^2*w0^2*w.^2 );
+
+figure()
+semilogy(freq, values);
+hold on;
+% wyrysowanie teoretycznego widma mocy
+semilogy(w, s, 'r');
+
+
+
+
+\end{lstlisting}
+
+
+
+\section{Wnioski końcowe}
+Z przeprowadzonych eksperymentów wynika, że przyjęta metodyka wyznaczania parametrów modeli daje zadowalające rezultaty. Ograniczeniem tej metody jest jednak zakres częstotliwości w których widmo estymowane jest dobrze dopasowane do widma teoretycznego. Zarówno w zadaniu 1 jak i w zadaniu 2 najlepsze dopasowanie osiągnięto w okolicach częstotliwości dla których odczytane zostały punkty pomiarowe, a wiec dla \mbox{ \( \omega = 1 \) dla zadania 1 oraz \( \omega = 250 \) dla zadania  2.} 
+
+ 
+\end{document}

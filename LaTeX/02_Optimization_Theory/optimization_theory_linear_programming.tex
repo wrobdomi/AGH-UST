@@ -1,0 +1,328 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+
+\newpagestyle{mypage}{%
+  \headrule
+  \sethead{\MakeUppercase{\thesection\quad \sectiontitle}}{}{\thesubsection\quad \subsectiontitle}
+  \setfoot{}{}{\thesubsubsection\quad \subsubsectiontitle}
+}
+\settitlemarks{section,subsection,subsubsection}
+\pagestyle{mypage}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Programowanie liniowe}} \\ \hline Dominik Wróbel & \textbf{23 IV 2018} & \textbf{Pon 08:00, s. 111} \\ \hline
+\multicolumn{2}{|l|}{Numery zadań} & 2, 3 \\ \hline 
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Cel ćwiczenia}
+Celem ćwiczenia jest zapoznanie się z optymalizacją praktycznych zagadnień przy użyciu programowania liniowego. Rozwiązane przykłady pozwolą na nabycie umiejętności budowy poprawnego modelu matematycznego dla danego zagadnienia. 
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 2 - Optymalizacja mocy wydzielanej na mostku }
+W zadaniu rozważany jest układ mostka z 5 opornikami. Układ z polecenia przedstawia Rysunek  \ref{fig:pl_1}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{pl_1.jpg}}
+\centering
+\caption{Mostek analizowany w zadaniu}
+\label{fig:pl_1}
+\end{figure}
+W zadaniu dane są napięcia odkładające się na każdym z oporników oraz zakresy wartości prądów jakie muszą przepływać przez dany opornik. 
+Każdy prąd \( I_{i} \) musi spełniać warunek 
+\begin{equation*}
+\overline{I_{i}}-\Delta_{i} \leq I_{i} \leq \overline{I_{i}}+\Delta_{i}
+\end{equation*}  
+przy danych założeniach 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{pl_2.jpg}}
+\centering
+\caption{Założenia zadania}
+\label{fig:pl_2}
+\end{figure}
+\newpage
+Zadanie rozpoczęto od budowy modelu matematycznego na podstawie I prawa Kirchhoffa dla węzłów mostka :
+\begin{equation*}
+\begin{cases}
+I_{1}-I_{3}-I_{4}=0 \\
+I_{2}+I_{3}-I_{5}=0 \\
+I_{1}+I_{2}-I_{4}-I_{5}=0
+\end{cases}
+\end{equation*}
+Powyższe równania odpowiadają modelowi matematycznemu postaci \( Ax = b \), w którym 
+\begin{equation*}
+A=
+\begin{bmatrix} 
+1 & 0 & -1 & -1 & 0 \\ 
+0 & 1 & 1 & 0 & -1 \\
+1 & 1 & 0 & -1 & -1  
+\end{bmatrix}
+\quad 
+b=
+\begin{bmatrix} 
+0 \\ 
+0 \\
+0
+\end{bmatrix}
+\end{equation*}
+Celem zadania jest minimalizacja całkowitej mocy wydzielanej na mostku, a zatem funkcja celu jest postaci: 
+\begin{equation*}
+f_{c}(x)=U_{1}I_{1}+U_{2}I_{2}+U_{3}I_{3}+U_{4}I_{4}+U_{5}I_{5} \rightarrow min
+\end{equation*}
+Funkcja celu odpowiada modelowi \( f_{c}(x)=cx \), zmienne decyzyjne w tym modelu to prądy płynące przez i-te oporniki, współczynniki funkcji celu, to napięcia na i-tych opornikach, stąd 
+\begin{equation*}
+c = 
+\begin{bmatrix}
+U_{1} \quad U_{2} \quad  U_{3} \quad  U_{4}  \quad  U_{5}
+\end{bmatrix}
+\end{equation*}
+Nierówność 
+\begin{equation*}
+\overline{I_{i}}-\Delta_{i} \leq I_{i} \leq \overline{I_{i}}+\Delta_{i}
+\end{equation*}  
+określa górne i dolne ograniczenie dla zmiennych decyzyjnych, dlatego
+\begin{equation*}
+l = 
+\overline{I_{i}}-\Delta_{i} \quad
+u = 
+\overline{I_{i}}+\Delta_{i}
+\end{equation*}
+W celu implementacji powyższego modelu do pliku zrodpl.m dopisano wszystkie potrzebne dane oraz na ich podstawie stworzono odpowiednie macierze. Skrypt przedstawia listing \ref{lis1}.
+\begin{lstlisting}[caption=zrodpl.m, captionpos=b,
+label=lis1, firstnumber=12,frame=single]
+
+Diff = [];
+Sum = [];
+U_i = [ 6 10 4 7 3 ];
+I_i = [ 4 2 2 2 4 ];
+Delta_i = [ 1 1 1 1 0 ];
+for i = 1:5
+Diff = [ Diff I_i(i)-Delta_i(i) ];
+end
+for i = 1:5
+Sum = [ Sum I_i(i)+Delta_i(i) ];
+end
+Diff=Diff';
+Sum=Sum';
+A = [ 1, 0, -1, -1,  0;
+      0, 1 , 1, 0 , -1;
+      1, 1, 0,  -1, -1 ];
+b = [ 0 ; 0 ; 0 ];  % Ograniczenia Ax = b
+t = [ 0 ;0 ; 0 ];   % typy ograniczen
+c = U_i;            % wspolczynniki funkcji celu
+l = Diff;           % I_i - delta_i, dolne ograniczenie
+u = Sum;            % I_i + delta_i, gorne ograniczenie
+zadan ='mini';
+\end{lstlisting}
+
+Stworzono także plik main.n wywołujący zrodpl.m oraz obliczający wartości optymalne mocy i oporników. Skrypt przedstawia listing \ref{lis2}.
+\begin{lstlisting}[caption=main.m, captionpos=b,
+label=lis2, firstnumber=12,frame=single]
+
+plnad;
+xopt 
+M = c * xopt ; % zuzyta moc optymalna
+Moc = M / 1000
+Oporniki = c ./ xopt'*1000; % opory optymalne R = u / i
+Oporniki
+Moc
+\end{lstlisting}
+
+Otrzymano następujące wyniki: 
+\begin{equation*}
+R_{opt} = 
+\begin{bmatrix}
+2000 \\ 
+5000 \\
+2000 \\ 
+7000 \\
+750
+\end{bmatrix}
+\Omega
+\quad
+P_{opt} = 0.0650 W
+\quad
+I_{opt} =
+\begin{bmatrix}
+3 \\
+2 \\
+2 \\
+1 \\
+4
+\end{bmatrix}
+mA
+\end{equation*}
+\subsection{Zadanie 3 - Optymalizacja procesu wytwarzania}
+W zadaniu rozważany zakład produkcyjny, który wytwarza trzy wyroby. Dana jest liczba roboczogodzin potrzebna do wykonania sztuki produktu: \\
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{pl_3.jpg}}
+\centering
+\caption{Założenia zadania}
+\label{fig:pl_3}
+\end{figure}
+Dane jest też liczba możliwych do wykorzystania roboczogodzin w ciągu tygodnia w każdym z działów zakładu produkcyjnego:
+\begin{itemize}
+\item Montaż 1800
+\item Kontrola 800
+\item Pakowanie 700
+\end{itemize}
+oraz zysk ze sprzedaży każdego z produktu:
+\begin{itemize}
+\item Wyrób A 400 zł/szt
+\item Wyrób B 300 zł/szt
+\item Wyrób C 200 zł/szt
+\end{itemize}
+Powyższe ograniczenia odpowiadają modelowi matematycznemu postaci \( Ax \leq b \), w którym wektor b zawiera całkowitą możliwą liczbę roboczogodzin w danym dziale. x to wektor zmiennych decyzyjnych, który opisuje liczbę wyprodukowanych produktów danego typu.
+\begin{equation*}
+A=
+\begin{bmatrix} 
+0.3 & 0.5 & 0.4 \\ 
+0.1 & 0.08 & 0.12 \\
+0.06 & 0.04 & 0.05  
+\end{bmatrix}
+\quad 
+b=
+\begin{bmatrix} 
+1800 \\ 
+800 \\
+700
+\end{bmatrix}
+\end{equation*}
+Celem zadania jest maksymalizacja zysku z produkowanych produktów.
+\begin{equation*}
+f_{c}(x)= 400x_{a} + 300x_{b} + 200x_{c} \rightarrow max
+\end{equation*}
+Funkcja celu odpowiada modelowi \( f_{c}(x)=cx \), zmienne decyzyjne w tym modelu to ilość wyprodukowanych sztuk danego wyrobu
+\begin{equation*}
+c = 
+\begin{bmatrix}
+400 \quad 300 \quad  200 
+\end{bmatrix}
+\end{equation*}
+Ilość produkowanych produktów powinna być większa lub równa zero oraz mniejsza od nieskończoności, są to ograniczenia dolne górne na wartość znalezionego rozwiązania :
+\begin{equation*}
+l = 
+\begin{bmatrix}
+0 \\
+0 \\
+0
+\end{bmatrix}
+=
+0 \leq x_{i} < \inf
+=
+\begin{bmatrix}
+inf \\ 
+inf \\
+inf
+\end{bmatrix} = 
+u
+\end{equation*}  
+W celu implementacji powyższego modelu do pliku zrodpl.m dopisano wszystkie potrzebne dane oraz na ich podstawie stworzono odpowiednie macierze. Skrypt przedstawia listing \ref{lis3}.
+\begin{lstlisting}[caption=zrodpl.m, captionpos=b,
+label=lis3, firstnumber=12,frame=single]
+
+product_A = [ 0.3 0.1 0.06 ]; % roboczogodziny potrzebne na sztuke 
+product_B = [ 0.5 0.08 0.04 ]; % danego produktu
+product_C = [ 0.4 0.12 0.05 ];
+max_mon = 1800; % max. dostepna liczba roboczogodzin
+max_kont = 800; % w tygodniu
+max_pakow = 700;
+zysk_A = 400;
+zysk_B = 300;
+zysk_C = 200;
+A = [ product_A(1) product_B(1) product_C(1);
+      product_A(2) product_B(2) product_C(2);
+      product_A(3) product_B(3) product_C(3);
+      ];
+b = [ max_mon ; max_kont ; max_pakow ];  % Ograniczenia Ax = b
+t = [ -1 ;-1 ; -1 ];   % -1 to <=
+c = [ zysk_A zysk_B zysk_C ];            % wspolczynniki funkcji celu
+l = [ 0; 0; 0] ;           % , dolne ograniczenie
+u = [ inf; inf; inf];      % , gorne ograniczenie
+zadan ='maks';
+
+\end{lstlisting}
+
+Stworzono także plik main.n wywołujący zrodpl.m oraz obliczający wartości optymalne liczy sztuk produkowanych produktów oraz całkowity zysk. Skrypt przedstawia listing \ref{lis4}.
+\newpage
+\begin{lstlisting}[caption=main.m, captionpos=b,
+label=lis4, firstnumber=12,frame=single]
+
+plnad;
+xopt 
+profit = xopt(1)*zysk_A+xopt(2)*zysk_B+xopt(3)*zysk_C;
+profit
+\end{lstlisting}
+
+Otrzymano następujące wyniki: 
+\begin{equation*}
+x_{opt} = 
+\begin{bmatrix}
+6000 \\
+0 \\ 
+0
+\end{bmatrix}
+= 
+\begin{bmatrix}
+x_{a} \\
+x_{b} \\
+x_{c}
+\end{bmatrix}
+\quad
+Zysk_{opt} = 2400000
+\end{equation*}
+Ilość produkowanego produktu \( x_{a} \) odpowiada optymalnemu tygodniowemu planowi produkcji z zyskiem 2400000 zł. Uzyskana odpowiedź spełnia wszystkie założenia. 
+
+\section{Wnioski końcowe}
+Programowanie liniowe pozwala na łatwe rozwiązywanie wielu praktycznych problemów. Kluczowe przy tego typu zadaniach jest zbudowanie prawidłowego modelu matematycznego z uwzględnieniem wszystkich ograniczeń. Następnie rozwiązanie przy pomocy metody Simpleks wymaga dbałości o zapisane ograniczenia. 
+  
+\end{document}

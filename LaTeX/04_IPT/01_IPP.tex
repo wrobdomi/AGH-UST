@@ -1,0 +1,430 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Identyfikacja procesów przemysłowych }}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+%\thispagestyle{mypage_1}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Identyfikacja procesów przemysłowych}} \\ \hline Dominik Wróbel & 16 X 2018 & Wt. 13:45, s. 111 \\ \hline
+\multicolumn{3}{|c|}{Laboratorium 1} \\ \hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\section{Przebieg ćwiczenia}
+\subsection{Zadanie 1 - błąd oszacowania średniej }
+
+W pierwszej kolejności zbadano czy dane z zadania mają rozkład normalny. W tym celu najpierw obliczono średnie napięcie w każdej chwili czasu poprzez obliczenie wartości średniej każdego wiersza otrzymanych pomiarów. Tak otrzymane średnie wartości napięć poddano dwóm testom - Kołmogorowa - Smirnowa oraz Lillieforsa. Dla testów otrzymano następujące wyniki:
+\begin{itemize}
+\item Kołmogorowa - Smirnowa : 1, hipoteza o rozkładzie normalnym danych została odrzucona
+\item Lillieforsa : 0, hipoteza o rozkładzie normalnym danych została potwierdzona
+\end{itemize}
+
+Aby sprawdzić rozkład danych narysowano także histogram wraz z dopasowaną krzywą rozkładu normalnego:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{01_hist.jpg}}
+\centering
+\caption{Histogram dla danych z eksperymentu wraz z dopasowaną krzywą rozkładu normalnego}
+\label{fig:01_hist}
+\end{figure}
+
+Na podstawie wyników otrzymanych testów oraz Rysunku \ref{fig:01_hist} można stwierdzić, że dane mają rozkład normalny. 
+
+Kolejną czynnością było wyznaczenie średniej wartości prądu płynącego przez rezystor oraz oszacowanie błędu tej średniej ( odchylenie standardowe ). Otrzymaną średnią uzyskano dzieląc średnie napięcie ze wszystkich chwil czasu przez wartość rezystora 120 \( \Omega \). 
+\begin{align*}
+& I_{sr} = 8,2805 mA \\
+& \sigma = 10,5451 mA
+\end{align*}
+
+Następnie obliczono przedział ufności dla oszacowania średniej przy użyciu funkcji matlaba \textit{paramci} na poziomie \( \frac{1}{100} \). Otrzymane wartości przedziału to \( I_1 = 8,0088 mA, \quad I_2 = 8.5521 mA \). 
+
+Dla obliczonej średniej oraz odchylenia standardowego narysowano rozkład Gaussa wraz z przedziałami ufności. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{02_gauss.jpg}}
+\centering
+\caption{Rozkład Gaussa dla wartości prądu w mA, przedział ufności na poziomie istotności 0,01 to <8,0088 ;  8.5521 > }
+\label{fig:02_gauss}
+\end{figure}
+
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 1, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+
+sredniaWektorNapiecie = 0; 
+
+load('data_01.mat');
+
+
+for j = 1:10000 
+    sredniaWektorNapiecie(j) = mean(u(j,:));
+end
+
+
+histfit(sredniaWektorNapiecie);
+
+
+kstestResult = kstest(sredniaWektorNapiecie);
+liltestResult = lillietest(sredniaWektorNapiecie);
+kstestResult
+liltestResult
+
+
+sredniaSrednichNapiecie = mean(sredniaWektorNapiecie);
+sredniaWektorPrad = sredniaWektorNapiecie / 120;
+sredniPrad = sredniaSrednichNapiecie / 120;
+
+sredniPradMa = sredniPrad * 1000;
+sredniaWektorPradMa = 1000 * sredniaWektorPrad;
+odchylenieSrednichMa = std(sredniaWektorPradMa);
+
+
+pd = fitdist(sredniaWektorPradMa', 'Normal')
+ci = paramci(pd,'Alpha',.01)
+
+
+x = [-15:.1:30];
+norm = normpdf(x,sredniPradMa,odchylenieSrednichMa);
+figure;
+plot(x,norm)
+hold on;
+line([8.0088  8.0088 ], [0 0.04]);
+line([  8.5521     8.5521  ], [0 0.04]);
+
+\end{lstlisting}
+
+
+
+
+\subsection{Zadanie 2 - aproksymacja wielomianami }
+
+Zadanie polega na zastosowaniu metody najmniejszych kwadratów do zbioru danych z czujnika ciśnieniowego. Współczynniki są wyznaczane dla różnego stopnia wielomianów \( n = 1,2,3,4,5 \) korzystając z równania:
+\begin{align*}
+& \Phi ^T\Phi a=\Phi ^T Y \\
+& a = ( \Phi ^T\Phi ) ^ {-1} \Phi ^T Y
+\end{align*}
+Jakość dopasowania została zbadana przy pomocy testu chi2 na poziomie ufności \( \frac{1}{100} \), badając odchyłki wartości zmierzonych od aproksymowanych. Wektor podlegający testowi opisuje równanie:
+\begin{align*}
+& e = Y - \Phi a
+\end{align*}
+
+\begin{table}[H]
+\caption{Współczynniki wielomianu oraz wyniki testu ch2 dla różnych stopni wielomianu}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+n & współczynniki wielomianu & Test chi2 \\ \hline
+1 & 0.4361 -1.7532 & 1  \\ \hline
+2 & 0.0096    0.1007    0.1830 & 0  \\ \hline
+3 & 0.0001    0.0064    0.1451    0.0571 & 0  \\ \hline
+4 & -0.0000    0.0004   -0.0008    0.2002   -0.0351 & 0  \\ \hline
+5 & -0.0000    0.0001   -0.0014    0.0225    0.0861    0.0887 & 0 \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+Hipoteza testu chi2 została odrzucono tylko w przypadku \( n = 1 \). Najmniejsze n dla którego testchi2 pozwala przyjąć hipotezę, że reszty modelu pochodzą z rozkładu normalnego wynosi 2. 
+
+Odchylenie standardowe dla pomiarów obliczono na podstawie wariancji korzystając ze wzoru:
+\begin{align*}
+& \sigma ^2 = \frac{e^Te}{N-n-1}\\
+\end{align*} 
+Natomiast odchylenia standardowe parametrów na podstawie wariancji parametrów, które są elementami diagonalnymi macierzy:
+\begin{align*}
+& cov a = \sigma ^ 2 ( \Phi^T \Phi)^{-1}
+\end{align*} 
+
+\begin{table}[H]
+\caption{Odchylenia standardowe dla poziomu cieczy oraz parametrów }
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+n & \( \sigma ^2 \) & \( \sigma \) & \( diag(cova) \) & \( \sigma_p \) \\ \hline
+1 & 0.8507 &    0.9223 &  0.0335, 0.0001  &   0.1831    0.0090\\ \hline
+2 &    0.0387   & 0.1967  &  0.0033,  0.0001, 0.0000  &     0.0579    0.0076    0.0002 \\ \hline
+3 & 0.0364 & 0.1909 &  0.0054,  0.0003, 0.0000,  0.0000 &  0.0736    0.0183    0.0012    0.0000 \\ \hline
+4 &  0.0356 & 0.1887 & 0.0079, 0.0013, 0.0000,  0.0000,  0.0000  &   0.0890    0.0356    0.0042    0.0002    0.0000 \\ \hline
+5 &  0.0340 & 0.1844 & 0.0103,   0.0036, 0.0001, 0.0000, 0.0000, 0.0000  & 0.1016,    0.0597,    0.0107,    0.0008,   0.0000,    0.0000 \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\newpage
+Dane oraz aproksymacje wraz z krzywymi odchylonymi od charakterystyki o 3 wartości odchylenia przedstawiają wykresy poniżej:
+
+\begin{figure}[H]
+
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{03_n1.jpg}
+  \caption{n = 1}
+  \label{fig:opt_wiel_2}
+
+\endminipage\hfill
+\minipage{0.5\textwidth}%
+
+  \includegraphics[width=\linewidth]{04_n2.jpg}
+  \caption{n = 2}
+  \label{fig:opt_wiel_3}
+
+\endminipage
+
+\end{figure}
+
+\begin{figure}[H]
+
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{05_n3.jpg}
+  \caption{n = 3}
+  \label{fig:opt_wiel_2}
+
+\endminipage\hfill
+\minipage{0.5\textwidth}%
+
+  \includegraphics[width=\linewidth]{06_n4.jpg}
+  \caption{n = 4}
+  \label{fig:opt_wiel_3}
+
+\endminipage
+
+\end{figure}
+
+\begin{figure}[H]
+
+\minipage{0.5\textwidth}
+
+  \includegraphics[width=\linewidth]{07_n5.jpg}
+  \caption{n = 5}
+  \label{fig:opt_wiel_2}
+
+\endminipage\hfill
+
+
+\end{figure}
+
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 2, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+load('data_02.mat')
+
+
+% n = 1,2,3,4,5
+n = 1;
+for i = 1:n
+    
+    matrixPhi(:,1) = ones(length(u),1);
+    
+    for j = 1:i
+        matrixPhi(:,j+1) = u.^(j); 
+    end
+    
+    %matrixPhiT = matrixPhi';
+    a = ( matrixPhi' * matrixPhi ) \ matrixPhi' * y(:,5);
+    
+end
+
+
+
+for i = 0:length(a)-1
+    p(i+1) = a(length(a)-i);
+end
+p;
+
+val = polyval(p,u);
+
+plot(u,y(:,5),'*');
+hold on;
+plot(u,val,'r');
+
+e = y(:,5) - matrixPhi * a;
+
+estWar = ( e' * e ) / ( length(u) - n - 1 )
+odchStan = sqrt(estWar)
+
+val1 = val + 3*odchStan;
+val2 = val - 3*odchStan;
+
+hold on;
+plot(u,val1,'r');
+hold on;
+plot(u,val2,'r');
+
+[h,p] = chi2gof(e,'Alpha',0.01);
+
+estWar = ( e' * e ) / ( length(u) - n - 1 )
+odchStan = sqrt(estWar)
+
+ma1 = inv( matrixPhi' * matrixPhi );  
+macKow = estWar * ma1
+for i = 1:length(macKow(:,1))
+   odch(i) = sqrt(macKow(i,i)); 
+end
+odch
+
+\end{lstlisting}
+
+\section{Zadanie 3 - oscylator z tłumieniem}
+Zadnie polega na zastosowaniu metody najmniejszych kwadratów w celu doboru parametrów systemu dynamicznego przy minimalizacji odchyłek od rzeczywistych pomiarów. 
+Rozważanym w zadaniu układem jest oscylator z tłumieniem dla którego pomiary są wykonywane w dyskretnych chwilach czasu. Model taki może być opisany równaniem różnicowym:
+\begin{align*}
+y_k = \theta_1 y_{k-1} + \theta_2 y_{k-2} + e_k
+\end{align*}
+Parametry zostały oszacowane na podstawie minimalizacji funkcji:
+\begin{align*}
+& V(\theta)=\frac{1}{2}(\Phi \theta - Y )^T(\Phi \theta - Y ) \rightarrow min \\
+& \theta ^* = (\Phi ^T \Phi)^{-1} \Phi ^T Y \\
+& \theta^* = 
+\begin{bmatrix}
+1,9081 \\
+-0,9973
+\end{bmatrix}
+\end{align*}
+
+Oszacowanie błędów dla wyznaczonych parametrów obliczono na podstawie macierzy kowariancji, której elementy diagonalnej są wariancjami parametrów.
+\begin{align*}
+& cov \theta ^* = \frac{(\Phi\theta ^* - Y)^T (\Phi\theta ^* - Y)}{N-2} \\
+& \sigma_{\theta _1} = 0,0005967 \\
+& \sigma_{\theta _2} = 0,0005953
+\end{align*}
+
+Zakłócenie e obliczono ze wzoru:
+\begin{align*}
+e = Y - \Phi \theta ^ *
+\end{align*}
+Wariancja tego zakłócenia wynosi  0,0000057. 
+
+Porównanie modelu oraz danych pomiarowych przedstawia Rysunek poniżej.
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{08_por.jpg}}
+\centering
+\caption{Porównanie wyników danych pomiarowych ( kolor niebieski ) oraz modelu ( kolor zielony )}
+\label{fig:08_por}
+\end{figure}
+Z Rysunku \ref{fig:08_por} wynika, że parametry udało się wyznaczyć z dużą dokładnością. 
+Kod programu: 
+\begin{lstlisting}[caption=Zadanie 3, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+load('data_03.mat')
+
+phiMatrix(:,1) = y(2:end-1);  
+phiMatrix(:,2) = y(1:end-2); 
+Y = y(3:length(y));
+
+theta = ( phiMatrix' * phiMatrix ) \ phiMatrix' * Y;
+
+figure();
+plot(t,y);
+
+yApr(1:2) = y(1:2); 
+for i = 3:length(y)
+    yApr(i) = theta(1) * yApr(i-1) + theta(2) * yApr(i-2); 
+end
+
+hold on;
+plot(t,yApr,'g');
+
+vTheta = 0.5*(phiMatrix * theta  - Y)' * (phiMatrix * theta - Y );
+estWar = 2*vTheta / ( length(y) - 2 );
+mul = inv ( phiMatrix' * phiMatrix );
+macKow = estWar * mul;
+odchTheta(1) = sqrt(macKow(1,1));
+odchTheta(2) = sqrt(macKow(2,2));
+
+e = Y - phiMatrix * theta;
+mean(e)
+wariancja = var(e)
+
+
+\end{lstlisting}
+
+
+\section{Wnioski końcowe}
+Przeprowadzone aproksymacje prezentują sposoby wyznaczania parametrów dla różnych zagadnień. Z eksperymentów wynika, że do dokładnego wyznaczenia parametrów modelu konieczna jest duża liczba próbek z rzeczywistego eksperymentu. Duże znaczenie ma również implementacja metody użytej do aproksymacji, stopień wielomianu aproksymującego ma duży wpływa na dopasowanie do danych pomiarowych co uwidacznia się w zadaniu 2. Przy wyznaczaniu parametrów należy też pamiętać o oszacowaniu błędów. 
+ 
+\end{document}

@@ -1,0 +1,40 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[latin2]{inputenc}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usepackage{times}
+
+% Packages needed to draw 
+\usetikzlibrary{calc,through,backgrounds,positioning,fit}
+\usetikzlibrary{shapes,arrows,shadows}
+ 
+\begin{document}
+ 
+% Defining different types of nodes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzstyle{place}=[shape=circle, draw, minimum height=10mm]
+\tikzstyle{trig}=[shape=circle, draw, dashed, minimum height=10mm]
+\tikzstyle{trans}=[shape=rectangle, draw, minimum height=6mm, minimum width=12mm]
+ 
+\centering
+
+%OPTIONS of tikzpicture:
+% scale option scales the whole picture 
+
+
+%GENERAL TIPS
+% cordinate system starts from left bottom corner
+
+\begin{tikzpicture}[scale=1,inner sep=0.4mm]
+
+\node (e1) [place,label=below left:{$e_1$}] at (3,0) {$f(e_1)$};
+\node (false)[trig, label=below left:{$tr_{1}^{2}$}] at (4.5,0) {$false$};
+\node (env) [trans] at (3.75,1.5) {$env_{1}$};
+
+\draw [->] (env) to (e1);
+
+\draw [dashed, ->] (env) to (false);
+
+\end{tikzpicture}
+ 
+\end{document}

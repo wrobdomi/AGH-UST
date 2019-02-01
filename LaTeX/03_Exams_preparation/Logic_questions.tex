@@ -1,0 +1,200 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+
+\settitlemarks{section,subsection,subsubsection}
+
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+\begin{document}
+
+\center{\textbf{\textit{Logika - Pytania do mojego opracowania}}}
+
+
+\begin{itemize}
+\item Czym jest zmienna zdaniowa ? Jak się ja oznacza ? Jakie może mieć wartości ?
+
+\item Czym jest zdanie ? Co do niego przypisujemy ? 
+
+\item Wymień 5 podstawowych spójników logicznych i podaj dla nich tabelę prawdy.
+
+\item Podaj spójniki według priorytetów od największego.
+
+\item Co wchodzi w skład alfabetu logiki rachunku zdań ?
+
+\item Czym jest formuła atomiczna ?
+
+\item Czym jest formuła ?
+
+\item Wyjaśnij pojęcie interpretacji, podaj przykład dla dowolnej formuły.
+
+\item Wyjaśnij pojęcia : formuła spełnialna, niespełnialna, tautologia. 
+
+\item Czym jest system funkcjonalnie pełny ? 
+
+\item Czy AND, NOT tworzą system funkcjonalnie pełny ? Czy tworzą go: (AND, OR, NOT) , (OR, NOT), (NOT, IMPLIKACJA), (NAND), (NOR) ? 
+
+\item Czym jest system funkcyjny funkcjonalnie pełny minimalny, a czym redundantny ?
+
+\item Czym jest literał ?
+
+\item Czym jest minterm ?
+
+\item Czym jest maxterm ?
+
+\item Czym jest CNF ? Co łatwo sprawdzić na podstawie CNF ?
+
+\item Czym jest DNF ? Co łatwo sprawdzić na podstawie DNF ?
+
+\item Czym jest NNF ?
+
+\item Wymień najważniejsze równoważności logiczne ? ( 9 praw )
+
+\item Co oznacza \( \varphi \vDash \psi \) ? Jak nazywamy ten symbol ?
+
+\item Jaką postać ma problem dowodzenia twierdzeń w logice ?
+
+\item Jakie znasz metody dowodzenia twierdzeń ? Podaj nazwy i wzory ( 5 )
+
+\item O czym należy pamiętać przy dowodzeniu równoważności ?
+
+\item Podaj treść I twierdzenia o dedukcji.
+
+\item Podaj treść II twierdzenia o dedukcji.
+
+\item Na czym polega dowód liniowy ? Od czego się go rozpoczyna ? Czym może być każda z linii w dowodzie liniowym ?
+
+\item Podaj 3 reguły wnioskowania związane z implikacją.
+
+\item Podaj po dwie reguły wnioskowania dla: koniunkcji, dysjunkcji, negacji, równoważności ( system Fitcha ).
+
+\item Do czego służy metoda rezolucji ?
+
+\item Na jakich wyrażeniach tylko i wyłącznie działa metoda rezolucji ?
+
+\item Podaj algorytm zamiany dowolnego wyrażenia na CNF ( 4 kroki ).
+
+\item Podaj zasadę rezolucji.
+
+\item Czy można wyciągnąć więcej niż jeden wniosek stosując zasadę rezolucji do dwóch wyrażeń i o czym w związku z tym należy pamiętać ?  
+
+\item Z którego twierdzenia korzystamy wykonując dowody przy użyciu metody rezolucji. 
+
+\item Do czego służy rezolucja dualna ?
+
+\item Kiedy jest łatwiej zastosować rezolucję dualną niż zwykłą ( w jakiej postaci wyrażenia do dowodzenia ) ? Do czego głównie służy rezolucja dualna ?
+
+\item Jak zapisywane są wyrażenia w rezolucji dualnej ( wiersze i co one oznaczają ) ?
+
+\item Podaj zasadę rezolucji dualnej
+
+\item Jaki schemat wnioskowania stosuje się często w rezolucji dualnej ( związany z wprowadzeniem koniunkcji ) ?
+
+\item Do czego dążymy ( co chcemy uzyskać aby stwierdzić, że tautologia jest prawdziwa ) podczas dowodzenia tautologii przy użyciu rezolucji dualnej ?
+
+\item Do czego służy metoda tablic semantycznych ? Jak przy jej użyciu dowieść twierdzenie ?
+
+\item Czy są jakieś ograniczenia co do formuły wyjściowej w metodzie tablic semantycznych ?
+
+\item Jak rysujemy metodę tablic semantycznych ?
+
+\item Jakie dwa typy wyrażeń są w metodzie tablic semantycznych ? Który z nich jest zawsze realizowany jako pierwszy ?
+
+\item Co robimy w drzewie z formułą \( \alpha \), a co z formułą \( \beta \) ?
+
+\item Kiedy zamykamy daną gałąź drzewa ?
+
+\item Co oznacza zamknięcie wszystkich gałęzi drzewa ? Co oznacza gdy przynajmniej jedna pozostaje nie zamknięta ?
+
+\item Wymień wszystkie 5 formuł \( \alpha \) oraz na co się one rozkładają.
+
+\item Wymień wszystkie 4 formuły \( \beta \) oraz na co się one rozkładają. 
+ 
+\item Czym różnią się dowody strukturalne od dowodów liniowych jeśli chodzi o budowę ?
+
+\item Co rozpoczyna, a co kończy dowód zagnieżdżony ?
+
+\item Jaki schemat wnioskowania jest wykorzystywany przy wyjściu z zagnieżdżonego dowodu ?
+
+\item Jakie założenia uznajemy za prawdziwe w dowodzie zagnieżdżonym, a jakie prawdziwe nie są ?
+
+\item Do jakich wyrażeń można stosować klasyczne reguły wnioskowania w dowodzie zagnieżdżonym ( gdzie się mogą znajdować ) ?
+
+\item Czym jest system Fitch'a ?
+
+\item Jakie są ograniczenia logiki zdaniowej ? W związku z tym do czego służy rachunek predykatów ?
+
+\item Czym jest predykat ? Jak go oznaczamy ?
+
+\item Czym jest symbol stały ? Jak go oznaczamy ?
+
+\item Czym jest zmienna ? Jak ją oznaczamy ?
+
+\item Czym są kwantyfikatory ? Jakie dwa rodzaje istnieją ?
+
+\item Czym są symbole funkcyjne ?
+
+\item Jaki priorytet mają kwantyfikatory ?
+
+\item Czym jest term ?
+
+\item Czym jest formuła atomiczna w rachunku predykatów ?
+
+\item Czym są formuły rachunku predykatów ?
+
+\item Czym są zmienne wolne, a czym zmienne związane ?
+
+\item Czym jest baza Herbranda ? Czym jest interpretacja Herbranda ? 
+
+\item Jak badamy wartość logiczną wyrażenia w logice predykatów na podstawie bazy Herbranda ?
+
+\item Wymień reguły bazowe dla kwantyfikatorów
+
+\item Na czym polega dystrybucja kwantyfikatorów ?
+
+\item Na czym polega przemianowanie zmiennych w przekształceniach z kwantyfikatorami ?
+
+\item Na czym polega włączenie wyłączenie negacji w kwantyfikatorach ?
+
+\item Czym jest standardowa postać Skolema ( inaczej postać klauzulowa ) ?
+
+\item Podaj kolejne kroki sprowadzania formuły do postaci klauzulowej ( 7 ).
+
+\item Czym różni się rezolucja w logice predykatów od rezolucji w logice zdaniowej ?
+
+\item Na czym polega identyczność dwóch literałów w logice predykatów ?
+
+\item Kiedy mówimy, że dwa wyrażenia mają łącznik ?
+
+\item Jak przebiega sprawdzanie identyczności dwóch formuł ?
+
+\item Podaj zasadę rezolucji dla logiki predykatów.
+
+
+\end{itemize}
+
+
+
+
+\end{document}

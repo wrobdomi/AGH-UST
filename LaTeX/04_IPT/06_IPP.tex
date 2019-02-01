@@ -1,0 +1,418 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Identyfikacja procesów przemysłowych }}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\lstset{
+language=Matlab,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{darkgreen}\ttfamily\bfseries\small,
+stringstyle=\color{red}\ttfamily\small,
+commentstyle=\color{grey}\ttfamily\small,
+numbers=left,
+numberstyle=\color{darkred}\ttfamily\scriptsize,
+identifierstyle=\color{blue}\ttfamily\small,
+showstringspaces=false,
+morekeywords={}
+}
+
+
+\begin{document}
+
+%\thispagestyle{mypage_1}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Identyfikacja procesów przemysłowych}} \\ \hline Dominik Wróbel & 13 XI 2018 & Wt. 13:45, s. 111 \\ \hline
+\multicolumn{3}{|c|}{Laboratorium 5} \\ \hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\section{Przebieg ćwiczenia}
+
+Laboratorium polega na identyfikacji parametrów trzech różnych zbiorników z wodą. Zbiorniki różnią się pomiędzy sobą kształtem i wymiarami. Równania opisujące wypływ wody ze zbiorników to równania Torricellego. W zadaniach zostaną zbadanego dwa różne modele, pozwoli to na porównanie ich dokładności. Modele zostaną również zastosowane do porównania ich z danymi rzeczywistymi z eksperymentu. 
+  
+\subsection{Zadanie 1 }
+
+W zadaniu pierwszym równanie Torricellego mają stałą potęgą po prawej stronie równania równą \( \frac{1}{2} \).
+
+\begin{align*}
+& \dot{x_1}= - \frac{c_1\sqrt{x_1}}{S_1}, \ \dot{x_2}=-\frac{c_2\sqrt{x_2}}{S_2(x_2)}, \ \dot{x_3} = - \frac{c_3\sqrt{x_3}}{S_3(x_3)}, \ x_i(0) = x_{0,i}, \ i=1,2,3, \\
+& S_1 = cw, \ S_2(x_2) = w(\frac{b-a}{H}x_2+a), \ S_3(x_3)=w\sqrt{2Rx_3-x_3^2} \\
+& a=10cm, \ b=44,5cm, \ c=25, \ w=3,5cm, \ H=35cm, \ R=36,4cm
+\end{align*}
+
+Identyfikacji podlegają parametry \( c_i \) każdego z równań. Wyznaczane są także poziomy początkowe cieczy. Okres próbkowania wynosi \( T=0,01s \). Do rozwiązania obu zadań zastosowano minimalizację funkcji 
+\begin{equation*}
+Q(c_i,\alpha _i, x_{0,i} ) =\frac{1}{2}\sum _{k=1}^{N} (x_k(kT_0, c_i,\alpha _i, x_{0,i}) - y_i(kT_0))^2 \rightarrow min
+\end{equation*}
+z parametrami \( c_i, \alpha _i, x_{0,i} \). Minimalizacja została wykonana przy pomocy funkcji \textit{lsqnonlin} matlaba. 
+
+
+Otrzymane wartości parametrów oraz porównanie modelu z danymi z eksperymentu przedstawiają rysunki poniżej. Dane z eksperymentów zostały odpowiednio skrócone w celu uwzględnienie tylko właściwych pomiarów.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{05_pierwszy_zad1.jpg}}
+\centering
+\caption{Porównanie modelu oraz wyników eksperymentu - Zbiornik I. Parametry:
+\( c_1 = 19,01, \ x_0 = 30,34, \alpha = 0,5 \)}
+\label{fig:05_pierwszy_zad1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{05_pierwszy_zad1_hist.jpg}}
+\centering
+\caption{Różnice pomiędzy modelem a eksperymentem - Zbiornik I}
+\label{fig:05_pierwszy_zad1_hist}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{03_drugi_zad1.jpg}}
+\centering
+\caption{Porównanie modelu oraz wyników eksperymentu - Zbiornik II. Parametry:
+\( c_2 = 22,40, \ x_0 = 34,05, \alpha = 0,5 \)}
+\label{fig:03_drugi_zad1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{03_drugi_zad1_hist.jpg}}
+\centering
+\caption{Różnice pomiędzy modelem a eksperymentem - Zbiornik II}
+\label{fig:03_drugi_zad1_hist}
+\end{figure}
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{04_trzeci_zad1.jpg}}
+\centering
+\caption{Porównanie modelu oraz wyników eksperymentu - Zbiornik III. Parametry:
+\( c_3 = 17,57 , \ x_0 = 35,16, \alpha = 0,5 \)}
+\label{fig:04_trzeci_zad1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{04_trzeci_zad1_hist.jpg}}
+\centering
+\caption{Różnice pomiędzy modelem a eksperymentem - Zbiornik III}
+\label{fig:04_trzeci_zad1_hist}
+\end{figure}
+
+Przy pomocy testu chi kwadrat ( funkcja matlaba \textit{chi2gof} ) sprawdzono jakość dopasowania na poziomie istotności 0,001. Dla każdego ze zbiorników test ten dał negatywny wynik. 
+
+
+
+
+\subsubsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 1, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+close all;
+
+load('data_01.mat');
+
+% dane wejsciowe
+figure();
+plot(t1, x1, 'r');
+hold on;
+plot(t2, x2, 'g');
+hold on;
+plot(t3, x3, 'b');
+
+% obcinanie danych
+x1 = x1(186:4050);
+t1 = t1(186:4050);
+x2 = x2(186:3550);
+t2 = t2(186:3550);
+x3 = x3(230:5093);
+t3 = t3(230:5093);
+
+% dane po obrobce
+figure();
+plot(t1, x1, 'r');
+hold on;
+plot(t2, x2, 'g');
+hold on;
+plot(t3, x3, 'b');
+
+% parametry zbiornikow 
+a = 10;
+b = 44.5;
+c = 25;
+w = 3.5;
+H = 35;
+R = 36.4;
+
+T0 = 0.01;
+
+S1 = c*w;
+
+
+LB = [0.1 0.2 30]';
+UB = [200 0.5 40]';
+% punkt startowy 
+c=30; al=0.3; x0 = x2(1);
+xopt = lsqnonlin('cel',[c al x0]', LB, UB, [], t2, x2);
+% model - zbiornik 2
+[t2mod,x2mod] = ode45(@(t,x2m) -1 * xopt(1) * x2m^(1/2) / 
+( w * ( b - a ) / H * x2m + a*w ), t2, xopt(3));
+figure()
+plot(t2mod,x2mod, 'r');
+hold on;
+plot(t2, x2, 'b');
+title('Drugi zbiornik');
+figure();
+histfit(x2-x2mod);
+test2 = chi2gof(x2-x2mod, 'alpha', 0.01);
+
+c=30; al=0.3; x0 = x1(1);
+xopt = lsqnonlin('celOne',[c al x0]', LB, UB, [], t1, x1);
+% model - zbiornik 1 
+[t1mod,x1mod] = ode45(@(t,x1m) -1 * xopt(1) * x1m^(1/2) / S1, t1, xopt(3));
+figure()
+plot(t1mod,x1mod, 'r');
+hold on;
+plot(t1, x1, 'b');
+title('Pierwszy zbiornik');
+figure();
+histfit(x1-x1mod);
+test1 = chi2gof(x1-x1mod, 'alpha', 0.01);
+
+
+c=30; al=0.3; x0 = x3(1);
+xopt = lsqnonlin('celThree',[c al x0]', LB, UB, [], t3, x0);
+% model - zbiornik 3 
+[t3mod,x3mod] = ode45(@(t,x3m) -1 * xopt(1) * x3m^(1/2) / 
+( w * sqrt(2*R*x3m-x3m^2)), t3, xopt(3));
+figure()
+plot(t3mod,x3mod, 'r');
+hold on;
+plot(t3, x3, 'b');
+title('Trzeci zbiornik');
+figure();
+histfit(x3-x3mod);
+test3 = chi2gof(x3-x3mod, 'alpha', 0.01);
+\end{lstlisting}
+
+\subsection{Zadanie 2 }
+
+W zadaniu drugim badane są te same zbiorniki. Przyjęto tą samą metodykę do identyfikacji parametrów modelu. W tym zadaniu jednak identyfikowany jest jeden parametr więcej, jest nim wykładnik \( \alpha \).
+
+Otrzymane wartości parametrów oraz porównanie modelu z danymi z eksperymentu przedstawiają rysunki poniżej.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{09_pierwszy_zad2.jpg}}
+\centering
+\caption{Porównanie modelu oraz wyników eksperymentu - Zbiornik I. Parametry:
+\( c_1 = 30,06, \ x_0 = 30,00, \alpha = 0,33 \)}
+\label{fig:05_pierwszy_zad1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{09_pierwszy_zad2_hist.jpg}}
+\centering
+\caption{Różnice pomiędzy modelem a eksperymentem - Zbiornik I}
+\label{fig:05_pierwszy_zad1_hist}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{08_drugi_zad2.jpg}}
+\centering
+\caption{Porównanie modelu oraz wyników eksperymentu - Zbiornik II. Parametry:
+\( c_2 = 40,37, \ x_0 = 33,19, \alpha = 0,29 \)}
+\label{fig:03_drugi_zad1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{08_drugi_zad2_hist.jpg}}
+\centering
+\caption{Różnice pomiędzy modelem a eksperymentem - Zbiornik II}
+\label{fig:03_drugi_zad1_hist}
+\end{figure}
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{10_trzeci_zad2.jpg}}
+\centering
+\caption{Porównanie modelu oraz wyników eksperymentu - Zbiornik III. Parametry:
+\( c_3 = 32.90 , \ x_0 = 33.15, \alpha = 0.28 \)}
+\label{fig:04_trzeci_zad1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.5]{10_trzeci_zad2_hist.jpg}}
+\centering
+\caption{Różnice pomiędzy modelem a eksperymentem - Zbiornik III}
+\label{fig:04_trzeci_zad1_hist}
+\end{figure}
+
+Przy pomocy testu chi kwadrat ( funkcja matlaba \textit{chi2gof} ) sprawdzono jakość dopasowania na poziomie istotności 0,001. Dla każdego ze zbiorników test ten dał negatywny wynik. 
+
+
+
+
+
+\subsubsection{Kod programu}
+Kod programu prezentuje listing poniżej.
+\begin{lstlisting}[caption=Zadanie 2, captionpos=b,label=lis1, firstnumber=1,frame=single]
+clear all;
+close all;
+
+load('data_01.mat');
+
+% dane wejsciowe
+figure();
+plot(t1, x1, 'r');
+hold on;
+plot(t2, x2, 'g');
+hold on;
+plot(t3, x3, 'b');
+
+% obcinanie danych
+x1 = x1(186:4050);
+t1 = t1(186:4050);
+x2 = x2(186:3550);
+t2 = t2(186:3550);
+x3 = x3(230:4672);
+t3 = t3(230:4672);
+
+% dane po obrobce
+figure();
+plot(t1, x1, 'r');
+hold on;
+plot(t2, x2, 'g');
+hold on;
+plot(t3, x3, 'b');
+
+% parametry zbiornikow 
+a = 10;
+b = 44.5;
+c = 25;
+w = 3.5;
+H = 35;
+R = 36.4;
+
+T0 = 0.01;
+
+S1 = c*w;
+
+
+LB = [0.1 0.2 30]';
+UB = [200 0.5 40]';
+c=30; al=0.3; x0 = x2(1);
+xopt = lsqnonlin('cel',[c al x0]', LB, UB, [], t2, x2);
+zbiornik2 = xopt;
+[t2mod,x2mod] = ode45(@(t,x2m) -1 * xopt(1) * x2m^(xopt(2)) / 
+( w * ( b - a ) / H * x2m + a*w ), t2, xopt(3));
+figure()
+plot(t2, x2, 'b');
+hold on;
+plot(t2mod,x2mod, 'r','LineWidth',2);
+title('Drugi zbiornik');
+figure();
+histfit(x2-x2mod);
+test2 = chi2gof(x2-x2mod, 'alpha', 0.001);
+
+c=30; al=0.3; x0 = x1(1);
+xopt = lsqnonlin('celOne',[c al x0]', LB, UB, [], t1, x1);
+zbiornik1 = xopt; 
+[t1mod,x1mod] = ode45(@(t,x1m) -1 * xopt(1) * x1m^(xopt(2)) / S1, t1, xopt(3));
+figure()
+plot(t1, x1, 'b');
+hold on;
+plot(t1mod,x1mod, 'r','LineWidth',2);
+title('Pierwszy zbiornik');
+figure();
+histfit(x1-x1mod);
+test1 = chi2gof(x1-x1mod, 'alpha', 0.001);
+
+
+c=30; al=0.3; x0 = x3(1);
+xopt = lsqnonlin('celThree',[c al x0]', LB, UB, [], t3, x0);
+zbiornik3 = xopt;
+[t3mod,x3mod] = ode45(@(t,x3m) -1 * xopt(1) * x3m^(xopt(2)) / 
+( w * sqrt(2*R*x3m-x3m^2)), t3, xopt(3));
+figure()
+plot(t3, x3, 'b');
+hold on;
+plot(t3mod,x3mod, 'r');
+title('Trzeci zbiornik');
+figure();
+histfit(x3-x3mod);
+test3 = chi2gof(x3-x3mod, 'alpha', 0.001);
+
+\end{lstlisting}
+
+
+
+\section{Wnioski końcowe}
+W badanym zagadnieniu lepiej sprawdził się model zastosowany w zadaniu 2, uwzględniający więcej parametrów. Model uwzględniający większą liczbę parametrów procesu fizycznego sprawdza się zazwyczaj lepiej, ponieważ z większą dokładnością oddaje rzeczywisty proces. Mimo to żadnemu ze zidentyfikowanych modeli nie udało się uzyskać zgodności z danymi na poziomie 0,001 testu chi kwadrat. Warto również zauważyć, że na przebieg eksperymentu miały wpływ zakłócenia, co ma negatywny wpływ na dokładność danych pomiarowych.
+
+ 
+\end{document}

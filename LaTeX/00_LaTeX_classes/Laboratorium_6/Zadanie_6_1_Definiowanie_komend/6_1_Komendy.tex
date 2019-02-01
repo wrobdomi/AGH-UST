@@ -1,0 +1,29 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+
+\newcommand{\fixme}[1]{\colorbox{yellow!50}{FIXME:{#1}}}
+
+\newcommand{\todo}[1]{\colorbox{red!20}{TODO:{#1}}}
+
+\newcommand{\myint}[3]{{\ensuremath{\int_{#1}^{#2} {#3} dx}}}
+
+\newcommand{\foo}[1]{\mathbf{#1}}
+\newcommand{\tg}{\tan x}
+\newcommand{\ctg}{\cot}
+\def \agh {Akademia Gorniczo-Hutnicza}
+
+\begin{document}
+\fixme{test} \\
+\todo{test} \\ 
+Moja całka to \myint{0}{1}{x} \\
+Zbiór liczb naturalnych to \( \foo{N} \) \\
+Tangens ma proste litery \( \tg \). \\
+Cotangens ma proste litery \( \ctg \). \\
+
+{\agh} w Krakowie \agh.
+
+
+\end{document}

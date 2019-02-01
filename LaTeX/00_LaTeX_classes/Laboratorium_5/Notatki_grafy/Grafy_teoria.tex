@@ -1,0 +1,106 @@
+\documentclass{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[latin2]{inputenc}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usepackage{times}
+
+% Packages needed to draw 
+\usetikzlibrary{calc,through,backgrounds,positioning,fit}
+\usetikzlibrary{shapes,arrows,shadows}
+ 
+\begin{document}
+ 
+% Other things needed to draw
+\tikzstyle{place}=[shape=circle, draw, minimum height=10mm]
+\tikzstyle{trig}=[shape=circle, draw, dashed, minimum height=10mm]
+\tikzstyle{trans}=[shape=rectangle, draw, minimum height=6mm, minimum width=12mm]
+ 
+\centering
+
+%OPTIONS of tikzpicture:
+% scale option scales the whole picture 
+
+
+%GENERAL TIPS
+% cordinate system starts from left bottom corner
+
+\begin{tikzpicture}[scale=2,inner sep=0.4mm]
+%\node (e1) [place,label=below left:{$e_1$}] at (3,0) {$f(e_1)$};
+
+
+% DRAWING LINES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Drawing a straight line 
+% Specify points and put -- between them
+\draw (0.5,0) -- (3,2); % Draw a line from point (0,0) to (1,0)
+
+% Drawing a broken line
+% Specify points and put -- between them
+\draw (0,0) -- (2,2.5) -- (5,2.5) -- (1,0);
+
+% Drawing a curve line
+% Specify point, after a point put .. and controls point, 
+% then .. or last point and so on
+\draw (0,0) .. controls(1,1) .. (2,3) .. controls(3,6) .. (3,0);
+
+% Drawing help lines from point (0,0) to point (2,3)
+% These are gray lines on the picture
+\draw[help lines] (0,0) grid (2,3);
+
+% Adding arrows to the lines is simple...
+\draw [->] (0,6) -- (6,5);
+\draw [<-] (0,4) -- (5,3);
+\draw [|->] (0,3) -- (6,1);
+
+% Adding options to lines
+
+% width
+\draw [thick] (0,2) -- (6,3);
+\draw [ultra thick] (0,1) -- (6,2);
+
+% type of line & colors
+\draw [dashed, green] (4,1) -- (2,0.5);
+\draw [dotted, ultra thick, red] (0,2) -- (3.5,5);
+
+
+% DRAWING SHAPES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Drawing different shapes
+
+%Circle - specify middle and radius
+\draw (0,0) circle (7pt);
+%Ellipse - specify middle and axes
+\draw (5,5) ellipse (20pt and 7pt);
+%Rectangle - Square - specify bottom left point first and up right corner next
+\draw (0,0) rectangle (5,5);
+
+
+% NODES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% specify name of node i brackets ( needed to appeal to node )
+% then specify its center, then set its shape in options
+% and put draw to draw node, put string in curly brackets 
+% to be put into node 
+\node (name_a) at (3.5,3.5) [shape=circle, draw] {$x_1$};
+\node (b) at (5.5,5.5) [shape=rectangle, draw] {$x_2$};
+
+% Drawing connections between nodes
+% We simply draw lines/arrows like we did with drawing lines, but 
+% this time we use names of nodes instead of points, and we specify
+% how to reach the node
+\draw [->] (name_a.east) -- (b.center);
+
+% Using 'to' to draw connections between nodes allows us to specify angle
+% of input and output
+\draw [->] (name_a) to [out=135, in=45] (b);
+
+
+% Adding label to node
+\node (c) [place, label=below left:{$e_1$}] at (2,5) [shape=rectangle] {node}; 
+   
+
+
+\end{tikzpicture}
+ 
+\end{document}
