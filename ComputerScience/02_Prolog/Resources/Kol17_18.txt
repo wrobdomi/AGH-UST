@@ -1,0 +1,114 @@
+
+% IMIÊ I NAZWISKO: 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% [10%] ZADANIE 1 (rozgrzewka)
+% Stwórz listê zawieraj¹c¹ wszystkie liczby ca³kowite z zadanego zakresu.
+% Przyk³ad:
+% ?- zakres(4,9,Lista).
+% Lista = [4,5,6,7,8,9]
+
+zakres(Start, Stop, Lista) :- fail.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% [15%] ZADANIE 2 (proste listy)
+% Umieœæ element na zadanej pozycji w liœcie.
+% Przyk³ad:
+% ?- umiesc(alfa,[a,b,c,d],2,Wynik).
+% Wynik = [a,alfa,b,c,d]
+
+umiesc(Elem, List, Pozycja, Wynik) :- fail.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% [25%] ZADANIE 3 (zagadka logiczna)
+% Andrzej, Barbara i Celina ustalaj¹ w toku rozmowy, ¿e wykonuj¹
+% trzy ró¿ne zawody (lekarz, prawnik, in¿ynier) i graj¹ na trzech
+% ró¿nych instrumentach (fortepian, flet, skrzypce). Wiedz¹c, ¿e:
+%  - Barbara jest ¿on¹ lekarza,
+%  - prawnik gra na fortepianie,
+%  - Barbara nie jest in¿ynierem,
+%  - Andrzej jest pacjentem skrzypka
+% ustal kto gra na flecie.
+% NIE wykorzystuj w tym zadaniu LIST!
+% Przyk³adowy wynik predykatu solution:
+% ?- solution(Flute).
+% Flute = krzysztof
+
+solution(Flute) :- fail.
+
+% trzy osoby ju¿ zosta³y zdefiniowane dla u³atwienia:
+person(andrzej).   person(barbara).   person(celina).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% [25%] ZADANIE 4 (baza wiedzy)
+% Dana jest baza wiedzy jak ni¿ej:
+
+% miasto(Nazwa, Populacja, Powierzchnia).
+miasto('Warszawa', 1735442, 51724).
+miasto('Kraków', 761873, 32685).
+miasto('£ódŸ', 706004, 29325).
+miasto('Wroc³aw', 634487, 29282).
+miasto('Poznañ', 545680, 26191).
+miasto('Gdañsk', 461489, 26196).
+
+% trasa(Miasto - Miasto, D³ugoœæ, Szacowany czas przejazdu w minutach).
+trasa('Warszawa' - 'Kraków', 294, 244).
+trasa('Warszawa' - 'Kraków', 355, 239).
+trasa('Warszawa' - 'Kraków', 311, 266).
+trasa('Gdañsk' - 'Warszawa', 341, 253).
+trasa('Warszawa' - '£ódŸ', 130, 92).
+trasa('Kraków' - 'Wroc³aw', 269, 169).
+
+% [15%] Dopisz predykat dojazd/2, który wskazuje, czy istnieje poœrednia
+% lub bezpoœrednia trasa miêdzy dwoma miastami. Predykat powinien
+% abstrahowaæ od kierunku trasy (X - Y i Y - X s¹ dla niego równowa¿ne).
+% Przyk³ad:
+% ?- dojazd('£ódŸ', 'Gdañsk').
+% true
+
+
+dojazd(MiastoX, MiastoY) :- fail.
+
+
+
+% [10%] Zmodyfikuj predykat dojazd/2 stworzony powy¿ej (skopiuj jego kod
+% i rozbuduj go) tak, aby oprócz sprawdzenia, czy istnieje dojazd, podawa³
+% równie¿ listê miast, przez które trzeba przejechaæ. Miasta przejazdowe
+% powinny byæ zwrócone jako lista w 3 argumencie.
+% Przyk³ad:
+% ?- dojazd('£ódŸ', 'Gdañsk', Posrednie).
+% Posrednie = ['Warszawa']
+
+dojazd(MiastoX, MiastoY, Posrednie) :- fail.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% [25%] ZADANIE 5 (trudniejsze listy)
+% Wytnij zadany fragment listy. Start okreœla indeks pierwszego, a Stop
+% indeks ostatniego wyciêtego elementu. Zak³adamy, ¿e pierwszy element listy
+% ma numer 1.
+% Przyk³ad
+% ?- wytnij([a,b,c,d,e,f,g,h,i,k], 3, 7, Wynik).
+% Wynik = [c,d,e,f,g]
+
+wytnij(Lista, Start, Stop, Wynik) :- fail.
+
+
+%wytnij(Lista, Start, Stop, Wynik) :- fail.
+
+
+
+
+
+
+
+

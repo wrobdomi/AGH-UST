@@ -1,0 +1,656 @@
+Toggle navigation  <https://swish.swi-prolog.org/> *SWISH*
+<https://swish.swi-prolog.org/>
+
+  * File**
+      o Save ...
+      o Info & history ...
+      o Reload
+      o Open recent
+      o
+      o Follow ...
+      o Start TogetherJS ...
+      o
+      o Download
+      o Print ...
+  * Edit**
+      o Clear messages
+      o
+      o View changes
+      o
+      o Find(Ctrl-F)(Ctrl-F)
+      o Find and replace(Shift-Ctrl-F)(Shift-Ctrl-F)
+      o Jump to line(Alt-G)(Alt-G)
+      o
+      o Semantic highlighting
+      o Emacs Keybinding
+      o Open document in new tab
+      o Preserve state in browser
+  * Examples**
+      o Example programs
+      o Prolog tutorials
+      o SWISH tutorials
+      o
+      o Usage statistics
+  * Help**
+      o About
+      o
+      o Help
+      o Runner
+      o Debugging
+      o Notebook
+      o Editor
+      o Chat
+      o Login extras
+      o
+      o Limitations
+      o Caveats
+      o Background
+
+  *
+      o
+
+
+
+
+        	
+        		
+        	
+        	
+        		
+        		
+        		
+        		
+        		
+        		
+        		
+        		
+        	
+        	
+        		
+        		
+        		
+        		
+        		
+        		
+        		
+        		
+        		
+        		
+        		
+        	
+        	
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        		
+        			
+        		
+        	
+        	
+        		
+        	
+        	
+        		
+        		
+        	
+        	
+        		
+        			
+        		
+        	
+        	
+        		
+        	
+
+
+        	
+        		
+        	
+        	
+        		
+        	
+        	
+        		
+        	
+        	
+        		
+        	
+
+
+        	
+        		
+        		
+        		
+        		
+        	
+        	
+        		
+        		
+        		
+        		
+        	
+        	
+        		
+        		
+        		
+        		
+        	
+        	
+        		
+        			
+        		
+        			
+        		
+        		
+        	
+        	
+        		
+        		
+        	
+        	
+        		
+        		
+        		
+        		
+        	
+        	
+        		
+        			
+        		
+        		
+        			
+        		
+        	
+        	
+        		
+        			
+        		
+        		
+        			
+        		
+        	
+
+
+        	
+        		
+        	
+        	
+        		
+        	
+        	
+        		
+        	
+        	
+        		
+        	
+
+
+        	
+        		
+        			
+        		
+        	
+        	
+        		
+        			
+        		
+        	
+        	
+        		
+        			
+        		
+        	
+        	
+        		
+        	
+        	
+        		
+        			
+        		
+        	
+        	
+        		
+        			
+        		
+        	
+        	
+        		
+        	
+        	
+        		
+        			
+        			
+        		
+        	
+
+        **
+          +
+      +
+    118 users online
+  *
+
+    //
+
+  * [Login with Google] [Login with StackOverflow] Logout
+  * 25**
+      o Open hangout
+      o Open chat for current file
+  *
+
+  * - <#tabbed-tab-0>Program
+*
+
+na koncu
+
+x
+
+1
+10
+100
+ 
+54
+
+    X \= Y.
+
+55
+
+​
+
+56
+
+brat(X,Y) :-
+
+57
+
+    rodzic(Z,X),
+
+58
+
+    rodzic(Z,Y),
+
+59
+
+    mezczyzna(X),
+
+60
+
+    X \= Y.
+
+61
+
+​
+
+62
+
+przodek(X,Y) :-
+
+63
+
+    rodzic(X,Y).
+
+64
+
+​
+
+65
+
+przodek(X,Z) :-
+
+66
+
+    rodzic(X,Y),
+
+67
+
+    przodek(Y,Z).
+
+68
+
+​
+
+69
+
+%%
+
+70
+
+madziecko(X) :-
+
+71
+
+    rodzic(X,_).
+
+72
+
+​
+
+73
+
+                % 2 razy robert? unique?
+
+74
+
+​
+
+75
+
+%% ex 1.3
+
+76
+
+szczesciarz(X) :-
+
+77
+
+    madziecko(X).
+
+78
+
+​
+
+79
+
+dwojedzieci(X) :-
+
+80
+
+    rodzic(X,Y),
+
+81
+
+    siostra(_,Y).
+
+82
+
+​
+
+83
+
+%% ex 1.4
+
+84
+
+wnuk(X,Z) :-
+
+85
+
+    rodzic(Y,X),
+
+86
+
+    rodzic(Z,Y).
+
+87
+
+​
+
+88
+
+%% ex 1.5
+
+89
+
+ciocia(X,Y) :-
+
+90
+
+    rodzic(Z,Y),
+
+91
+
+    siostra(X,Z).
+
+92
+
+​
+
+93
+
+​
+
+94
+
+​
+
+95
+
+/* Zapytania:
+
+96
+
+ * 
+
+97
+
+ * kobieta(K),write(K),write(' to kobieta.'),nl. -- znajduje jedna z kobiet i wypisuje jej imie,
+
+98
+
+ * -- dziala zgodnie z algorytmem prologa przeszukiwania drzewa, znajduje pierwsze rozwiazanie poprawne
+
+99
+
+ * -- i wraca
+
+100
+
+ * 
+
+101
+
+ * kobieta(K),write(K),write(' to kobieta.'),nl,fail. -- wymusza odnajdywanie kolejnych kobiet w 
+
+102
+
+ * -- w jednym wywolaniu, fail powoduje, ze predykat jest zawsze niespelniony i prolog wraca do poszukiwania 
+
+103
+
+ * -- rozwiazania od nowa zmieniajac wartosc K
+
+104
+
+ * 
+
+105
+
+ * kobieta(K),fail. -- zwraca false ponieważ ostateczna wartosc predykatu to false, wynika to z tego, że
+
+106
+
+ * -- ostatecznie prolog nie znalzl ani jednego rozwiazania ktore zwrociloby true z powodu dodania .fail 
+
+107
+
+ * -- na koncu
+
+108
+
+ */ 
+
+  * Collapse all
+  * Expand all
+  * Stop all
+  * Clear
+
+  * Re-run
+
+write('Ala ma '),write('kota'),nl,write('w ciapki!').
+Ala ma kota
+w ciapki!
+1true
+AbortNext101001,000 Stop
+Abort
+
+Send
+
+  * Re-run
+
+go.
+What state do you want to know about?
+Type its name, all lower case, followed by a period.
+florida.
+Its capital is: tallahassee
+1true
+AbortNext101001,000 Stop
+Abort
+
+Send
+
+  * Re-run
+
+kobieta(K),write(K),write(' to kobieta.'),nl.
+kasiato kobieta.
+K = kasia
+elizato kobieta.
+K = eliza
+magdato kobieta.
+K = magda
+annato kobieta.
+K = anna
+AbortNext101001,000 Stop
+Abort
+
+Send
+
+  * Re-run
+
+kobieta(K),write(K),write(' to kobieta.'),nl,fail.
+kasiato kobieta.
+elizato kobieta.
+magdato kobieta.
+annato kobieta.
+false
+AbortNext101001,000 Stop
+Abort
+
+Send
+
+  * Re-run
+
+kobieta(K),fail.
+false
+AbortNext101001,000 Stop
+Abort
+
+Send
+
+  * Re-run
+
+kobieta(K),fail,kobieta.
+
+procedure `kobieta' does not exist
+
+AbortNext101001,000 Stop
+Abort
+
+Send
+
+  * Re-run
+
+kobieta(K),fail.
+false
+AbortNext101001,000 Stop
+Abort
+
+Send
+
+x
+
+ 
+
+kobieta(K),fail.
+
+?-
+Examples
+
+History
+
+  * rodzic(kasia,a).
+  * rodzic(kasia,Uy).
+  * rodzic(Y,robert).
+  * rodzic(Yu,robert).
+  * mezczyzna(X);
+  * mezczyzna(X).
+  * rodzic(X,robert),mezczyzna(X).
+  * rodzic(Y,robert),mezczyzna(Y).
+  * rodzic(Y,robert),kobieta(Y).
+  * rodzic(Y,krzys)..
+  * rodzic(Y,krzys).
+  * parent(Y,krzys).
+  * matka(X,robert).
+  * matka(robert,X).
+  * ojciec(robert,X).
+  * ojciec(X, robert).
+  * brat(robert).
+  * brat(X,robert).
+  * brat(X,jan).
+  * brat(X,magda).
+  * brat(X,eliza).
+  * siostra(X,robert).
+  * dziadek(jan).
+  * dziadek(X,jan).
+  * dziadek(X,magda).
+  * dziadek(X,anna).
+  * dziadek(X,eliza).
+  * babcia(X,magda).
+  * babcia(X,anna).
+  * babcia(X,jan).
+  * przodek(X,jan).
+  * potomek(eliza, tomek).
+  * potomek(robert, tomek).
+  * potomek(X, tomek).
+  * descendant(X, robert).
+  * potomek(anna, robert).
+  * potomek(magda, robert).
+  * potomek(jan, magda).
+  * potomek(jan, robert).
+  * potomek(X, robert).
+  * potomek(X, kasia).
+  * krewny(X,eliza).
+  * listing.
+  * kobieta(K),write(K),fail.
+  * write('Ala ma '),write('kota'),nl,write('w ciapki!').
+  * go.
+  * kobieta(K),write(K),write(' to kobieta.'),nl.
+  * kobieta(K),write(K),write(' to kobieta.'),nl,fail.
+  * kobieta(K),fail,kobieta.
+  * kobieta(K),fail.
+
+Solutions
+
+  * Aggregate (count all)
+  *
+  * Projection
+  * Order by
+  * Distinct
+  * Limit
+  *
+  * Time
+  * Debug (trace)
+
+table resultsRun!
