@@ -1,0 +1,40 @@
+#!/bin/bash
+export PATTERN="0"
+export PASS="0"
+
+function checkforchar()
+{
+ 	PASS=`echo "${PATTERN}" | grep "[^abcdefghijklmnoprstwuxyzABCDEFGHIJKLMNOPRSTWUXYZ\.]" | wc -l`	
+}	
+
+function askforword()
+{
+	echo " Podaj slowo z literami i kropkami "
+	read PATTERN
+	echo " Podane przez Ciebie slowo to ${PATTERN} "
+	checkforchar
+}
+
+function checkforpass()
+{
+if [ "${PASS}" = "1" ]
+then
+echo "Podano bledne slowo"
+else
+grep "${PATTERN}" test
+fi
+}
+
+if [ "${#}" = "0" ]
+
+then
+        echo " Nie podano slowa "
+        askforword
+ 	checkforpass	
+else
+	echo "Podales argument ${1}"
+	PATTERN="${1}"
+	checkforchar
+	checkforpass
+fi
+

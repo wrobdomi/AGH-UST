@@ -1,0 +1,76 @@
+#!/bin/bash
+
+export PASSWORD="0"
+export LENGTH="0"
+export TRESHOLD="8"
+export ADDPASWD="0"
+export TR=0
+export CONTROL="${1}"
+
+function getrandom()
+{
+TEMP="0"
+PASSWORD="`sort -R zad3 | head -1`"
+TEMP=`echo "${PASSWORD}" | wc -c`
+LENGTH=$(( TEMP-1 ))
+}
+
+function additionalrand()
+{
+TEMPINDEX=0
+TEMPCHAR="0"
+while [ $TEMPINDEX -lt $LENGTH ] 
+do
+	TEMPCHAR="${PASSWORD:TEMPINDEX:1}"
+	TEMPINDEX=$(( TEMPINDEX+1 ))
+	echo "${TEMPCHAR}"
+	ADDPASWD=`sort -R zad3 | grep "^${TEMPCHAR}" | head -1`
+	echo "${ADDPASWD}"
+done
+}
+
+
+function additionalrandprint()
+{
+TEMPINDEX=0
+TEMPCHAR="0"
+TEMPLEN=0
+TEMPLEN1=0	
+while [ $TEMPINDEX -lt $LENGTH ]
+do
+        TEMPCHAR="${PASSWORD:TEMPINDEX:1}"
+        TEMPINDEX=$(( TEMPINDEX+1 ))
+        echo "${TEMPCHAR}"
+        ADDPASWD=`sort -R zad3 | grep "^${TEMPCHAR}" | head -1`
+        TEMPLEN=`echo "${ADDPASWD}" | wc -c` 
+	TEMPLEN1=$(( TEMPLEN-1 ))
+	echo -n "|"
+	while [ $TEMPLEN1 -gt $TR ]
+	do
+	echo -n "_|"
+	TEMPLEN1=$(( TEMPLEN1-1 ))
+	done		 
+done
+}
+
+case "$CONTROL" in
+"-s")
+	while [ "${TRESHOLD}" -gt "${LENGTH}" ] 
+	do
+		getrandom
+	done
+
+	echo " Wylosowane haslo to ${PASSWORD}, ma dlugosc ${LENGTH} liter. "
+	additionalrand
+;;
+"-p")
+	while [ "${TRESHOLD}" -gt "${LENGTH}" ]
+        do
+                getrandom
+        done
+
+	additionalrandprint
+;;
+*) 
+echo "Brak opcji"
+esac
