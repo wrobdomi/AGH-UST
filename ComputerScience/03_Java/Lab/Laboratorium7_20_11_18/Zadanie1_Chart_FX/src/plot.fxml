@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="380.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="PlotController">
+
+  <children>
+    <BorderPane layoutX="14.0" layoutY="14.0" prefHeight="380" prefWidth="950">
+
+      <bottom>
+        <HBox alignment="CENTER" prefHeight="38.0" prefWidth="800.0">
+
+          <children>
+
+            <Label text="Degree" HBox.hgrow="SOMETIMES">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+              </HBox.margin>
+            </Label>
+            <Separator prefWidth="25.0" />
+            <TextField fx:id="degree" prefWidth="45.0" text="3" />
+            <Separator prefWidth="25.0" />
+
+            <Label text="X Min" HBox.hgrow="SOMETIMES">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+              </HBox.margin>
+            </Label>
+            <Separator prefWidth="25.0" />
+            <TextField fx:id="minimumX" prefWidth="45.0" text="0" />
+            <Separator prefWidth="25.0" />
+
+            <Label text="X Max" HBox.hgrow="SOMETIMES">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+              </HBox.margin>
+            </Label>
+            <Separator prefWidth="25.0" />
+            <TextField fx:id="maximumX" prefWidth="45.0" text="10" />
+            <Separator prefWidth="25.0" />
+
+            <Label text="Samples" HBox.hgrow="SOMETIMES">
+              <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+              </HBox.margin>
+            </Label>
+            <Separator prefWidth="25.0" />
+            <TextField fx:id="howManySamples" prefWidth="45.0" text="11" />
+            <Separator prefWidth="25.0" />
+            <Button mnemonicParsing="false" onAction="#menageGUI" text="Set" />
+
+          </children>
+
+        </HBox>
+      </bottom>
+
+      <center>
+        <HBox alignment="CENTER" prefHeight="250" prefWidth="800.0">
+          <Pane fx:id="mainPane" />
+        </HBox>
+      </center>
+
+      <right>
+        <VBox id="fraction" fx:id="factorBox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" />
+      </right>
+
+    </BorderPane>
+  </children>
+
+</AnchorPane>

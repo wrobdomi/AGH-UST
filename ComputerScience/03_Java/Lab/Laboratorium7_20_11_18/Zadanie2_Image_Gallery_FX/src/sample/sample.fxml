@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane id="externalBorder" fx:id="externalBorder" prefHeight="546.0" prefWidth="725.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <left>
+      <ScrollPane fx:id="imagesPreview" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="300.0" vbarPolicy="ALWAYS" BorderPane.alignment="CENTER" />
+   </left>
+   <top>
+      <Button id="directoryChooser" fx:id="directoryChooser" mnemonicParsing="false" onMousePressed="#findDirectory" style="-fx-background-color: blue;" text="Choose directory..." textAlignment="CENTER" textFill="WHITE" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" top="5.0" />
+         </BorderPane.margin>
+      </Button>
+   </top>
+   <center>
+      <StackPane id="imagesFullView" fx:id="imagesFullView" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

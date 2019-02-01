@@ -1,0 +1,4 @@
+1. Add src folder to the project 
+2. File -> ProjectStructure -> Libraries -> Add
+3. Navigate to polyExternalService.jar
+4. Apply

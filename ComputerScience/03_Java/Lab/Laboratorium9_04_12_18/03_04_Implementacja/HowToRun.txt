@@ -1,0 +1,20 @@
+1. Add ClientApp and ServerApp folders to project
+2. Ensure that port 8819 is not busy
+3. Run MainServe ( starts localhost )
+4. Run one instance of LoginView
+5. Log in with credentials: 
+  - login: dominik
+  - password: dominik
+4. Run another instance of LoginView
+5. Log in with credentials: 
+  - login: tomek
+  - password: tomek
+4. Run another instance of LoginView
+5. Log in with credentials: 
+  - login: marysia
+  - password: marysia
+5.5 Should you have any problems starting loginView, try again from point 3.
+6. Double click name of user you want write to
+7. Double click name of user you want to receive messages from
+8. Type your message at the bottom in TextField and press Enter
+9. Your message should be visible in proper window

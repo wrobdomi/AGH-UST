@@ -1,0 +1,3 @@
+To jest plik testowy
+Ten tekst zostanie zaszyfrowany
+Przez algorytmy szyfrujace
