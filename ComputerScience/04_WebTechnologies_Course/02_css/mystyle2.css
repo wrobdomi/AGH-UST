@@ -1,0 +1,101 @@
+/* Zadanie 1 */ 
+body {
+    font-family: helvetica, sans-serif; 
+    font-size: 15px;
+    font-style: normal;
+}
+
+/* Zadanie 1 */ 
+h1 { 
+    color: green; 
+    letter-spacing: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+/* Zadanie 1 */ 
+h2 {
+    color: blue;
+}
+
+/* Zadanie 1 */ 
+h3 {
+    color: pink;
+}
+
+/* Zadanie 1 */ 
+p {
+    text-indent: 80px;
+}
+
+p::first-letter {
+    font-size: 30px;
+}
+
+ul {
+    display: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 120px;
+    border: 1px solid black;
+    float: right;
+}
+
+ul li {
+    border-bottom: 1px solid black;
+    background-color: gray;
+    text-align: center;
+}
+
+ul li a {
+    cursor: default;
+    text-decoration: none;
+}
+
+ul li:hover {
+    background-color: blue;
+    color: white;
+}
+
+#maincontent{
+    background-color: silver;
+    max-width: 960px;
+    margin-left: 25%;
+}
+
+#links{
+    width: 25%;
+    float: left;
+    /* position: fixed; */
+}
+
+#menu {
+    float: right;
+    clear: both;
+}
+
+
+@media screen and (min-width: 800px){
+    #menu{
+        display: none;
+    }
+    #m{
+        display: block;
+    }
+}
+
+@media screen and (max-width: 800px){
+    #menu{
+        display: block;
+    }
+    
+}
+    
+:target{
+    display: block;
+} 
+
+
+
+

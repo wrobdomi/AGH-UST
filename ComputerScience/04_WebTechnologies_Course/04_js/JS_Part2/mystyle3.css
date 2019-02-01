@@ -1,0 +1,140 @@
+/* Zadanie 1 */ 
+body {
+    font-family: helvetica, sans-serif; 
+    font-size: 15px;
+    font-style: normal;
+}
+
+/* Zadanie 1 */ 
+h1 { 
+    color: green; 
+    letter-spacing: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+
+/* Zadanie 1 */ 
+p {
+    text-indent: 80px;
+}
+
+p::first-letter {
+    font-size: 30px;
+}
+
+
+
+
+
+table {
+    border-collapse: collapse;
+    border: 3px solid blue;
+    background-color: gray;
+    margin: auto;
+}
+
+thead {
+    font-size: 20px;
+    color: purple;
+    border: 2px solid black;
+    background-color: yellow;
+}
+
+th {
+    text-transform: uppercase;
+    border: 1px solid green;
+}
+
+tbody {
+    font-size: 14px;
+    color: blue;
+}
+
+td {
+    border: 1px solid green;
+}
+
+
+
+
+
+ol {
+    list-style-type: upper-roman;
+}
+
+ol ol {
+    list-style-type: lower-roman;
+}
+
+ol ol ol {
+    list-style-type: lower-greek;
+}
+
+#firstCol {
+    background-color: brown;
+}
+
+#secondCol {
+    background-color: orange;
+}
+
+ul {
+    display: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 120px;
+    border: 1px solid black;
+    float: right;
+}
+
+ul li {
+    border-bottom: 1px solid black;
+    background-color: gray;
+    text-align: center;
+}
+
+ul li a {
+    cursor: default;
+    text-decoration: none;
+}
+
+ul li:hover {
+    background-color: blue;
+    color: white;
+}
+
+#maincontent{
+    background-color: silver;
+    max-width: 960px;
+    margin-left: 25%;
+}
+
+#links{
+    width: 25%;
+    float: left;
+    /* position: fixed; */
+}
+
+
+#menu {
+    float: right;
+    clear: both;
+}
+
+
+:target{
+    display: block;
+}
+
+
+@media screen and (min-width: 800px){
+    #menu{
+        display: none;
+    }
+    #m{
+        display: block;
+    }
+}
+

@@ -1,0 +1,140 @@
+<?xml version="1.0"?> <!-- Wersja XML -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <!-- Wersja XHTML-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Ćwiczenie3</title> <!-- Tytuł z polskimi znakami -->
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; 
+		charset=UTF-8" /> <!-- Kodowanie dokumentu -->
+	</head>
+	<body>
+        
+        <div>	
+                <ul>
+                    <li> <a href="./zadanie1.html">Zadanie 1</a> </li>
+                    <li> <a href="./zadanie2.html">Zadanie 2</a> </li>
+                    <li> <a href="./zadanie4.html">Zadanie 4</a> </li>
+                    <li> <a href="#tab">Tabela</a> </li>
+                    <li> <a href="#lis">Lista</a> </li>
+                    <li> <a href="#def">Definicje</a> </li>
+                </ul> 
+        </div>
+
+        <div>
+            <a id="tab"></a>
+            <h1>Tabela</h1>
+                <table>
+                        <thead>
+                            <tr>
+                                <th>Wartość 1</th>
+                                <th>Wartość 2</th>
+                                <th>Wartość 3</th>
+                                <th>Wartość 4</th>
+                                <th>Wartość 5</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                                <tr>
+                                    <td>1 tfoot</td>
+                                    <td>2 tfoot</td>
+                                    <td>3 tfoot</td>
+                                    <td>4 tfoot</td>
+                                    <td>5 tfoot</td>
+                                </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2">rowspan = 2</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td colspan="2">colspan = 2</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td rowspan="2" colspan="2">rowspan = 2 <br/> colspan = 2 </td>
+                                
+                                <td>5</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                        
+                                <td>5</td>
+                            </tr>
+                        </tbody>
+                </table>
+            <a id="lis"></a>
+            <h1>Lista</h1>
+                <ol>
+                    <li>Napoje
+                        <ul>
+                            <li>Woda</li>
+                            <li>Sok
+                            <ul>
+                                <li>Jakbłkowy</li>
+                                <li>Bananowy</li>
+                            </ul> 
+                            </li> 
+                            <li>Kawa</li>
+                        </ul> 
+                    </li>     
+                    <li>Jedzenie
+                    <ul>
+                        <li>Ciastka</li>
+                        <li>Czekolada
+                        <ul>
+                            <li>Mleczna</li>
+                            <li>Orzechowa</li>
+                            <li>Bakaliowa</li>
+                        </ul> 
+                        </li> 
+                        <li>Chleb</li>
+                    </ul> 
+                    </li>
+                    <li>Książki
+                    <ul>
+                        <li>Java</li>
+                        <li>Bazy Danych
+                        <ul>
+                            <li>PostgreSQL</li>
+                            <li>Oracle</li>
+                            <li>MySQL</li>
+                        </ul>
+                        </li>  
+                        <li>JavaScript</li>
+                    </ul> 
+                    </li>
+                </ol>  
+            <a id="def"></a>
+            <h1>Wykaz definicji</h1>
+                <dl>
+                    <dt>Obiekt</dt>
+                    <dd>Podstawowe pojęcie wchodzące w skład paradygmatu programowania obiektowego </dd>
+                    <dt>Klasa</dt>
+                    <dd>Częściowa lub całkowita definicja dla obiektów.</dd>
+                    <dt>Metoda</dt>
+                    <dd>Podprogram składowy klasy, którego zadaniem jest działanie na rzecz określonych elementów danej klasy lub klas z nią spokrewnionych</dd>
+                </dl>
+            <p>
+                <a href="http://validator.w3.org/check?uri=referer"><img
+                    src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+            </p>
+        </div>
+
+	</body>
+</html>
