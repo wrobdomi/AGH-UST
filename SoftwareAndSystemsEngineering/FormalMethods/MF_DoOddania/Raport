@@ -1,0 +1,148 @@
+CPN Tools state space report for:
+/cygdrive/C/Users/Dominik/Desktop/RezerwacjeBiletow_v_2_3_podzial_kierunkow25.cpn
+Report generated: Thu Apr  4 20:58:41 2019
+
+
+ Statistics
+------------------------------------------------------------------------
+
+  State Space
+     Nodes:  6306
+     Arcs:   23286
+     Secs:   3
+     Status: Full
+
+  Scc Graph
+     Nodes:  1
+     Arcs:   0
+     Secs:   1
+
+
+ Boundedness Properties
+------------------------------------------------------------------------
+
+  Best Integer Bounds
+                             Upper      Lower
+     New_Page'DO_KUPIENIAX 1 2          2
+     New_Page'DO_KUPIENIAY 1 2          2
+     New_Page'KIERUNEK_X 1   2          2
+     New_Page'KIERUNEK_Y 1   2          2
+     New_Page'KUP_BILET 1    2          0
+     New_Page'NOWY_KLIENT 1  1          1
+     ZMIANA_TYGODNIA'TYDZIEN_A 1
+                             1          0
+     ZMIANA_TYGODNIA'TYDZIEN_B 1
+                             1          0
+
+  Best Upper Multi-set Bounds
+     New_Page'DO_KUPIENIAX 1
+                         1`(0,X,A)++
+1`(0,X,B)++
+1`(1,X,A)++
+1`(1,X,B)++
+1`(2,X,A)++
+1`(2,X,B)
+     New_Page'DO_KUPIENIAY 1
+                         1`(0,Y,A)++
+1`(0,Y,B)++
+1`(1,Y,A)++
+1`(1,Y,B)++
+1`(2,Y,A)++
+1`(2,Y,B)
+     New_Page'KIERUNEK_X 1
+                         1`(0,X,A)++
+1`(0,X,B)++
+1`(1,X,A)++
+1`(1,X,B)++
+1`(2,X,A)++
+1`(2,X,B)
+     New_Page'KIERUNEK_Y 1
+                         1`(0,Y,A)++
+1`(0,Y,B)++
+1`(1,Y,A)++
+1`(1,Y,B)++
+1`(2,Y,A)++
+1`(2,Y,B)
+     New_Page'KUP_BILET 1
+                         2`(X,A)++
+2`(X,B)++
+2`(Y,A)++
+2`(Y,B)
+     New_Page'NOWY_KLIENT 1
+                         1`(0,0,false)++
+1`(0,0,true)++
+1`(0,1,true)++
+1`(1,0,false)++
+1`(1,0,true)++
+1`(1,1,true)++
+1`(2,0,false)++
+1`(2,0,true)++
+1`(2,1,true)
+     ZMIANA_TYGODNIA'TYDZIEN_A 1
+                         1`A
+     ZMIANA_TYGODNIA'TYDZIEN_B 1
+                         1`B
+
+  Best Lower Multi-set Bounds
+     New_Page'DO_KUPIENIAX 1
+                         empty
+     New_Page'DO_KUPIENIAY 1
+                         empty
+     New_Page'KIERUNEK_X 1
+                         empty
+     New_Page'KIERUNEK_Y 1
+                         empty
+     New_Page'KUP_BILET 1
+                         empty
+     New_Page'NOWY_KLIENT 1
+                         empty
+     ZMIANA_TYGODNIA'TYDZIEN_A 1
+                         empty
+     ZMIANA_TYGODNIA'TYDZIEN_B 1
+                         empty
+
+
+ Home Properties
+------------------------------------------------------------------------
+
+  Home Markings
+     All
+
+
+ Liveness Properties
+------------------------------------------------------------------------
+
+  Dead Markings
+     None
+
+  Dead Transition Instances
+     None
+
+  Live Transition Instances
+     All
+
+
+ Fairness Properties
+------------------------------------------------------------------------
+
+  Impartial Transition Instances
+     ZMIANA_TYGODNIA'ZMIANA_TYGODNIA_A 1
+     ZMIANA_TYGODNIA'ZMIANA_TYGODNIA_B 1
+
+  Fair Transition Instances
+     None
+
+  Just Transition Instances
+     None
+
+  Transition Instances with No Fairness
+     GENERACJA_KLIENTOW'WYBRANO_BILET_XA 1
+     GENERACJA_KLIENTOW'WYBRANO_BILET_XB 1
+     GENERACJA_KLIENTOW'WYBRANO_BILET_YA 1
+     GENERACJA_KLIENTOW'WYBRANO_BILET_YB 1
+     New_Page'BILET_DOSTEPNY_X 1
+     New_Page'BILET_DOSTEPNY_Y 1
+     New_Page'ZAPLACONOX 1
+     New_Page'ZAPLACONOY 1
+     New_Page'ZWROCONOX 1
+     New_Page'ZWROCONOY 1
