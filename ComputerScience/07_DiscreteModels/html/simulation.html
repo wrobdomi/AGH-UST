@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>IntelligentLighting</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+  <!-- icons library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- My scripts -->
+  <script src="..\js\sensor.js"></script>
+  <script src="..\js\light.js"></script>  
+  <script src="..\js\main.js"></script>
+  <script src="..\js\physicsCalculations.js"></script>
+  <script src="..\js\cellsIds.js"></script>
+  <script src="..\js\cellularAlgorithm.js"></script>
+
+  <!-- My CSS -->
+  <link rel="stylesheet" href="..\css\main.css">
+</head>
+
+<body>
+
+<div class="fixed-top text-center params-info" id="params-top">Light-sensor distance: 2, &nbsp;&nbsp;&nbsp;&nbsp;
+    Side length: 1, &nbsp;&nbsp;&nbsp;&nbsp; Minimal required intensity: 300</div>
+
+<div class="jumbotron text-center">
+  <img src="..\images\agh.png" alt="AGH Logo"> 
+  <h1>Stochastic model of intelligent lighting</h1>
+  <hr style="width: 800px;">
+  <p>Cellular automata</p> 
+</div>
+
+<div class="container">
+  
+  <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href=".\lightingmodel.html">Overview</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href=".\simulation.html">Simulation</a>
+        </li>
+    </ul>
+
+</div>
+
+
+<div class="container form-section-frame" style="margin-top: 15px;">
+
+        <h3>1. Grid Generation</h3>
+
+        <form>
+            <div class="form-row ">
+                <div class="form-group col-md-6">
+                    <label for="nRows">Number of rows</label>
+                    <input type="text" class="form-control" id="nRows" placeholder="Rows">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="nCols">Number of columns</label>
+                    <input type="text" class="form-control" id="nCols" placeholder="Cols">
+                </div>
+            </div>
+        </form>
+
+        <button class="btn btn-primary" onclick="generateGrid()">Generate grid</button>
+</div>
+
+<div class="container form-section-frame" style="margin-top: 15px;">
+
+        <h3>2. General params</h3>
+
+        <form>
+            <div class="form-row ">
+                <div class="form-group col-md-4">
+                    <label for="lsDistance">Light-Sensor distance [m]</label>
+                    <input type="text" class="form-control" id="lsDistance" placeholder="From light to sensor...">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cellSideLength">Cell side lenght [m]</label>
+                    <input type="text" class="form-control" id="cellSideLength" placeholder="Cell side length...">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="minIntRequired">Min. required intensity [lx]</label>
+                    <input type="text" class="form-control" id="minIntRequired" placeholder="Min. intensity...">
+                </div>
+            </div>
+        </form>
+
+        <button class="btn btn-primary" onclick="changeGeneralParams()">Set</button>
+</div>
+
+
+<div class="container form-section-frame" style="margin-top: 15px;">
+
+        <h3>3. Add sensor</h3>
+
+        <form>
+            <div class="form-row ">
+                
+                <div class="form-group col-md-4">
+                    <label for="xSensor">X coordinate</label>
+                    <input type="text" class="form-control" id="xSensor" placeholder="X">
+                </div>
+                
+                <div class="form-group col-md-4">
+                    <label for="ySensor">Y coordinate</label>
+                    <input type="text" class="form-control" id="ySensor" placeholder="Y">
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="sensorColor">Color</label>
+                    <select id="sensorColor" class="form-control">
+                        <option selected>blue</option>
+                        <option>green</option>
+                        <option>pink</option>
+                        <option>orange</option>
+                        <option>purple</option>
+                        <option>brown</option>
+                    </select>
+                </div>
+
+            </div>
+        </form>
+
+        <button class="btn btn-primary" onclick="addSensor()">Add sensor</button>
+</div>
+
+
+<div class="container form-section-frame" style="margin-top: 15px;">
+
+        <h3>4. Add light</h3>
+
+        <form>
+            <div class="form-row">
+                
+                <div class="form-group col-md-3">
+                    <label for="xLight">X coordinate</label>
+                    <input type="text" class="form-control" id="xLight" placeholder="X">
+                </div>
+                
+                <div class="form-group col-md-3">
+                    <label for="yLight">Y coordinate</label>
+                    <input type="text" class="form-control" id="yLight" placeholder="Y">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label for="lightAngle">Angle</label>
+                    <select id="lightAngle" class="form-control">
+                        <option selected>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group col-md-3">
+                    <label for="lightPower">Power [lm]</label>
+                    <select id="lightPower" class="form-control">
+                        <option selected>900</option>
+                        <option>360</option>
+                        <option>600</option>
+                        <option>700</option>
+                        <option>800</option>
+                        <option>1000</option>
+                        <option>1100</option>
+                        <option>1200</option>
+                        <option>1860</option>
+                        <option>1900</option>
+                        <option>2700</option>
+                        <option>3200</option>
+                        <option>3400</option>
+                        <option>3600</option>
+                    </select>
+                </div>
+
+            </div>
+        </form>
+
+        <button class="btn btn-primary" onclick="addLight()">Add light</button>
+</div>
+
+
+<div class="container" id="grid-placeholder">
+    <table id="grid-table">
+
+    </table>
+</div>
+
+<div class="container" style="margin-top:20px;">
+     <div class="row">
+        <div class="col-md-6" style="display: flex; align-items: center; justify-content: center;">
+            <button type="button" class="btn btn-success" onclick="startCellularAutomata()">
+                <i class="fa fa-bomb"></i>
+                Start Cellular Automata !
+            </button>
+        </div>
+        <div class="col-md-6" style="display: flex; align-items: center; justify-content: center;">
+            <button type="button" class="btn btn-warning" onclick="stopCellularAutomata()">
+                <i class="fa fa-flag-checkered"></i>
+                Stop Cellular Automata !
+            </button>
+        </div>  
+     </div>
+    
+</div>
+
+
+<div class="container" id="sensors-placeholder">
+    <h3>3. List of sensors</h3>
+    <table class="table table-sm table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">X</th>
+                <th scope="col">Y</th>
+                <th scope="col">Color</th>
+                <th scope="col">Intensity [lx]</th>
+                <th scope="col">Angle [deg]</th>
+                <th scope="col">Distance [m]</th>
+            </tr>
+        </thead>
+        <tbody id="sensors-table-body">
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container" id="lights-placeholder">
+    <h3>4. List of lights</h3>
+    <table class="table table-sm table-dark" id="lights-table">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">X</th>
+                <th scope="col">Y</th>
+                <th scope="col">Angle</th>
+                <th scope="col">Power [lm]</th>
+                <th scope="col">Up</th>
+                <th scope="col">Down</th>
+                <th scope="col">Left</th>
+                <th scope="col">Right</th>
+            </tr>
+        </thead>
+        <tbody id="lights-table-body">
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container form-section-frame" style="margin-top: 15px;">
+
+        <h3>5. Add daylight or absorption</h3>
+
+        <form>
+            <div class="form-row">
+                
+                <div class="form-group col-md-3">
+              
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cellTypeChoice" id="daylightRadio" value="daylightChosen">
+                        <label class="form-check-label" for="daylightRadio">
+                            Daylight
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cellTypeChoice" id="absorptionRadio" value="absorptionChosen" checked>
+                        <label class="form-check-label" for="absorptionRadio">
+                            Absorption
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cellTypeChoice" id="clear" value="clear">
+                        <label class="form-check-label" for="clear">
+                            Clear
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group col-md-2">
+                    <label for="daylightLevel">Daylight Level [lx]</label>
+                    <select id="daylightLevel" class="form-control">
+                        <option selected>25</option>
+                        <option>50</option>
+                        <option>75</option>
+                        <option>100</option>
+                        <option>125</option>
+                        <option>150</option>
+                        <option>175</option>
+                        <option>200</option>
+                        <option>225</option>
+                        <option>250</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label for="absorptionFunction">Absorption function</label>
+                    <select id="absorptionFunction" class="form-control" onChange="absorptionFunctionChanged();">
+                        <option selected>1. Linear &#981;(end) =  	(1-kR)&#981;(start) </option>
+                        <option>2. Exponential &#981;(end) = e^{-kR} &#981;(start)</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group col-md-3">
+                    <label for="absorptionCoef">K coefficient</label>
+                    <input type="text" class="form-control" id="absorptionCoef" placeholder="0.05" value="0.05">
+                </div>
+
+            </div>
+        </form>
+
+        <button type="button" class="btn btn-secondary" data-toggle="tooltip" 
+            data-placement="top" title="Choose daylight or absorption first"
+            onClick="absorptionOrDaylightChanged()">
+            Choose radio button and click selected cell.
+        </button>
+</div>
+
+
+<div class="container" id="absorption-grid-placeholder">
+    <table id="light-absorption-table">
+
+    </table>
+</div>
+
+<div class="container" id="absorption-chart-placeholder">
+    <canvas id="absorptionChart"></canvas>
+</div>
+
+
+
+<div class="container" style="height:100px">
+</div>
+
+
+
+</body>
+</html>
+
+<script>
+var ctx = document.getElementById('absorptionChart').getContext('2d');
+var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20' ],
+        datasets: [{
+            fill: false,
+            label: 'My First dataset',
+            lineTension: 0, 
+            backgroundColor: '#3F69AA',
+	        borderColor: '#3F69AA',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }]
+    },
+
+    // Configuration options go here
+    options : {
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: '% of source power',
+            fontSize: 20
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Distance [m]',
+            fontSize: 20
+          }
+        }],
+      }
+    }
+
+});
+
+absorptionFunctionChanged();
+</script>

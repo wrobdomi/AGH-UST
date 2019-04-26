@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css?family=ZCOOL+XiaoWei');
+
+body {
+    font-family: "ZCOOL XiaoWei";
+}
+
+.form-section-frame {
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+}
+
+#grid-table {
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#light-absorption-table{
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#grid-placeholder {
+    margin-top: 15px;
+}
+
+#sensors-table {
+    margin-top: 20px;
+}
+
+#sensors-placeholder {
+    margin-top: 15px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+}
+
+#lights-table {
+    margin-top: 20px;
+}
+
+#lights-placeholder {
+    margin-top: 15px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+}
+
+.params-info{
+    background-color: rgb(23, 162, 184);
+    font-size: 20px;
+}
+
+
+canvas{
+
+  width:1100px !important;
+  height:350px !important;
+
+}
+
+
+
+
+.test-border {
+    border: 2px solid red;
+}
