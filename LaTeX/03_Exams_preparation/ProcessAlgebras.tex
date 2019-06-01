@@ -276,11 +276,51 @@ Danemu procesowi przyporządkowane są akcje, które może on wykonywać. Pełny
 \item[Komunikacja pomiędzy procesami]
 Istnieje możliwość komunikacji pomiędzy procesami (w CCS przez porty, w CSP przez kanały, w LOTOS przez bramy).
 
+\item[Dziedzina]
+Pojęcie używane w rozszerzonych wersjach algebr procesów, gdzie możliwe jest przekazywanie danych pomiędzy procesami. Dziedzina (w CSP, W CCS zbiór wartości, w LOTOS sorts) oznacza możliwe typy danych. 
+
+
 \end{description}
+
+
+Poza tymi pojęciami, algebry CCS, CSP i LOTOS mają różne nazwy na operatory o podobnym znaczeniu, ale uwaga ! Nie wszystkie operatory o analogicznym znaczeniu działają tak samo w każdej z algebr. 
+
+\newpage
+
+\textbf{\textit{W algebrze CCS jest zdefiniowane pięć podstawowych operacji:}}
+\begin{itemize}
+\item $a.E$ - operacja prefiksu
+\item $\sum E_i $ - operacja sumy
+\item $E_1|E_2$ - operacja złożenia
+\item $E\L$ - operacja restrykcji
+\item $E[f]$ - operacja reetykietowania
+\end{itemize}
+
+
+\textbf{\textit{W algebrze CSP zdefiniowane są operacje:}}
+\begin{itemize}
+\item Prefiksu \\
+$ B = input \xrightarrow{} B1 \text{ - proces B przechodzi ze stanu B do stanu B1 pod wpływem zdarzenia input} $ \\
+$ B1 = output \xrightarrow{} B \text{ - proces B przechodzi ze stanu B1 do stanu B pod wpływem zdarzenia output} $
+\item Istnieją trzy rodzaje operacji wyboru:
+\begin{itemize}
+\item deterministyczny $e_1 \xrightarrow{} P_1 | e_2 \xrightarrow{} P_2$ \\
+Podjęta musi zostać decyzja o zajściu zdarzenia $e_1$ lub zdarzenia $e_2$. Decyzję tą podejmuje otoczenie (rozumiane jako proces zawierający operację wyboru deterministycznego - przykład na to w omówieniu operatora interakcji).
+\item niedeterministyczny $(e_1 \xrightarrow{} P_1 ) \sqcap (e_2 \xrightarrow{} P_2)$ \\
+Służy do zamodelowania wyboru niedeterministycznego. Tutaj nie decyduje otoczenie tylko mamy niedeterminizm.
+\item Ogólny $P_1 \square P_2$ \\
+... taki ogólny. Może pełnić funkcję deterministycznego lub niedeterministycznego. 
+\end{itemize}
+\item Przeplot $P_1 ||| P_2$ - ten operator modeluje procesy działające całkowicie niezależnie, nie synchronizujące się i nie komunikujące się ze sobą. 
+\item Interakcja $P_1 || P_2$ - interakcja pozwala procesom na synchronizację i komunikację.
+\end{itemize}
+
 
 
 \newpage
 \section{Zagadnienia 1 i 2}
+
+W tych zagadnieniach podany jest w nawiasach odnośnik do wykładów, ale w samych wykładach ciężko coś konkretnego znaleźć. Większość poniższych informacji pochodzi z książek, ale nawiązują one do fragmentów wykładów: Formalne\_CSP (slajd 47 - 49, Porównanie CCS i CSP), Formalne\_LOTOS (slajd 11,12) 
 
 \issue{1}{
 Porównanie LOTOS-a z CCS (wykład)
@@ -288,21 +328,25 @@ Porównanie LOTOS-a z CCS (wykład)
 
 Najważniejsze to:
 \begin{enumerate}
-\item Sposób synchronizacji procesów - LOTOS używa multi-synchronizacji, a CSS używa synchronizacji poprzez akcje komplementarne
-\item Działania operatora ukrywania (w LOTOS) i jego odpowiednika Restriction w CSS jest inne - w LOTOS operator ten generuje akcje wewnętrzne, w CCS usuwa akcje
+\item Sposób synchronizacji procesów - LOTOS używa multi-synchronizacji, a CCS używa synchronizacji poprzez akcje komplementarne
+\item Działania operatora ukrywania (w LOTOS) i jego odpowiednika Restriction w CCS jest inne - w LOTOS operator ten generuje akcje wewnętrzne, w CCS usuwa akcje
 \item Akcja wewnętrzna w CCS ($\tau$), oprócz tego, że wprowadza niedeterminizm jak w LOTOS, jest także używana do synchronizacji 
-\item Poza tym wiele operatorów z CCS ma prawie identyczne znaczenie jak w LOTOS
 \item w LOTOS istnieje więcej operatorów niż w CCS 
+\item W CCS są też operatory, które działają bardzo podobnie do ich odpowiedników z LOTOS, przykładowo: 
+\begin{itemize}
+\item Operator wyboru + (CCS) oraz [] (LOTOS) 
+\item Operator następstwa a.P (CCS) oraz a; P; (LOTOS)
+\end{itemize}
 \end{enumerate}
 
 
 \issue{2}{
 Porównanie CCS z CSP (wykład)
 }
-
+Najważniejsze to: 
 \begin{enumerate}
 
-\item (Najważniejsze) Inne podejście do problemu równoważności procesów
+\item Inne podejście do problemu równoważności procesów
 \begin{itemize}
 \item W CSP problem równoważności jest definiowany z użyciem pojęcia śladu lub przy użyciu modelu niepowodzeń
 \item W CCS równoważność procesów jest zdefiniowana w kontekście relacji bisymulacji
@@ -325,7 +369,13 @@ Bisymulacja jest semantyką równoważności procesów, która bardziej precyzyj
 
 \item Inne operatory w każdej z algebr
 \begin{itemize}
-\item W CSP istnieją inne operatory, których nie ma w CCS, a także w CCS istnieją operatory, których nie ma w CSP.
+\item W CSP istnieją inne operatory, których nie ma w CCS, a także w CCS istnieją operatory, których nie ma w CSP. (przykład: operator sumy w CSS oraz operatory wyboru w CSP)
+\end{itemize}
+
+\item Istnieją w obu algebrach także operatory o zbliżonym działaniu, przykładowo:
+\begin{itemize}
+\item Operator następstwa . (w CCS), $\rightarrow$ (w CSP)
+\item Przeplot ||| (w CSP) oraz kompozycja A|B (w CCS)
 \end{itemize}
 
 \end{enumerate}
@@ -399,8 +449,13 @@ blokowanie (przerwanie) procesu, ukrywanie procesu, zmiana nazwy procesu
 drugiego procesu
 }
 
-Czym się różnią: złożenie sekwencyjne, wyzwalanie (aktywowanie) i wykonanie jednego procesu pod warunkiem wykonania
-drugiego procesu - tego nie wiem. 
+UWAGA! Nie mam pewności, co Szymkat miał na myśli pisząc w zagadnieniu 8: złożenie sekwencyjne, wyzwalanie (aktywowanie) , ... , wykonanie jednego procesu pod warunkiem wykonania drugiego, bo można to wszystko uznać za jeden operator (aktywowania), ale
+\begin{itemize}
+\item złożenie sekwencyjne - może chodzić o operator średnika \textbf{;}
+\item wyzwalanie - najpewniej chodzi o operator aktywowania >>
+\item wykonanie jednego procesu pod warunkiem wykonania drugiego - może chodzi o to, że używając operatora aktywowania, proces musi zostać \underline{pozytywnie} zakończony aby mógł zostać wykonany inny proces (przy użyciu exit, a nie stop)
+\end{itemize}
+
 
 Przypominamy, że w LOTOS używamy pojęć:
 \begin{figure}[H]
@@ -461,7 +516,7 @@ Producent jako proces może być widziany jak czarna skrzynka komunikująca się
 \centerline{\includegraphics[scale=1]{prod1_proc.png}}
 \label{fig:prod1_proc}
 \end{figure}
-Właściwe bramy z których korzysta proces są jego parametrami i muszą być określone na etapie tworzenia instancji procesu. (podrozdział psanie programów z użyciem operatorów). \\
+Właściwe bramy z których korzysta proces są jego parametrami i muszą być określone na etapie tworzenia instancji procesu. (podrozdział pisanie programów z użyciem operatorów). \\
 Analogicznie można opisać proces konsumenta i kanału:
 \begin{figure}[H]
 \centerline{\includegraphics[scale=1]{cons1_proc.png}}
@@ -472,16 +527,16 @@ Analogicznie można opisać proces konsumenta i kanału:
 \label{fig:chan1_proc}
 \end{figure}
 Taki opis procesów jest dobry jeśli analizujemy każdy proces oddzielnie, jednak aby złożyć trzy procesy razem potrzebne będzie jeszcze użycie operatorów składania równoległego (parallel composition operators), które będą omówione później. \\ \\
-Zauważmy w tym przykładzie, że wszystkie wykonywane akcje są obserwowalne (zewnętrzne). Przykładowo wykonanie akcji pc1 przez producenta powoduje również wykonanie w tym samym momencie wykonanie tej samej akcji w procesie Kanału. Analogicznie dla pozostałych akcji.
+Zauważmy w tym przykładzie, że wszystkie wykonywane akcje są obserwowalne (zewnętrzne). Przykładowo wykonanie akcji pc1 przez producenta powoduje również wykonanie w tym samym momencie tej samej akcji w procesie Kanału. Analogicznie dla pozostałych akcji.
 
-
-Warto jeszcze zwrócić na notację 
+\newpage
+Warto jeszcze zwrócić uwagę na notację 
 \begin{figure}[H]
 \centerline{\includegraphics[scale=1]{notacja.png}}
 \label{fig:chan1_proc}
 \end{figure}
 Konkretnie na końcówkę ":\textbf{ exit}". \\
-Taka końcówka oznacza, że proces jest w stanie wykonać zachowanie \textbf{exit} na końcu działania. Końcówka ta może być ustawiona na jedną z dwóch wartości: \textit{exit} jeśli proces może pomyślnie zakończyć działanie albo wartość \textit{noexit} w innym wypadku. 
+Taka końcówka oznacza, że proces jest w stanie wykonać zachowanie \textbf{exit} na końcu działania. Końcówka ta może być ustawiona na jedną z dwóch wartości: \textit{exit} jeśli proces może pomyślnie zakończyć działanie albo wartość \textit{noexit} w wypadku gdy proces działa rekurencyjnie. 
 
 
 
@@ -512,7 +567,10 @@ Operator wyboru umożliwia modelowanie niedeterministycznych zachowań, np. tak 
 \centerline{\includegraphics[scale=1]{auto_proc.png}}
 \label{fig:auto_proc}
 \end{figure}
-Zwróćmy uwagę na ważną różnicę pomiędzy 2 i 3. W przypadku drugim po wrzuceniu monety (insert\_quarter) nie mamy już wyboru (środowisko procesu nie ma wyboru) czy chcemy kawę czy mleko, bo automat niedeterministycznie sam wybiera kawę lub mleko. W przykładzie 3 po wrzuceniu monety możemy wybrać (środowisko procesu może wybrać) czy chcemy kawę czy mleko.
+Zwróćmy uwagę na ważną różnicę pomiędzy 2 i 3. W przypadku drugim po wrzuceniu monety (insert\_quarter) nie mamy już wyboru (środowisko procesu nie ma wyboru) czy chcemy kawę czy mleko, bo automat niedeterministycznie sam wybiera kawę lub mleko. W przykładzie 3 po wrzuceniu monety możemy wybrać (środowisko procesu może wybrać) czy chcemy kawę czy mleko. \\
+
+
+Może korzystnie będzie zaznaczyć na kolokwium, że operator wyboru może służyć do wprowadzania niedeterminizmu, a odpowiednio użyty może synchronizować procesy ze środowiskiem. 
 
 
 \begin{figure}[H]
@@ -526,7 +584,9 @@ Jaka jest różnica pomiędzy dwoma rysunkami ? \\ Chodzi o to, że środowisko 
 
 \newpage
 \subsubsection{Operator aktywowania >> (enable) }
-Operator aktywowania jest podobny do \textbf{;}, ale służy do sekwencyjnego łączenia \underline{dwóch wyrażeń behawioralnych} (a nie akcji i wyrażenia behawioralnego jak w przypadku operatora \textbf{;}).
+Operator aktywowania jest podobny do \textbf{;}, ale służy do sekwencyjnego łączenia \underline{dwóch wyrażeń behawioralnych} (a nie akcji i wyrażenia behawioralnego jak w przypadku operatora \textbf{;}). Warto zwrócić uwagę, że warunkiem wykonania procesu jest \underline{pozytywne} zakończenie procesu go poprzedzającego, czyli przez exit, a nie przez stop. 
+ 
+
 \begin{figure}[H]
 \centerline{\includegraphics[scale=0.8]{enables_1.png}}
 \label{fig:enables_1}
@@ -591,7 +651,7 @@ Oczywiście trzeba teraz dostosować działanie konsumenta:
 \label{fig:cons2_proc}
 \end{figure}
 
-\subsubsection{Kilka ciekawszych przykładów z wydarzeniami wewnętrznymi}
+\subsubsection{Bonus - Kilka ciekawszych przykładów z wydarzeniami wewnętrznymi}
 \example{}{
 \begin{align*}
 & \text{coffe; exit } [] \text{ milk; exit}
@@ -639,11 +699,6 @@ Wracając do przykładu P-K:
 \label{fig:disable_pc}
 \end{figure}
 
-\begin{framed}
-\begin{itemize}
-\item Jak działa i jak wygląda operator przerwania ? 
-\end{itemize}
-\end{framed}
 
 
 
@@ -724,6 +779,23 @@ Operator reetykietowania nie służy do specyfikowania zachowania procesu, jest 
 \centerline{\includegraphics[scale=0.7]{labels.png}}
 \end{figure}
 
+W LOTOS reetykietowanie realizowane jest dynamicznie:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{relabel_1.png}}
+\label{fig:program_expl}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{relabel_2.png}}
+\label{fig:program_expl2}
+\end{figure}
+
+
+
+
+
+
 \newpage
 \section{Zagadnienie 9}
 
@@ -743,7 +815,7 @@ W języku lotos aby zdefiniować proces i wyrażenia behawioralne korzystamy z k
 
 W LOTOS tworzone są instancje procesów, najpierw definiowany jest proces (co odpowiada napisaniu metody w języku programowania), a następnie tworzona jest jego instancja (co odpowiada wywołaniu danej metody w języku programowania). \\ \\
 
-Wracając do przykładu P-K, zdefiniowaliśmy już procesy osobno, teraz chcemy stworzyć system przy pomocy operatorów składania równoległego. 
+
 \example{}{
 \begin{figure}[H]
 \centerline{\includegraphics[scale=0.7]{program.png}}
@@ -787,6 +859,12 @@ W podstawowym LOTOS akcja była synonimem bramy. W full LOTOS akcja składa się
 \item opcjonalny predykat
 \end{itemize}
 
+Przykład akcji w full LOTOS:\
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.75]{fullLotos.png}}
+\end{figure}
+
 Procesy się synchronizują pod warunkiem, że 
 \begin{itemize}
 \item Bramy nazywają się tak samo
@@ -794,11 +872,6 @@ Procesy się synchronizują pod warunkiem, że
 \item Predykat jest spełniony
 \end{itemize}
 
-Przykład akcji w full LOTOS:\
-
-\begin{figure}[H]
-\centerline{\includegraphics[scale=0.75]{fullLotos.png}}
-\end{figure}
 
 Zdarzenie może oferować (!) lub akceptować wartość (?). 
 Możliwe typy komunikacji: 
@@ -815,28 +888,29 @@ Możliwe typy komunikacji:
 Redukcja etykietowanych systemów przejść (LTS) w pakiecie CADP, różnego typu równoważności bisymulacyjne grafów LTS
 }
 
-W pakiecie CADP dla danego systemu możemy wygenerować LTS, a następnie zredukować go według wskazanego typu równoważności przy użyciu narzędzia REDUCTOR. Grafy LTS mogą być porównywane przy użyciu wieli równoważności bisymulacyjnych, m.in.: 
+W pakiecie CADP dla danego systemu możemy wygenerować LTS, a następnie zredukować go według wskazanego typu równoważności przy użyciu narzędzia REDUCTOR. Redukuje on rozmiar przestrzeni stanów zachowując równoważność względem wybranych akcji. Przykładowe rodzaje redukcji:
+
 \begin{itemize}
-\item Strong equivalence - stany są równoważne gdy akcje możliwe do wykonania w jednym są możliwe do wykonania w drugim oraz stany wynikowe są również powiązane.
-
-\begin{figure}[H]
-\centerline{\includegraphics[scale=0.75]{bisim1.png}}
-\end{figure}
- 
-\item Branching equivalnce
-\begin{figure}[H]
-\centerline{\includegraphics[scale=0.75]{bisim2.png}}
-\end{figure}
- 
- 
-\item Weak equivalence 
-\begin{figure}[H]
-\centerline{\includegraphics[scale=0.75]{bisim3.png}}
-\end{figure}
-
-
+\item redukcja podwójnych tranzycji
+\item $\tau$-dywergencja - zastąpienie silnie spójnych składowych z przejściami $\tau$ pojedynczą pętlą
+\item $\tau$-kompresja - usunięcie silnie spójnych składowych z przejściami $\tau$
+\item $\tau*a$ - eliminacja wszystkich $\tau$-przejść
 \end{itemize}
+
+Grafy LTS mogą być porównywane przy użyciu wieli równoważności bisymulacyjnych, które działają na różnym poziomie dokładności m.in.: 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.75]{bisimall.png}}
+\end{figure}
+
 Stosowanie tych oraz innych równoważności dostępne jest w pakiecie CADP.
+
+
+
+
+
+
+
 
 
 
