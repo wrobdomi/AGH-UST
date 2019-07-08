@@ -1,0 +1,876 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{tcolorbox}
+\usepackage{mathtools}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+\pagenumbering{arabic}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {}
+  {\thepage}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Wykład Monograficzny z Fizyki}}
+	{}
+	
+	\setfoot
+	{}
+	{\thepage}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mRed}{RGB}{234,67,53}
+\definecolor{mKeyword}{RGB}{0,0,242}
+\definecolor{mBlue}{RGB}{0,153,242}
+\definecolor{backgroundColour}{RGB}{242,242,242}
+\definecolor{issueColor}{RGB}{0,51,102}
+
+\newcommand{\definition}[2]{
+    \begin{tcolorbox}[colback=green!5!white,colframe=mGreen,title={Definicja -  #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\question}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={Zagadnienie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\kol}[2]{
+    \begin{tcolorbox}[colback=mRed!5!white,colframe=mRed,title={Kolokwium 2018 #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\example}[2]{
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue,title={Przykład #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\issue}[2]{
+    \begin{tcolorbox}[colback=issueColor!5!white,colframe=issueColor,title={Zagadnienie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{mKeyword},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Opracowanie}} \\ \hline \multicolumn{3}{|c|}{Fizyka - Egzamin}  \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\tableofcontents
+
+
+\newpage
+
+\section{Lista zagadnień}
+
+\subsection{Zadania z zeszłego roku, które wysłał Bartek}
+
+\begin{enumerate}
+
+\item Efekt  fotoelektryczny:  na  czym  polega,  jakich  cech  efektu  nie  można  wytłumaczyć  klasycznie, do jakich nowych odkryć doprowadził.
+\item Promieniowanie ciała doskonale czarnego: opisz 3 prawa rządzące tym zjawiskiem, wyjaśnij jakie postulaty, wykraczające poza fizykę klasyczną, były konieczne do teoretycznego wyznaczenia rozkładu widmowego promieniowania.
+\item Wyprowadź wzór na współczynnik odbicia progu potencjału o wysokości $V_0$, oblicz prawdopodobieństwo odbicia elektronu o energii E=1.1$V_0$.
+\item Znajdź poziomy energetyczne i funkcje falowe cząstki uwięzionej w nieskończonej studni potencjału o szerokości L
+\end{enumerate}
+
+
+
+\subsection{Zadania z egzaminu 2018}
+
+\begin{enumerate}
+
+\item Efekt fotoelektryczny: na czym polega, jakich cech efektu nie można wytłumaczyć klasycznie, do jakich nowych odkryć doprowadził.
+\item Znajdź poziomy energetyczne i funkcje falowe cząstki o masie m uwięzionej w nieskończonej studni potencjału o szerokości L.
+\item Napisać rozpady alfa i beta dla pierwiastka X z liczbą masową A i atomową Z. Jakie są produkty tych rozpadów. Obliczyć ile cząstek pozostanie po 10 latach z 1kg materiału, jeżeli okres rozpadu połowicznego wynosi 2 lata.
+\item Wyjaśnić dlaczego ciepło właściwe gazu elektronowego jest znacznie mniejsza niż gazu klasycznego. Opisać temperaturową zależność ciepła właściwego dla całego kryształu.
+
+\end{enumerate}
+
+
+\subsection{Zagadnienia wybrane z wykładu według uznania}
+
+\begin{enumerate}
+\item Model atomu Bohra, nowe postulaty, wyprowadzenie wzorów na promienie orbit oraz poziomy energetyczne elektronu w atomie wodoru.
+\item Zakaz Pauliego
+\item Wiązania jonowe, wiązania kowalencyjne
+\item 
+\end{enumerate}
+
+
+\section{Źródła}
+Opracowanie na podstawie:
+\begin{itemize}
+\item Wykłady Bartka
+\item Tipler - Modern Physics
+\item Kąkol - Elementy Fizyki Współczesnej (Open AGH) 
+\item Kenneth Krane - Modern Physics
+\end{itemize}
+
+
+
+
+\newpage
+\section{Zadania z zeszłego roku, które wysłał Bartek}
+
+\subsection{Zadanie 1 - Efekt fotoelektryczny}
+
+\issue{}{
+Efekt  fotoelektryczny:  na  czym  polega,  jakich  cech  efektu  nie  można  wytłumaczyć  klasycznie, do jakich nowych odkryć doprowadził.
+}
+
+\subsubsection{Na czym polega ?}
+
+Zjawisko fotoelektryczne polega na wyrzucaniu elektronów z powierzchni metalu pod wpływem podającego światła. Zjawisko to jest potwierdzeniem kwantowej natury promieniowania. 
+
+
+Energia światła rozchodzi się w przestrzeni w postaci porcji energii zwanych fotonami (Einstein), energia pojedynczego fotonu jest dana wzorem:
+\begin{equation*}
+E = h\nu  
+\end{equation*}
+
+Gdy foton zderzy się z elektronem w metalu to może zostać przez elektron pochłonięty. Wówczas energia fotonu zostanie przekazana elektronowi, część tej energii poświęcana jest na to aby wyrwać elektron z metalu, a pozostała część przechodzi w energię kinetyczną tego elektronu. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f1.png}}
+\end{figure}
+
+\subsubsection{Jakich  cech  efektu  nie  można  wytłumaczyć  klasycznie ?}
+
+\begin{itemize}
+\item Wystąpienie zjawiska jest zupełnie niezależne od natężenia światła - zależy jedynie od częstotliwości (progowość)
+\item Zjawisko występuje prawie natychmiast po włączeniu źródła światła - teoria klasyczna zakłada pewne opóźnienie
+\item Napięcie hamowania jest niezależne od natężenia światła
+\end{itemize}
+
+
+\subsubsection{Do jakich nowych odkryć doprowadził ?}
+
+Na jego podstawie odkryto, że światło w pewnych warunkach zachowuje się jak fala, a w innych jak cząstka, czyli foton. Tę własność światła nazywa się dualizmem korpuskularno-falowym. Odkrycie efektu fotoelektrycznego przyczyniło się także do odkrycia promieniowania X. 
+\\
+
+Oprócz tego na bazie zjawiska fotoelektrycznego powstało wiele użytecznych wynalazków:
+\begin{itemize}
+\item Baterie słoneczne
+\item Fotokomórki
+\item Fotodiody
+\item Noktowizory
+\end{itemize}
+
+
+
+\newpage
+\subsection{Zadanie 2 - Promieniowanie ciała doskonale czarnego}
+
+\issue{}{
+Promieniowanie ciała doskonale czarnego: opisz 3 prawa rządzące tym zjawiskiem, wyjaśnij jakie postulaty, wykraczające poza fizykę klasyczną, były konieczne do teoretycznego wyznaczenia rozkładu widmowego promieniowania.
+}
+
+\subsubsection{Wstęp teoretyczny do zagadnienia}
+Promieniowanie termiczne jest zjawiskiem bardzo powszechnym - żarówka wolframowa świeci, bo... ?  ...bo ma wysoką temperaturę ! Wszystkie ciała jednocześnie absorbują i emitują promieniowanie termiczne. Jeżeli ciało ma wyższą temperaturę od otoczenia, to będzie się oziębiać ponieważ szybkość promieniowania przewyższa szybkość absorpcji. Gdy osiągnięta zostanie równowaga termodynamiczna wtedy te szybkości będą równe. \\
+
+Za pomocą siatki dyfrakcyjnej (przyrząd do analizy widmowej światła) możemy zbadać światło emitowane przez źródła to znaczy dowiedzieć się jakie są długości fal wypromieniowywanych przez ciało i jakie jest ich natężenie. \\
+
+W rozważaniach na temat promieniowania termicznego badamy widmo światła emitowanego przez ciało doskonale czarne - modelowe ciało, które służy do analizy tego zjawiska, analiza dla zwykłych ciał byłaby o wiele bardziej skomplikowana. \\ 
+
+Widmo promieniowania ciała doskonale czarnego przedstawia rysunek:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f2.png}}
+\end{figure}
+
+Co my tu mamy ? Na osi poziomej długość fali, na osi pionowej wielkość nazywana zdolnością emisyjną $R(\lambda)$. 
+
+Cały problem z tym zagadnieniem był taki, że widmo to, czyli cały ten wykres był wyznaczony doświadczalnie i fizycy szukali teorii, która by pozwalała analitycznie wyznaczyć funkcję  $R(\lambda)$. 
+
+Jak widać funkcja ta jest silnie zależna od temperatury, jest natomiast praktycznie niezależna od materiału. 
+
+\newpage
+\subsubsection{3 prawa rządzące tym zjawiskiem}
+
+\begin{enumerate}
+\item Prawo Stefana-Boltzmanna (prawo doświadczalne)
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f3.png}}
+\end{figure}
+\item Prawo przesunięć Wiena (prawo doświadczalne)
+
+Mówi o położeniach maksimów, dla jakiej długości fali występuje maksimum w danej temperaturze
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f4.png}}
+\end{figure}
+
+\item Prawo Plancka 
+
+Opisuje zależność $R(\lambda)$ (wyznaczone analitycznie)
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f5.png}}
+\end{figure}
+
+\end{enumerate}
+
+\newpage
+\subsubsection{Postulaty, wykraczające poza fizykę klasyczną...}
+Rayleigh i Jeans chcieli wyznaczyć funkcję widmową na podstawie fizyki klasycznej stosując teorię pola elektromagnetycznego. W wyniku ich obliczeń uzyskali funkcję, która była zgodna z doświadczeniami dla dużych długości fal, ale odbiegała znacznie od doświadczeń dla krótkich długości fal, tą różnicę nazywa się Katastrofą w nadfiolecie: 
+ \begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f6.png}}
+\end{figure}
+Plank założył, że widmo energii jest dyskretne, a każdy atom zachowuje się jak oscylator elektromagnetyczny posiadający charakterystyczną częstotliwość drgań.
+ \begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f7.png}}
+\end{figure}
+
+Na wykładzie pojawiło się nawet wyprowadzenie tego wzorku:
+
+\begin{align*}
+& E = nk\nu \text{ - założenie} \\
+& \text{Wtedy funkcja rozdziału: } \\
+& Z = \sum_{n} e^{-\beta nk\nu} = \sum_{0}^{\infty}(e^{-\beta k\nu})^n = \frac{1}{1-e^{-\beta k\nu}} \\
+& <E> = \frac{\partial}{\partial \beta}ln Z = -\frac{Z}{\partial \beta}ln(1-e^{-\beta k\nu }))^{-1} = \frac{1}{1-e^{-\beta k\nu }}e^{e^{-\beta k\nu}} h\nu = \\
+& = \frac{h\nu}{e^{\beta k\nu}-1} \\
+& <E> = E_{fotonu} \cdot \text{srednia liczba fotonow w danej } \nu \\
+& u(\nu) = \frac{8\pi \nu^2 }{c^3}<E>
+\end{align*}
+
+
+
+\newpage
+\subsection{Zadanie 4 - Studnia potencjału}
+
+\issue{}{
+Znajdź poziomy energetyczne i funkcje falowe cząstki uwięzionej w nieskończonej studni potencjału o szerokości L
+}
+
+\subsubsection{Wstęp teoretyczny do zagadnienia}
+Nieskończona studnia potencjału to problem teoretyczny, który rozwiązuje się łatwo przy użyciu równania Schrödinger'a i ilustruje niektóre własności funkcji falowych. \\
+
+E. Schrödinger sformułował mechanikę falową (jedno ze sformułowań fizyki kwantowej) zajmującą się opisem falowych własności materii. Według tej teorii, elektron w stanie stacjonarnym w atomie może być opisany za pomocą stojących fal materii, przy czym podstawę stanowi związek de Broglie'a $p=\frac{h}{\lambda}$ wiążący własności cząsteczkowe z falowymi. \\
+
+Rozważany problem wziął się z analizy układu w którym mamy zamknięty w pudełku elektron. Ścianki tego pudełka stanowią siatki, które są położone w niedalekiej odległości od elektrod. W samym pudełku potencjał wynosi 0, ale pomiędzy ściankami, a elektrodami rośnie. Widok z góry na pudełko: 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f8.png}}
+\end{figure}
+Potencjał:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f9.png}}
+\end{figure}
+Jak widać nachylenie zbocza potencjału może być dowolnie wysokie i strome i zmienia się wraz ze wzrostem amplitudy V oraz odległością elektrody od ścianki. Jeśli wyobrazimy sobie, że mamy nieskończenie duża amplitudę V oraz przybliżamy ściankę nieskończenie blisko do elektrody, wówczas wykres potencjału będzie wyglądał tak: 
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f10.png}}
+\end{figure}
+Problem jest ważny ze względu na postać funkcji potencjału:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f11.png}}
+\end{figure}
+Taka postać funkcji pozwala na łatwe wyznaczeni dokładnego rozwiązania równania Schrödinger'a, a z drugiej strony jest dobrym przybliżeniem niektórych sytuacji rzeczywistych, jak np. ruch elektronu w metalu. \\
+Wypada też wiedzieć przynajmniej ogólnie o co chodzi z równaniem Schrödinger'a i po co w ogóle nam funkcja falowa:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{f12.png}}
+\end{figure}
+
+
+\newpage
+\subsubsection{Wyprowadzenie wzorów}
+
+Wykres zależności potencjału od położenia:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f10.png}}
+\end{figure}
+
+Wychodząc od równania Schrödinger'a 
+\begin{align*}
+& \frac{-\hslash}{2m}\frac{d^2\Psi (x)}{dx^2} = (E-V(x))\Psi (x) \\
+\end{align*}
+Podstawiamy za $V(x)$ wartość 0 i otrzymujemy:
+\begin{align*}
+& \frac{-\hslash}{2m}\frac{d^2\Psi (x)}{dx^2} = E\Psi (x) \\
+\end{align*}
+Przenosząc drugą pochodną na lewą stronę:
+\begin{align*}
+\Psi '' = -\frac{2mE}{\hslash ^2}\Psi(x) 
+\end{align*}
+
+Ponieważ $p^2 = 2mE$, to możemy zapisać, że 
+\begin{align*}
+& k^2 = \frac{p^2}{\hslash ^2} = \frac{2mE}{\hslash ^2} \\
+& \Psi '' = -k^2 \Psi(x) 
+\end{align*}
+
+Rozwiązanie takiego równania różniczkowego ma postać:
+\begin{align*}
+& \Psi (x) = A\sin kx \\
+& \text{lub} \\
+& \Psi (x) = B \cos kx
+\end{align*}
+
+Podstawiając warunek graniczny: $\Psi(x) = 0$, gdy $x = 0$, otrzymujemy, że rozwiązanie z cosinusem jest niepoprawne. 
+Podstawiając drugi warunek graniczny: $\Psi(x) = 0$, gdy $x = L$, otrzymujemy, że
+
+\begin{align*}
+\Psi(L) = A\sin kL = 0
+\end{align*}
+co ogranicza wartości k do:
+\begin{align*}
+& k_n = n\frac{\pi}{L} \\
+& n = 1,2,3,...
+\end{align*}
+
+Przyrównując teraz do siebie dwa równania na $k^2$:
+
+\begin{align*}
+& (n\frac{\pi}{L})^2 = \frac{2mE}{\hslash ^2} \\
+& E_n = \frac{\hslash ^2k_{n}^2}{2m} = n^2\frac{\hslash ^2 \pi ^2}{2mL^2} = n^2E_1
+\end{align*}
+
+Uzyskaliśmy równanie opisujące poziomy energetyczne. \\
+
+Teraz chcemy wyznaczyć A z równania falowego: 
+\begin{align*}
+\Psi(L) = A\sin kL = 0
+\end{align*}
+
+Stałą A można obliczyć korzystając z warunku normalizacji:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{f13.png}}
+\end{figure}
+
+Całka w przedziałach gdzie potencjał ma wartość nieskończoną wynosi 0 dlatego całkujemy tylko od $0$ do $L$. Po scałkowaniu otrzymujemy, że $A_n = (\frac{2}{L})^\frac{1}{2}$ (niezależne od n). 
+
+I ostatecznie funkcje falowe mają postać:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.7]{f14.png}}
+\end{figure}
+
+
+\newpage
+\subsection{Zadanie 3 - Próg potencjału i prawdopodobieństwo}
+
+
+\issue{}{
+Wyprowadź wzór na współczynnik odbicia progu potencjału o wysokości $V_0$, oblicz prawdopodobieństwo odbicia elektronu o energii E=1.1$V_0$.
+}
+
+\subsubsection{Wzór na współczynnik odbicia}
+
+Rozważamy otoczenie w którym funkcja potencjału to skok o amplitudzie $V_0$:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f15.png}}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f16.png}}
+\end{figure}
+
+Analizujemy wiązkę cząstek, wszystkie o tej samej energii E, które przemieszczają się z lewej strony w prawą i napotykają skok potencjału. 
+
+
+Wychodząc od równania Schrödinger'a 
+\begin{align*}
+& \frac{-\hslash}{2m}\frac{d^2\Psi (x)}{dx^2} = (E-V(x))\Psi (x) \\
+\end{align*}
+
+zapisujemy to równanie dla dwóch regionów, przed i po przejściu przez skok potencjału (zakładając $E > V_0$):
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f17.png}}
+\end{figure}
+
+\newpage
+Ogólne rozwiązania tych równań różniczkowych mają postać:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f18.png}}
+\end{figure}
+
+W obszarze dla $x>0$ brak fali odbitej stąd $D=0$. \\
+
+Żądamy aby funkcja oraz jej pierwsza pochodna była ciągła stąd:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=1]{f19.png}}
+\end{figure}
+
+Rozwiązując powyższe równania otrzymujemy, że 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f20.png}}
+\end{figure}
+
+Skąd wyznaczamy współczynnik odbicia R oraz transmisji T:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f21.png}}
+\end{figure}
+
+\newpage
+\subsubsection{Prawdopodobieństwo odbicia elektronu}
+
+Korzystając wcześniejszych obliczeń:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f22.png}}
+\end{figure}
+
+gdzie
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f23.png}}
+\end{figure}
+
+stąd
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f25.png}}
+\end{figure}
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f24.png}}
+\end{figure}
+
+
+
+Podstawiając do powyższego wzoru $E=1.1V_0$ i przyjmując $|A|^2 = 1$ otrzymujemy
+
+\begin{align*}
+|C|^2 = |\frac{2(1.1V_0)^\frac{1}{2}}{(1.1V_0)^\frac{1}{2} + (0.1V_0)^\frac{1}{2}}|^2 = 2.6
+\end{align*}
+
+
+stąd
+
+\begin{align*}
+|\Psi _{II}|^2 = 2.6e^{-2\alpha x}
+\end{align*}
+
+
+
+
+%Z równania Broglie'a:
+%\begin{align*}
+%& p = \frac{h}{\lambda} \\
+%& \text{h - stała Plancka} \\
+%& \lambda \text{ - długość fali cząstki}
+%\end{align*}
+
+%Całkowita energia cząstki w pudełku to energia kinetyczna:
+
+%\begin{align*}
+%E = \frac{p^2}{2m} = \frac{h^2}{2m\lambda ^2} = \frac{h^2}{2m(\frac{2L}{n^2})} = n^2\frac{h^2}{8mL^2}
+%\end{align*}
+
+%Korzystając ze związku:
+
+%\begin{align*}
+%& \hbar = \frac{h}{2\pi}
+%\end{align*}
+
+%Energia dana jest wzorem:
+
+%\begin{align*}
+%E_n = n^2\frac{\pi ^2\hbar ^2}{2mL^2} = n^2E_1 \text{ \quad  n = 1,2,3,...}
+%\end{align*}
+
+
+%gdzie $E_1$ oznacza najmniejszą możliwą energię. 
+
+\newpage
+\section{Zadania z egzaminu 2018}
+
+\subsection{Zadanie 1}
+
+\issue{}{
+Zadanie 1 - Patrz -> Zadania z zeszłego roku, które wysłał Bartek
+}
+
+\issue{}{
+Zadanie 2 - Patrz -> Zadania z zeszłego roku, które wysłał Bartek
+}
+
+\newpage
+\issue{}{
+Napisać rozpady alfa i beta dla pierwiastka X z liczbą masową A i atomową Z. Jakie są produkty tych rozpadów. Obliczyć ile cząstek pozostanie po 10 latach z 1kg materiału, jeżeli okres rozpadu połowicznego wynosi 2 lata.
+}
+
+\subsubsection{Wstęp teoretyczny do zagadnienia}
+
+Jądro atomu składa się z:
+\begin{itemize}
+\item Nukleonów - wspólna nazwa dla protonów i neutronów, liczbę nukleonów oznacza się przez A = Z + N (liczba masowa)
+\item Protonów - ładunki dodatnie, liczbę protonów oznacza się przez Z (liczba atomowa)
+\item Neutronów - ładunki neutralne, liczbę neutronów oznacza się przez N 
+\end{itemize}
+
+Pierwiastki podajemy wraz z ich liczbą masową A i atomową Z:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f26.png}}
+\end{figure}
+
+Rozpadem jądra nazywamy dojście do stanu podstawowego przez zmianę liczby nukleonów, któremu często towarzyszy emisja promieniowania.  \\
+
+Trzy podstawowe rozpady energetyczne:
+
+\begin{enumerate}
+\item Rozpad alfa $\alpha$
+\item Rozpad beta $\beta$
+\item Rozpad gamma $\gamma$
+\end{enumerate}
+
+\subsubsection{Rozpad $\alpha$}
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.8]{f27.png}}
+\end{figure}
+Występuje najczęściej dla jąder ze zbyt dużą liczbą protonów. \\
+
+W wyniku rozpadu alfa powstaje jądro, które ma mniejszą o 2 liczbę atomową a liczbę masową mniejszą o 4 w porównaniu z rozpadającym się jądrem, a także cząstka $\alpha$.
+
+
+\subsubsection{Rozpad $\beta$}
+
+Mogą zachodzić dwa rodzaje rozpadu $\beta$:
+
+\begin{itemize}
+\item beta +
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.55]{f28.png}}
+\end{figure}
+
+
+\item beta -
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.55]{f29.png}}
+\end{figure}
+
+\end{itemize}
+
+
+\subsubsection{Obliczyć ile cząstek...}
+
+Korzystamy z tego wzorku:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.75]{f30.png}}
+\end{figure}
+
+\begin{align*}
+& t = 10 lat \\
+& N_0 = 1000 g \\
+& T_{\frac{1}{2}} = 2 lata
+\end{align*}
+
+\begin{align*}
+& N(t) = 1000g (\frac{1}{2})^{\frac{t}{T_{\frac{1}{2}}}} \\
+& N(t) = 1000g \frac{1}{2}^2 = 31,25 g
+\end{align*}
+
+\newpage
+
+\subsection{Zadanie 2}
+
+\issue{}{
+Wyjaśnić dlaczego ciepło właściwe gazu elektronowego jest znacznie mniejsze niż gazu klasycznego. Opisać temperaturową zależność ciepła właściwego dla całego kryształu
+}
+
+\subsubsection{Wyjaśnij dlaczego ciepło właściwe...}
+
+W podejściu klasycznym elektrony traktowane są jako identyczne rozróżnialne cząstki, które poddają się prawu Boltzmanna. Wówczas ciepło właściwe gazu elektronowego wynosi $\frac{3}{2}R$. Wartość ta jest jednak o wiele zawyżona, co pokazują eksperymenty. \\
+
+Przede wszystkim wynika to z faktu, że klasyczna teoria nie uwzględnia zakazu Pauliego oraz rozkładu Fermiego-Diraca, które brane są pod uwagę w podejściu kwantowym. \\
+
+
+\begin{itemize}
+\item Zakaz Pauliego - mówi, że elektrony muszą się poruszać nawet w temperaturze $T = 0 K$
+\item Rozkład Fermiego-Diraca - mówi, że dla $T = 0 K$ elektrony przyjmują stany o energii poniżej $E_F$. Dla temperatury większej od $0 K$, tylko elektrony będące na poziomie $E_F$ mogą wyskoczyć poza ten stan. Dlatego wzbudzony termicznie może być tylko niewielki ułamek elektronów.  
+\end{itemize}
+
+Definiując temperaturę Fermiego można wyprowadzić wzór na ciepło właściwe gazu elektronowego. 
+
+\begin{align*}
+& k_B T_F = E_F
+\end{align*}
+Przyrost energii w temperaturze T:
+\begin{align*}
+dU = N\frac{(k_B T)^2}{E_F}
+\end{align*}
+Stąd ciepło właściwe:
+
+\begin{align*}
+C_{vel} = \frac{dU}{dT} = \frac{\pi ^2}{2}R\frac{T}{T_F} = \frac{\pi ^2}{3}k^2_BD(E_F)T
+\end{align*} 
+  
+
+\subsubsection{ Opisać temperaturową zależność... }
+
+Ciepło właściwe całego kryształu jest sumą ciepła właściwego gazu elektronowego oraz ciepła właściwego sieci krystalicznej. 
+
+\begin{align*}
+C_V = C_{vel} + C_{vs}
+\end{align*}
+
+Ciepło właściwe gazu zostało opisane już wyżej. Drugi ze składników pochodzi od drgań sieci, które w podejściu kwantowym są drganiami kwantowych oscylatorów harmonicznych. Ciepło właściwe sieci wynosi:
+
+\begin{align*}
+& C_{vs} = \frac{12}{5}\pi ^4 R(\frac{T}{T_D})^3 \\
+& T_D \text{ - temperatura Debye'a}
+\end{align*}
+
+
+\newpage
+\section{Zadania wybrane według uznania}
+
+\subsection{Model Bohra atomu}
+\issue{}{
+Model atomu Bohra, nowe postulaty, wyprowadzenie wzorów na promienie orbit oraz poziomy energetyczne elektronu w atomie wodoru
+}
+
+
+\subsubsection{Nowe postulaty}
+Bohr zmodyfikował model planetarny atomu wprowadzając trzy postulaty:
+
+\begin{itemize}
+\item W atomie istnieją orbity stacjonarne, na których elektron porusza się nie emitując promieniowania 
+\item Atom emituje promieniowanie o częstotliwości f, kiedy elektron przeskakuje pomiędzy orbitami $hf = E_i - E_f$
+\item W granicy dużych orbit i dużych energii, obliczenia kwantowe muszą być zgodne z obliczeniami klasycznymi (zasada korespondencji Bohra)
+\end{itemize}
+
+Konsekwencją tych postulatów jest kwantyzacja momentu pędu: $L = n\hslash$
+
+
+
+\subsubsection{Wyprowadzenie wzorów}
+
+\begin{itemize}
+\item Promienie orbit 
+
+Siła dośrodkowa potrzebna do poruszania elektronu po orbicie kołowej jest siłą Coulomba:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f31.png}}
+\end{figure}
+
+Rozwiązując to równanie ze względu na $v$:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f32.png}}
+\end{figure}
+
+Na podstawie kwantyzacji momentu pędy Bohra:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f33.png}}
+\end{figure}
+
+Wyliczając z tego równania $r$, a następnie podstawiając wcześniej wyznaczone $v$:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f34.png}}
+\end{figure}
+
+
+Podnosząc $r$ do kwadratu i skracając otrzymujemy, że:
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f35.png}}
+\end{figure}
+
+stąd promień równy jest:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f36.png}}
+\end{figure}
+
+\item Poziomy energetyczne
+
+Całkowita energia elektronu to suma energii kinetycznej i potencjalnej
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f37.png}}
+\end{figure}
+
+Jako, że siłę dośrodkową stanowi siła Coulomba:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f38.png}}
+\end{figure}
+
+więc całkowita energia:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f39.png}}
+\end{figure}
+
+Podstawiając obliczone $r_n$ otrzymamy, że:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f40.png}}
+\end{figure}
+
+
+\end{itemize}
+
+
+
+
+
+\newpage
+\subsection{Zakaz Pauliego}
+\issue{}{
+Zakaz Pauliego
+}
+
+Zakaz Pauliego dotyczy sytuacji w której rozważamy więcej niż jeden elektron poruszający się w polu potencjalnym. Przykładowo rozważając ponownie problem nieskończonej studni potencjału, ale tym razem umieszczając tam dwie nierozróżnialne cząstki nie oddziałujące ze sobą. Równanie Schrodingera dla dwóch cząstek ma postać:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f41.png}}
+\end{figure}
+
+
+Jako, że rozważamy cząstki, które nie oddziałują ze sobą, możemy zapisać funkcję falową jako iloczyn funkcji 1-cząstkowych, gdzie jedna z cząstek jest w stanie m, a druga n. 
+
+Prawdopodobieństwo znalezienia się cząstki w danym położeniu jest równe iloczynowi prawdopodobieństw dla każdej z cząstek. Ale jako, że cząstki są identyczne nie możemy rozróżnić, która się gdzie znajduje więc konieczne jest skonstruowanie funkcji prawdopodobieństwa, która spełniać będzie warunek:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f43.png}}
+\end{figure}
+
+Warunek ten zachodzi , gdy funkcja falowa jest symetryczna lub antysymetryczna, czyli gdy:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f44.png}}
+\end{figure}
+
+Aby funkcja falowa dwóch cząstek mogła być symetryczna lub antysymetryczna konieczne jest stworzenie kombinacji liniowej:
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.70]{f45.png}}
+\end{figure}
+
+Stąd wynika, że mamy w przyrodzie dwa rodzaje cząstek:
+
+\begin{itemize}
+\item bozony - opisane funkcją symetryczną
+\item fermiony - opisane funkcją antysymetryczną
+\end{itemize}
+
+Jak łatwo zauważyć dla fermionów funkcja się zeruje gdy $m = n$, stąd wynika zakaz Pauliego, który mówi, że w danym stanie kwantowym, dla fermionów, może znajdować się tylko jedna cząstka. 
+
+Czyli wracając do przykładu ze studnią, cząstki muszą mieć różne m i n. \\
+
+To, czy cząstka jest bozonem, czy fermionem, związane jest z jej spinem: \\
+
+cząstki o spinie całkowitym to bozony (foton, cząstka a) cząstki o spinie połówkowym to fermiony (elektron, proton, neutron) 
+
+
+
+
+
+
+\newpage
+\subsection{Wiązania jonowe i kowalencyjne}
+\issue{}{
+Wiązania jonowe i kowalencyjne
+}
+
+\end{document}
+
+

@@ -1,0 +1,1730 @@
+\documentclass[a4paper,20pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}   % lub utf8
+
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+\usepackage{titlesec}
+\usepackage{titleps,kantlipsum}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{indentfirst}
+\usepackage{mdframed}
+\usepackage{subfig}
+\usepackage{datetime}
+\usepackage{enumitem}
+
+\usepackage{longtable}
+
+\usepackage{tabu}
+
+\usepackage{ltablex}
+
+\usepackage[table]{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{tabularx}
+\usepackage{enumitem}
+
+
+
+
+\newpagestyle{firstpage}{%
+  \sethead{}{}{}
+  \setfoot{}{}{}
+}
+
+\newpagestyle{normalpage}{%
+  \headrule
+  \sethead{\thesection . \quad \sectiontitle}{}{\thesubsection . \quad \subsectiontitle}
+  \setfoot{}{}{\thepage}
+}
+
+
+\settitlemarks{section,subsection,subsubsection}
+
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+
+\sloppy
+ 
+ 
+ 
+\setlist{nolistsep}
+\definecolor{green}{HTML}{66FF66}
+\definecolor{myGreen}{HTML}{009900}
+
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\arraystretch}{1.5} 
+ 
+ 
+ 
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	\includegraphics[width=0.15\textwidth]{agh.jpg}\par\vspace{1cm}
+	{\scshape\LARGE Akademia Górniczo-Hutnicza \\ im. Stanisława Staszica \par}
+	\vspace{1cm}
+	{\scshape\Large  Inżynieria wymagań \\ Projekt zaliczeniowy \par}
+	\vspace{1.5cm}
+	{\huge\bfseries System wspomagający prace firmy zajmującej się sprzedażą i serwisowaniem rowerów elektrycznych \par}
+	\vspace{2cm}
+	{\Large\itshape  Dominik Wróbel\par}
+	\vfill
+	Prowadzący\par
+	dr inż. Grzegorz \textsc{Rogus}
+
+	\vfill
+
+% Bottom of the page
+	{\large Kraków, \today \par}
+\end{titlepage}
+
+\pagestyle{firstpage}
+\tableofcontents
+
+
+
+\newpage
+\pagestyle{normalpage}
+
+\section{Wprowadzenie}
+
+
+
+
+
+\subsection{Cel dokumentu}
+Celem niniejszego dokumentu jest szczegółowe przedstawienie opisu systemu wspomagającego pracę firmy zajmującej się sprzedażą i serwisowaniem rowerów elektrycznych. Przedstawiona zostanie ogólna perspektywa produktu, jego funkcje i ograniczenia. Ponadto omówione zostaną modele danych i użyte interfejsy zewnętrzne. Dopełnieniem tych informacji będzie model procesów biznesowych organizacji. Dokument przeznaczony jest dla użytkowników systemu, kadry zarządzającej różnych szczebli oraz programistów i przedstawicieli producenta oprogramowania jako źródło podstawowej referencji dotyczącej wymagań projektowych.
+
+\subsection{Przyjęte zasady w dokumencie}
+
+\begin{itemize}
+\item Rozdziały - dokumentacja podzielona została na rozdziały względem tematyki. Każdy duży rozdział oznaczony został liczbą, rozpoczynając od 1.
+
+\item Podrozdziały - podrozdziały to mniejsze, spójne tematycznie części wewnątrz rozdziałów, których numeracja rozpoczyna się od 1, numer podrozdziału poprzedzony jest kropką i numerem rozdziału
+
+\item Podpodrozdziały - najmniejsze sekcje w dokumencie, które zazwyczaj użyte są w celu prezentacji konkretnego przykładu odnoszącego się do podrozdziału. Ich numeracja rozpoczyna się od numeru 1, poprzedzona jest kropką, numerem podrozdziału i numerem rozdziału. 
+
+\item Rysunki - dokumentacja zawiera rysunki, które zawierają podpisy w formie: Rysunek X: ''Podpis... ''. X oznacza numer Rysunku, numerowanie rysunków rozpoczyna się od 1. 
+\end{itemize}
+
+
+\subsection{Definicje, akronimy i skróty}
+
+\begin{description}
+  \item[Klient] \hfill \\ 
+  	Każda osoba, która korzysta z usług firmy rowerowej. 
+  \item[Pracownik] \hfill \\ 
+  	Każda osoba zatrudniona przez firmę rowerową.
+  \item[Użytkownik] \hfill \\ 
+  	Klient lub Pracownik.
+  \item[System] \hfill \\ 
+  	Odnosi się do rozwiązania informatycznego opisanego w tym dokumencie.	
+  \item[Pole obowiązkowe] \hfill \\ 
+  	Pole, które musi zostać wypełnione przez użytkownika aby dane mogły zostać przesłane i przetworzone.
+  \item[Ekran, widok] \hfill \\ 
+  	Interfejs systemu w którym zawiera się wszystko co widzi użytkownik.	
+  \item[Usługa] \hfill \\ 
+  	Serwis, naprawa lub specyficzna usługa realizowana przez firmę rowerową.		
+\end{description}
+
+
+
+
+\newpage
+\subsection{Zakres produktu}
+W zakres systemu wchodzi obsługa sprzedaży, serwisu posprzedażowego i naprawy rowerów, a także przechowywanie i prezentacja aktualnych i historycznych danych o klientach i marketing. 
+
+Sprzedaż obejmuje prezentacje informacji o modelach rowerów, pomoc w zakupie i wyborze modelu oraz obsługę zamówień i zakupu konkretnego modelu z wyposażeniem.
+
+Serwis posprzedażowy i naprawy dotyczą możliwości rezerwacji terminów napraw i przeglądów.
+
+W skład marketingu wchodzi kontakt z klientem różnymi kanałami (SMS, email) z zapytaniami ofertowymi (np. przegląd, wymiana modelu)  
+
+Prezentacja danych dotyczy aktualnych i historycznych danych, w tym profilu klienta i historii jego spraw. 
+
+\newpage
+
+
+
+
+
+\section{Opis ogólny}
+
+
+\subsection{Perspektywa produktu}
+
+System jest nowym oprogramowaniem, które ma zastąpić nieuporządkowane informacje, które obecnie przechowywane są w postaci arkuszy excel i baz danych. Informacje z różnych źródeł mają zostać uporządkowane przez system w zakresie stworzenia centralnego składu wszystkich informacji oraz spójnych modeli danych. Oprócz tego system ma umożliwić realizację kilku typowych dla klienta funkcjonalności. Na Rysunku \ref{ekosys} poniżej przedstawiono mapę ekosystemu dla projektu, która umieszcza system w kontekście aktualnie działających rozwiązań informatycznych. 
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{ecomap.png}}
+\caption{Mapa ekosystemu}
+\label{ekosys}
+\end{figure}
+
+
+
+\newpage
+\subsection{Ograniczenia}
+
+
+\begin{itemize}[itemindent=4em]
+  \item[\textit{OGR-1}] - System ma zostać zrealizowany jako aplikacja webowa.  \\
+  \item[\textit{OGR-2}] - Część backendowa systemu zrealizowana ma zostać przy użyciu języka programowania Java, z użyciem frameworka Spring. Taka realizacja umożliwić ma łatwą integracją z innymi systemami, w szczególności niektóre modele danych w postaci obiektów mogą być bezpośrednio odwzorowane na podstawie dokumentacji już działających rozwiązań, z którymi współpracuje system (wszystkie te systemy działają w technologii Java, patrz Rysunek \ref{ekosys}) \\
+  \item[\textit{OGR-3}] - Część frontendowa systemu ma zostać zrealizowana przy użyciu architektury Single Page Application i komunikować się z częścią backendową przy użyciu danych w formacie JSON. \\
+  \item[\textit{OGR-4}] - Cały kod html ma być zgodny ze standardem HTML5. \\
+  \item[\textit{OGR-5}] - Możliwe do użycia kolory w arkuszach CSS są ściśle określone. Biblioteka kolorów określona jest przed dokumentację kolorów dostarczoną przez firmę rowerową i stanowi załącznik do tego dokumentu. \\
+  \item[\textit{OGR-6}] - Firma rowerowa posiada własny relacyjny system baz danych oparty na technologii Oracle MySQL. Dane używane przez system muszą być w całości przechowywane w tej bazie.  \\
+\end{itemize}
+
+
+
+\subsection{Środowisko działania}
+
+
+\begin{itemize}[itemindent=4em]
+  \item[\textit{ŚD-1}] - system firmy rowerowej powinien poprawnie działać na przeglądarkach: 
+  \begin{itemize}[itemindent=4em]
+  	\item Windows Internet Explorer wersja 7, 8 i 9
+  	\item Firefox wersja 12 do 26
+  	\item Google Chrome (wszystkie wersje)
+  \end{itemize}
+  \item[\textit{ŚD-2}] - część backendowa systemu powinna być hostowana na serwerze Java, Apache Tomcat, wersja 9.0.21 \\
+  \item[\textit{ŚD-3}] - baza danych to Oracle MySQL, firma rowerowa posiada własne serwery hostujące bazę danych \\
+  \item[\textit{ŚD-4}] - część frontendowa aplikacji systemu hostowana może być na dowolnym serwerze przeznaczonym do hostingu. \\
+  \item[\textit{ŚD-5}] - w celu zapewnienia ciągłości działania, wymagane jest podwójne, niezależne hostowanie aplikacji na dwóch różnych serwerach, zerówno części backendowej jak i frontendowej \\
+  \item[\textit{ŚD-6}] - pracownicy firmy muszą mieć dostęp do strony z sieci firmowej przez VPN
+\end{itemize}
+
+
+
+
+
+
+\newpage
+\subsection{Założenia i zależności}
+
+
+\begin{itemize}[itemindent=4em]
+  \item[\textit{ZAŁO-1}] - Realizacja usług przez warsztaty możliwa jest przez pięć dni w tygodniu.  \\
+  \item[\textit{ZAŁO-2}] - Producent rowerów i części udostępnia wszystkie dane techniczne dotyczące produktów. \\
+  \item[\textit{ZALE-1}] - Dostępne daty wykonania usług ustalane są przez system warsztatowy i przesyłane do systemu firmy rowerowej.   \\
+  \item[\textit{ZALE-2}] - Status płatności przesyłany jest do systemu firmy przez system finansowy.  \\  
+\end{itemize}
+
+
+
+\subsection{Zgodność z aktami prawnymi}
+
+Tworzony system musi być zgodny z aktami prawnymi dotyczącymi handlu elektronicznego, prywatności i bezpieczeństwa danych użytkowników. Dokumenty formalizujące wszystkie zasady, których musi przestrzegać system znajdują się na liście poniżej: \\
+\begin{enumerate}
+\item  Ustawa o świadczeniu usług drogą elektroniczną z dnia 18 lipca 2002 roku (Dz.U. z 2002 r. Nr 144, poz. 1204 ze zm) \\ 
+\item  Ustawa o ochronie danych osobowych z dnia 29 sierpnia 1997 roku (Dz.U. z 1997 r. Nr 133, poz. 883 ze zm.) \\
+\item  Rozporządzenie Ministra Spraw Wewnętrznych i Administracji z dnia 29 kwietnia 2004 r. w sprawie dokumentacji przetwarzania danych osobowych oraz warunków technicznych i organizacyjnych, jakim powinny odpowiadać urządzenia i systemy informatyczne służące do przetwarzania danych osobowych (Dz.U. z 2004 r. Nr 100, poz. 1024) \\
+\item Ustawa o ochronie niektórych praw konsumentów oraz o odpowiedzialności za szkodę wyrządzoną przez produkt niebezpieczny z dnia 2 marca 2000 r. (Dz.U. z 2000 r., nr 22, poz. 271 ze zm.) \\
+\item Rozporządzenie Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych) \\
+\item  Ustawa z dnia 23 kwietnia 1964 r. – Kodeks Cywilny (Dz. U. z 1964 r. Nr 16, poz. 93 ze zm.) \\
+\item  Ustawa z dnia 27 lipca 2002 r. o szczególnych warunkach sprzedaży konsumenckiej oraz o zmianie Kodeksu Cywilnego (Dz.U. z 2002 r. Nr 141, poz. 1176 ze zm.)
+\end{enumerate}
+
+
+\newpage
+\subsection{Dokumentacja użytkownika}
+Tworzony system powinien być intuicyjny w obsłudze zarówno dla klienta jak i dla pracownika sklepu. Mimo to, projekt powinien być wspierany przez przewodniki użytkownika oraz dokumentacje projektową. Szczególny nacisk powinien zostać położony na wytworzenie zrozumiałego i zwięzłego przewodnika dla pracowników firmy rowerowej. W wyniku prac nad dokumentacją powinny powstać następujące dokumenty: \\
+\begin{itemize}
+\item Dokumentacja techniczna systemu - opisująca wszystkie aspekty związane z zagadnieniami technicznymi, obejmująca szczegółową dokumentacją kodu programu. \\
+\item Przewodnik Pracownika - szczegółowy, zrozumiały i krótki opis działania systemu z perspektywy pracownika firmy. Docelowo, dokument ten ma być przeznaczony dla pracowników w celu zapoznania z działaniem systemu i wdrożenia go w kontaktach z klientami. Wprowadzane przez pracowników dane będą miały strategiczne znaczenia ze względu na przydatność produktu, dlatego ważne jest dobre opanowanie działania systemu przez każdego pracownika.
+\end{itemize}  
+
+
+\newpage
+\section{Funkcje produktu}
+
+Rozdział ten zawiera wszystkie funkcje, które posiada system. Każda z funkcji posiada opis oraz przypisany priorytet. Oprócz tego, każdej funkcji przypisano wymagania funkcjonalne w formie atrybutów, które precyzują szczegóły działania każdej z funkcji. Elementem każdej funkcji jest także tabela zwierająca błędy, które mogą wystąpić.
+
+\subsection{Rejestracja}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+Użytkownik musi zarejestrować się w systemie aby móc korzystać z systemu firmy rowerowej. Rejestracja dostępna jest na ekranie domowym dla każdego odwiedzającego. Rejestracja polega na wypełnieniu formularza dotyczącego danych osobistych, preferencji użytkownika oraz ewentualnych informacji na temat posiadanego roweru. Przy rejestracji należy określić swoją rolę jako pracownik lub klient. Priorytet = niski.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[H]{XX}
+\arrayrulecolor{black}\hline
+\textbf{Rejestracja.Inicjalizacja:} & \textbf{Rozpoczęcie rejestracji} \\
+\hline
+\quad .Rozpocznij: & 
+\begin{minipage}[t]{\linewidth}%
+Użytkownik rozpoczyna proces rejestracji poprzez kliknięcie przycisku rejestracji, który znajduje się na ekranie domowym.
+\end{minipage}\\
+
+\arrayrulecolor{black}\hline
+
+\arrayrulecolor{black}\hline
+\textbf{Rejestracja.DaneOsobowe:} & \textbf{Użytkownik podaje swoje dane osobowe} \\
+\hline
+
+\quad .ImieNazwisko: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik wprowadza imię i nazwisko jako tekst w dwóch oddzielnych polach. Pola te są obowiązkowe.
+\end{minipage}\\
+
+
+\quad .Telefon: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik wprowadza telefon kontaktowy jako ciąg cyfr. Pole to jest obowiązkowe. 
+\end{minipage}\\
+
+
+\quad .Email: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik wprowadza email jako tekst. Pole to jest obowiązkowe. 
+\end{minipage}\\
+
+
+\quad .Rola: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik zaznacza jedno z dwóch pól - klient lub pracownik - pola te wykluczają się wzajemnie. Pole to jest obowiązkowe.
+\end{minipage} \\
+
+
+\quad \quad .Id: &
+\begin{minipage}[t]{\linewidth}%
+Jeśli użytkownik jest pracownikiem to pojawia się pole na podanie ID pracownika w formacie tekstowym. Pole jest obowiązkowe.
+\end{minipage} \\
+
+
+\quad .Hasło: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik wpisuje hasło, którego będzie używał jako tekst. Hasło powinno być odpowiednio silne. Pole jest obowiązkowe.
+\end{minipage} \\
+
+
+\quad .Potwórz hasło: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik powtarza wpisane hasło jako tekst. Musi być ono zgodne z wpisanym wcześniej. Pole jest obowiązkowe.
+\end{minipage} \\
+
+
+
+\arrayrulecolor{black}\hline
+\textbf{Rejestracja.DaneSprzętowe:} & \textbf{Pole widoczne tylko dla klienta. Klient dodaje do swojego konta rowery.} \\
+\hline
+
+\quad .Posiadanie: &
+\begin{minipage}[t]{\linewidth}%
+Klient zaznacza czy posiada już rower elektryczny. Pole jest wymagane. Pole tylko dla klienta. 
+\end{minipage}\\
+
+
+\quad .Rowery: &
+\begin{minipage}[t]{\linewidth}%
+Jeśli klient zaznaczył, że posiada rower, pojawia się pole do wybrania liczby posiadanych rowerów. Pole tylko dla klienta.   
+\end{minipage}\\
+
+\quad \quad .DaneRoweru: &
+\begin{minipage}[t]{\linewidth}%
+Dla wybranej liczby rowerów pojawiają się pola z których klient wybiera z listy posiadany model roweru. Pole tylko dla klienta.    
+\end{minipage}\\
+
+
+\arrayrulecolor{black}\hline
+\textbf{Rejestracja.Preferencje:} & \textbf{Użytkownik określa preferencje dotyczące użytkowania systemu.} \\
+\hline
+
+\quad .Newsletter: &
+\begin{minipage}[t]{\linewidth}%
+Klient zaznacza czy chce otrzymywać powiadomienia dotyczące przypomnień i ofert. Pole tylko dla klienta. 
+\end{minipage}\\
+
+
+\quad .Regulamin: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik zaznacza, że zapoznał się i akceptuje regulamin korzystania z serwisu. Regulamin dostępy jest do pobrania obok tego pola. Pole jest wymagane.
+\end{minipage}\\
+
+\arrayrulecolor{black}\hline
+\textbf{Rejestracja.Zakończenie:} & \textbf{Użytkownik kończy proces rejestracji.} \\
+\hline
+
+
+\quad .Wysłanie: &
+\begin{minipage}[t]{\linewidth}%
+Po uzupełnieniu wszystkich wymaganych pól w poprawny sposób, użytkownik może wysłać formularz z danymi klikając w przycisk. Przed wysłaniem sprawdzić należy czy wszystkie wymagane pola są uzupełnione, czy wprowadzone dane są poprawne oraz czy użytkownik o takich danych istnieje już w systemie.
+
+Jeśli dane są poprawne, to użytkownik otrzymuje email z linkiem do potwierdzenia swojego konta. 
+\end{minipage}\\
+
+
+
+
+\arrayrulecolor{black}\hline
+\textbf{Rejestracja.Potwierdzenie:} & \textbf{Użytkownik potwierdza swój email.} \\
+\hline
+
+
+\quad .Email: &
+\begin{minipage}[t]{\linewidth}%
+Użytkownik po prawidłowej rejestracji otrzymuje email z linkiem, po kliknięciu w ten link, jego rejestracja jest zakończona i może logować się do systemu.
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+\vbox{
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Niepoprawny format danych wejściowych & Wszystkie pola danych wejściowych muszą podlegać walidacji, system wyświetla komunikat o błędnym formacie danych.  \\ 
+\hline
+Wysłanie danych bez wypełnienia obowiązkowego pola & Nie ma możliwości wysłania danych bez uzupełnienia pól obowiązkowych. System wyświetla komunikat pod polem, które nie zostało uzupełnione, a jest konieczne.  \\ 
+\hline
+Użytkownik jest już w systemie & Na jeden email można zarejestrować tylko jedno konto. W innym razie, system wyświetla komunikat o tym, że użytkownik jest już zarejestrowany.  \\ 
+\hline
+\end{tabular}
+\end{center}
+}
+
+\end{itemize}
+
+
+
+
+
+\subsection{Logowanie}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+Na ekranie domowym znajdują się pola przeznaczone do logowania. Użytkownik podaje email i hasło, aby się zalogować. Tylko zalogowany użytkownik może mieć dostęp do usług firmy rowerowej. Priorytet = niski.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Logowanie.Dane:} & \textbf{Logowanie do systemu} \\
+\hline
+
+\quad .Wprowadzanie: & 
+\begin{minipage}[t]{\linewidth}%
+Użytkownik podaje swój email i hasło jako tekst. Oba pola są obowiązkowe.
+\end{minipage}\\
+
+
+\quad .Wysłanie: & 
+\begin{minipage}[t]{\linewidth}%
+Użytkownik wysyła wprowadzone dane klikając przycisk logowania.
+\end{minipage}\\
+
+\quad .Autoryzacja: & 
+\begin{minipage}[t]{\linewidth}%
+Dane wprowadzone przez użytkownika są sprawdzane z danymi zapamiętanymi w bazie danych. W przypadku niezgodności danych użytkownik nie może przejść dalej, do ekranu powitalnego. Po podaniu prawidłowych danych, użytkownik przechodzi do ekranu powitalnego.
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+\vbox{
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+
+
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Niepoprawny format danych wejściowych & Wszystkie pola danych wejściowych muszą podlegać walidacji, system wyświetla komunikat o błędnym formacie danych.  \\ 
+\hline
+Wysłanie danych bez wypełnienia obowiązkowego pola & Nie ma możliwości wysłania danych bez uzupełnienia pól obowiązkowych. System wyświetla komunikat pod polem, które nie zostało uzupełnione, a jest konieczne.  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+}
+
+\end{itemize}
+
+
+
+\subsection{Pomoc w zakupie i wyborze modelu}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+Na ekranie powitalnym w prawym dolnym rogu znajduje się chatbot. Chatbot wita użytkownika i proponuje mu kilka standardowo zadawanych pytań do wybrania. Na środku strony znajduje się wyszukiwarka, która umożliwia wyszukanie modelu, części, serwisu dostępnych na stronie firmy. Dane kontaktowe infolinii znajdują się na ekranie powitalnym w prawym górnym rogu obok menu użytkownika. Funkcje te dostępne są tylko w przypadku gdy do systemu zalogował się użytkownik będący klientem. Priorytet = wysoki. 
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Pomoc.Chatbot:} & \textbf{Chatbot to niewielkie okno chatu, które wita użytkownika na stronie i służy do pomocy użytkownikowi w nawigacji, wyszukiwaniu i rozwiązywaniu problemów.} \\
+
+\hline
+
+\quad .Pytania: & 
+\begin{minipage}[t]{\linewidth}%
+Chatbot wysyła do użytkownika kilka standardowo zadawanych pytań:
+\begin{itemize}
+\item Jakiej usługi potrzebuje klient ?
+\item Czy klient potrzebuje porady w zakupie części lub roweru ?
+\item Czy klient potrzebuje pomocy z nawigacją ?
+\end{itemize} 
+\end{minipage}\\
+
+
+\quad .Rozmowa: & 
+\begin{minipage}[t]{\linewidth}%
+Po wpisaniu przez użytkownika komunikatu, chatob odpowiada na komunikaty użytkownika, w taki sposób aby jak najtrafniej odpowiedzieć na jego pytania. 
+\end{minipage}\\
+
+
+
+\arrayrulecolor{black}\hline
+\textbf{Pomoc.Wyszukiwarka:} & \textbf{Wyszukiwarka rowerów, części, serwisów.} \\
+\hline
+
+\quad .Szukanie: & 
+\begin{minipage}[t]{\linewidth}%
+Klient wpisuje w pole wyszukiwania zagadnienie, które go interesuje. Może to być usługa, produkt lub pytanie. System zwraca listę powiązanych z zapytaniem klienta linków, z których klient może wybrać go interesujący. 
+\end{minipage}\\
+
+\quad .Wyniki: & 
+\begin{minipage}[t]{\linewidth}%
+Po kliknięciu w jeden z wyszukanych linków, klient przechodzi na ekran dotyczący zagadnienia. Przykładowo, po kliknięciu w link dotyczący danego modelu roweru, wyświetlany jest ekran prezentujący dane o tym rowerze, ekran ten jest standardowo dostępny w systemie.
+\end{minipage}\\
+
+
+\arrayrulecolor{black}\hline
+\textbf{Pomoc.Infolinia:} & \textbf{Dane kontaktowe na stronie} \\
+\hline
+
+\quad .Kontakt: & 
+\begin{minipage}[t]{\linewidth}%
+Na ekranie powitalnym w prawym górnym rogu, obok menu, znajdują się dane kontaktowe do pracowników firmy, klient może skorzystać z telefonu do pracownika, w razie pytań, które nie zostały rozwiązane automatycznie. 
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+
+
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Chatbot nie może dopasować odpowiedzi do komunikatu użytkownika. & Chatbot powinien zaproponować użytkownikowi aby skontaktował się w tej sprawie z pracownikiem infolinii.  \\ 
+\hline
+Brak znalezionych linków w odpowiedzi na wyszukiwanie klienta. & Wyszukiwarka powinna oferować użytkownikowi podpowiedzi w trakcie wpisywania zagadnienia, tak aby mógł wybrać jedną z dostępnych opcji.  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+
+
+
+
+\subsection{Prezentacja informacji o produktach}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+W menu ekranu powitalnego znajduje się przycisk po kliknięciu którego użytkownik przechodzi do ekranu na którym prezentowane są modele rowerów elektrycznych, części do rowerów oraz parametry produktów. Po kliknięciu w dany wiersz, użytkownik przechodzi na ekran szczegółowy i ma możliwość zamówienia produktu. Priorytet = wysoki.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+
+\arrayrulecolor{black}\hline
+\textbf{Prezentacja.Menu:} & \textbf{Menu służące do dostosowania prezentacji do preferencji.} \\
+
+\hline
+
+\quad .RodzajProduktu: & 
+\begin{minipage}[t]{\linewidth}%
+Na ekranie prezentacji dostępne są trzy przyciski, klikając każdy z nich użytkownik wybiera jakie produkty mają być wyświetlane: rowery, części lub wszystkie.   
+\end{minipage}\\
+
+\quad .Parametry: & 
+\begin{minipage}[t]{\linewidth}%
+W zależności od wybranego rodzaju produktu, użytkownik może wybrać jego parametry.
+\end{minipage}\\
+
+\quad \quad .Rower: & 
+\begin{minipage}[t]{\linewidth}%
+Parametry te dla rowerów to zakres cenowy, zakres wysokości ramy, zakres wielkości kół, dostępność przerzutek i ich liczba, hamulce, zakres mocy silnika elektrycznego.    
+\end{minipage}\\
+
+\quad \quad .Części: & 
+\begin{minipage}[t]{\linewidth}%
+Parametry te dla części to zakres cenowy, lista modeli rowerów do których pasuje wybrana część.
+\end{minipage}\\
+
+\quad \quad .Wyniki: & 
+\begin{minipage}[t]{\linewidth}%
+Po zmianie jakiejkolwiek opcji w menu, prezentowane dane są automatycznie, od razu dostosowywane do preferencji.
+\end{minipage}\\
+
+
+
+
+\arrayrulecolor{black}\hline
+\textbf{Prezentacja.Produkty:} & \textbf{Prezentacja produktów z oferty firmy.} \\
+
+\hline
+
+\quad .Widok: & 
+\begin{minipage}[t]{\linewidth}%
+Produkty prezentowane są w tabeli zawierającej małe zdjęcia modelu, jego nazwę oraz cenę.   
+\end{minipage}\\
+
+
+\quad .Szczegóły: & 
+\begin{minipage}[t]{\linewidth}%
+Po najechaniu na wiersz tabeli z produktami, wyświetlają się bardziej szczegółowe parametry modelu uzyskane od jego producenta.
+\end{minipage}\\
+
+
+
+\arrayrulecolor{black}\hline
+\textbf{Prezentacja.Szczegóły:} & \textbf{Po kliknięciu w wiersz z produktem, użytkownik przechodzi na ekran szczegółowy.} \\
+\hline
+
+\quad .WidokSzczegółowy: & 
+\begin{minipage}[t]{\linewidth}%
+Widok szczegółowy zawiera galerie zdjęć produktu, szczegółowe parametry produktu oraz pole do określenia liczby sztuk i przycisk do zakupu produktów. 
+\end{minipage}\\
+
+\end{tabularx}
+\end{center}
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Brak produktu o wybranych parametrach & System powinien powiadomić użytkownika, że produkt o wybranych parametrach nie istnieje.  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+
+
+
+
+\subsection{Zakup produktów}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+W widoku szczegółowym produktu użytkownik ma możliwość zamówienia wybranej liczby produktów. Użytkownik wybiera z listy liczbę produktów, które chce zamówić, a następnie przechodzi do płatności używając przycisku do zakupu. Priorytet = średni.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+
+\arrayrulecolor{black}\hline
+\textbf{Zakup.Dane:} & \textbf{Formularz służący do wpisania danych kupującego.} \\
+
+\hline
+
+\quad .DaneOsobowe: & 
+\begin{minipage}[t]{\linewidth}%
+Dane osobowe są konieczne do dostarczenia klientowi przesyłki.    
+\end{minipage}\\
+
+\quad \quad .ImieNazwisko: & 
+\begin{minipage}[t]{\linewidth}%
+Klient podaje imię i nazwisko jako tekst. Pola te są automatycznie wypełniane danymi z konta klienta, klient nie może ich zmienić.    
+\end{minipage}\\
+
+\quad \quad .AdresWysyłki: & 
+\begin{minipage}[t]{\linewidth}%
+Klient podaje adres na jaki mają zostać wysłane zamówione produkty. Adres wprowadzany jest jako tekst w trzech polach: ulica, miejscowość, kod pocztowy. 
+\end{minipage}\\
+
+\quad \quad .TelefonKontaktowy: & 
+\begin{minipage}[t]{\linewidth}%
+Klient podaje telefon kontaktowy jako ciąg cyfr, pole to automatycznie uzupełniane jest numerem wprowadzonym przez klienta przy rejestracji, ale może zostać zmienione.     
+\end{minipage}\\
+
+
+\arrayrulecolor{black}\hline
+\textbf{Zakup.Płatność:} & \textbf{Klient wybiera sposób płatności.} \\
+
+\hline
+
+\quad .SposóbPłatności: & 
+\begin{minipage}[t]{\linewidth}%
+Klient wybiera jeden z możliwych sposobów płatności: Karta płatnicza (wiele możliwych banków), przelew tradycyjny. 
+\end{minipage}\\
+
+\quad .Realizacja: & 
+\begin{minipage}[t]{\linewidth}%
+Po wpisaniu danych i wybraniu sposobu płatności klient klika przycisk, który finalizuje przebieg transakcji. Przed realizacją transakcji, wpisane przez klienta dane muszą przejść walidacje. Przycisk płatności przenosi klienta do zewnętrznego serwisu w którym dokonywana jest płatność.  
+\end{minipage}\\
+
+\quad .AktualizacjaProfilu: & 
+\begin{minipage}[t]{\linewidth}%
+Zakup odnotowywany jest w profilu klienta, uwzględniając produkty kupione przez klienta.
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Niepoprawny format danych wejściowych & Jeśli klient wprowadzi niepoprawne dane wejściowe, to wyświetlany jest komunikat o niepoprawności danych.  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+
+
+
+\subsection{Prezentacja informacji o dostępnych serwisach}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+System zawiera ekran, który prezentuje informacje na temat dostępnych serwisów i napraw. Ekran ten przedstawia serwisy w tabeli, w której dostępna jest nazwa serwisu, opis, cena oraz przycisk do rezerwacji serwisu. Priorytet = wysoki. 
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+
+\arrayrulecolor{black}\hline
+\textbf{Serwisy.Prezentacja:} & \textbf{Wyświetlenie dla użytkownika dostępnych serwisów i napraw.} \\
+
+\hline
+
+\quad .Menu: & 
+\begin{minipage}[t]{\linewidth}%
+Ekran prezentacji serwisów i napraw zawiera menu w którym użytkownik może wybrać jakiego rodzaju usługi mają być prezentowane według preferencji. Menu zawiera trzy przyciski, które dodają do prezentacji serwisy, naprawy lub wszystko. Dodatkowo serwisy i naprawy mogą być wyszukiwane w zakresie dostępności w danym przedziale czasowym zadanym datami, które wybierane są z kalendarza.
+\end{minipage} \\
+
+
+\quad .Serwisy: & 
+\begin{minipage}[t]{\linewidth}%
+Serwisy prezentowane są w formie tabeli, każdy wiersz tej tabeli zawiera nazwę serwisu, najbliższy możliwy termin wykonania serwisu, cenę serwisu oraz przycisk do rezerwacji serwisu. W skład predefiniowanych serwisów wchodzą:
+\begin{itemize}
+\item Wykonanie przeglądu 
+\item Wymiana opon i dętek
+\item Wymiana łańcucha
+\end{itemize}
+\end{minipage} \\
+
+\quad .Naprawy: & 
+\begin{minipage}[t]{\linewidth}%
+Naprawy prezentowane są również w formie tabeli, każdy wiersz tabeli zawiera nazwę naprawy, najbliższy możliwy termin wykonania, cenę oraz przycisk do rezerwacji.      
+\end{minipage}\\
+
+\quad .InneUsługi: & 
+\begin{minipage}[t]{\linewidth}%
+Klient może również wysłać żądanie specyficznej dla niego naprawy lub serwisu. Realizuje to przez opisanie usługi w polu tekstowym znajdującym się pod listą usług. Po wypełnieniu pola tekstowego, e-mail z opisem wysyłany jest do pracownika warsztatu, który określa czy wykonanie usługi jest możliwe, jej czas i koszt. 
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Usługa nie jest dostępna w wybranym przedziale czasowym & W takim przypadku system powinien zaproponować użytkownikowi terminy alternatywne.  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+
+
+
+
+\subsection{Rezerwacja serwisów i napraw}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+Na ekranie prezentującym serwisy i naprawy dostępne są przyciski do rezerwacji wybranej usługi. Kliknięcie przycisku przenosi użytkownika do widoku w którym może ustalić szczegóły dotyczące usługi oraz zapłacić za nią. Priorytet = średni.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+
+\arrayrulecolor{black}\hline
+\textbf{Rezerwacje.Szczegóły:} & \textbf{Klient ustala szczegóły zamówionej usługi.} \\
+
+\hline
+
+\quad .DaneRoweru: & 
+\begin{minipage}[t]{\linewidth}%
+Klient wybiera z listy model roweru, który ma być serwisowany. Następnie wybiera lokalizację warsztatu do którego dostarczy rower do serwisowania. Lokalizacja wybierana jest z mapy z zaznaczonymi dostępnymi lokalizacjami warsztatów. 
+\end{minipage} \\
+
+\quad .Lokalizacja: & 
+\begin{minipage}[t]{\linewidth}%
+Klient wybiera lokalizację warsztatu do którego dostarczy rower do serwisowania. Lokalizacja wybierana jest z mapy z zaznaczonymi dostępnymi lokalizacjami warsztatów. 
+\end{minipage} \\
+
+
+\quad .Płatność: & 
+\begin{minipage}[t]{\linewidth}%
+Klient może wybrać płatność z góry lub przy odbiorze bez żadnej różnicy w cenie. Po wybraniu rodzaju płatności wyświetlany jest formularz do wybrania formy płatności. Klient wybiera jeden z możliwych sposobów płatności: Karta płatnicza (wiele możliwych banków), przelew tradycyjny. 
+\end{minipage} \\
+
+
+
+\quad .Termin: & 
+\begin{minipage}[t]{\linewidth}%
+Po wykonaniu rezerwacji klient otrzymuje wiadomość email podsumowującą zamówione usługi, wiadomość zawiera orientacyjną datę realizacji zlecenia oraz link do śledzenia stanu usługi. 
+\end{minipage} \\
+
+
+\end{tabularx}
+\end{center}
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+\\ 
+Brak.
+
+
+\end{itemize}
+
+
+
+
+
+
+
+\subsection{Profil klienta}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+Każdy pracownik ma możliwość wyświetlenia profilu każdego klienta. Każdy klient ma możliwość wyświetlenia swojego profilu. Profil klienta zawiera podstawowe dane klienta: imię i nazwisko, email, telefon kontaktowy, posiadane modele rowerów, oprócz tego z każdym profilem klienta powiązana jest historia klienta. Priorytet = wysoki.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+
+\arrayrulecolor{black}\hline
+\textbf{Profil.Dane:} & \textbf{Profil klienta przedstawiony jest w formie tabeli, która zawiera dane klienta.} \\
+
+\hline
+
+\quad .DaneOsobowe: & 
+\begin{minipage}[t]{\linewidth}%
+W tabeli prezentowane są wszystkie dane osobowe klienta: imię i nazwisko, telefon kontaktowy, email.    
+\end{minipage}\\
+
+\quad .IdKlienta: & 
+\begin{minipage}[t]{\linewidth}%
+Klient posiada unikalne Id, które jest 6-cyfrowym kodem, dzięki któremu można go zidentyfikować.   
+\end{minipage}\\
+
+\quad \quad .Rowery: & 
+\begin{minipage}[t]{\linewidth}%
+Profil klienta zawiera listę rowerów, które posiada klient. 
+\end{minipage}\\
+
+
+
+\arrayrulecolor{black}\hline
+\textbf{Profil.Historia:} & \textbf{Profil każdego klienta zawiera odnośnik w postaci linku, który przekierowuje na ekran przedstawiający wszystkie operacje wykonane przez klienta wraz z datami w kolejności chronologicznej.} \\
+
+\hline
+
+\end{tabularx}
+\end{center}
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Niekompletny profil klienta & Dane klienta mogą ulec zmianie, profil klienta powinien być łatwo otwarty na rozbudowę o nowe atrybuty.  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+
+
+
+
+\subsection{Historia klienta i śledzenie stanu usług}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+Każdy profil klienta zawiera odnośnik w postaci linku do historii klienta. Historia klienta może być wyświetlana zarówno przez klientów jak i przez pracowników. Historia zawiera wszystkie wykonywane przez klienta działania związane z działalnością firmy rowerowej, w tym zakupy, zlecenia usług oraz inne zgłoszenia. Historia prezentowana jest w formie tabeli, w kolejności chronologicznej wykonywania operacji przez klienta. Operacje, które aktualnie są realizowane znajdują się u góry strony, klient może sprawdzić stan aktualnie realizowanych usług. Priorytet = wysoki.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+
+\arrayrulecolor{black}\hline
+\textbf{Historia.Dane:} & \textbf{Pojedynczy wpis w historii klienta zawiera dane dotyczące zlecenia i jego stanu.} \\
+
+\hline
+
+\quad .Status: & 
+\begin{minipage}[t]{\linewidth}%
+Zlecenie może mieć jeden ze statusów: Do realizacji, W trakcie realizacji, Zakończone.    
+\end{minipage}\\
+
+\quad .Data: & 
+\begin{minipage}[t]{\linewidth}%
+Każde zlecenie ma przypisaną datę złożenia zamówienia i datę realizacji zamówienia. 
+\end{minipage}\\
+
+\quad .Nazwa: & 
+\begin{minipage}[t]{\linewidth}%
+Każde zlecenie ma przypisaną nazwę.  
+\end{minipage}\\
+
+\quad .StatusPłatności: & 
+\begin{minipage}[t]{\linewidth}%
+Każda z pozycji w historii może mieć przypisany jeden ze statusów płatności: Oczekująca, Zakończona.  
+\end{minipage}\\
+
+
+\arrayrulecolor{black}\hline
+\textbf{Historia.Aktualizacja:} & \textbf{Pracownik firmy ma możliwość aktualizacji historii klienta.} \\
+
+\hline
+
+\quad .Status: & 
+\begin{minipage}[t]{\linewidth}%
+Każdy pracownik wyświetlając historię klienta ma do dyspozycji listę zawierającą trzy możliwe statusy usługi. Pracownik wybiera jeden ze statusów, a następnie akceptuje nowy status zlecenia. 
+\end{minipage}\\
+
+\quad .Komentarz: & 
+\begin{minipage}[t]{\linewidth}%
+Każdy pracownik wyświetlając historie klienta ma do dyspozycji pole tekstowe dla każdej pozycji w historii. W polu tym wpisuje informacje dotyczące stanu zlecenia, np. jaki jest aktualny stan napraw.    
+\end{minipage}\\
+
+
+
+\end{tabularx}
+\end{center}
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+
+\begin{center}
+\begin{tabular}{ | m{15em} | m{7cm} | } 
+\hline
+\textbf{Akcja} & \textbf{Reakcja systemu} \\ 
+\hline
+Brak rejestracji zdarzenia w historii klienta & Historia klienta powinna być łatwo modyfikowalna. Pracownik powinien mieć możliwość dodawania wydarzeń i komentarzy, które nie są generowane automatycznie przez system.  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\end{itemize}
+
+
+
+
+
+
+\subsection{Akcje marketingowe}
+
+\begin{itemize}
+\item \underline{Opis} 
+\newline
+\newline
+System wysyła do klientów wiadomości przez email lub sms dotyczące ofert biznesowych oraz przypomnień. Dostępne wiadomości to:
+\begin{itemize}
+\item Przypomnienie o terminie przeglądu roweru - sms
+\item Informacja o nowych usługach prowadzonych przez firmę - email
+\item Oferta zmiany starego roweru na nowy - sms
+\end{itemize}
+Wiadomości te wysyłane są tylko jeśli użytkownik zapisał się do newslettera podczas rejestracji i tym samym wyraził zgodę na otrzymywanie tych wiadomości. Priorytet = niski.
+\newline
+
+\item \underline{Wymagania funkcjonalne}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Marketing.Przegląd:} & \textbf{Przypomnienia o przeglądzie wysyłane są do klienta wiadomością sms. Wiadomość wysyłana jest raz w roku w końcu sezonu rowerowego. Datę tą ustalono na 30.10.2019.} \\
+
+\hline
+
+
+\arrayrulecolor{black}\hline
+\textbf{Marketing.Oferta:} & \textbf{Informacja o nowych usługach sklepu rowerowego wysyłana jest emailem, za każdym razem gdy do systemu wprowadzona zostanie nowa usługa.} \\
+
+\hline
+
+
+\arrayrulecolor{black}\hline
+\textbf{Marketing.Wymiana:} & \textbf{Oferta wymiany starego roweru na nowy wysyłana jest wiadomością sms. Oferta ta wysyłana jest po czasie trzech lat od nabycia roweru.} \\
+
+\hline
+
+
+\end{tabularx}
+\end{center}
+
+
+\item \underline{Spodziewane błędy lub niepoprawne dane wejściowe}
+
+\mbox{}\\
+Brak.
+
+\end{itemize}
+
+\newpage
+\section{Model procesów biznesowych}
+
+W rozdziale tym przedstawiony został model biznesowy firmy rowerowej. Model ten ma służyć wszystkim interesariuszom projektu w celu lepszego zrozumienia problemów, które ma rozwiązywać system, a także osób i ich ról w organizacji. Oprócz tego, model ten pozwala na 	ujednoznacznienie postrzegania struktury i dynamiki organizacji przez wszystkich interesariuszy.
+
+\subsection{Kontekst biznesowy i identyfikacja aktorów}
+
+
+\subsubsection{Aktorzy}
+
+Aktorzy biznesowi związani z funkcjonowaniem systemu firmy rowerowej to:
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{||c || p{8cm}||} 
+ \hline
+ Aktor & Opis \\ [0.5ex] 
+ \hline\hline
+ Firma rowerowa & Firma, która oferuje usługi i produkty związane z rowerami elektrycznymi.  \\ \hline 
+ Klient & Klient firmy rowerowej to każda osoba korzystająca z usług firmy w zakresie usług związanych z serwisem, naprawą lub sprzedażą produktów.  \\ \hline
+ Pracownik obsługi & Pracownik firmy rowerowej, który odpowiedzialny jest za pierwszy kontakt i obsługę klienta. W zakres jego obowiązków wchodzi prezentacja produktów i doradztwo dziedzinowe.    \\ \hline
+ Pracownik warsztatu &  Pracownik firmy rowerowej, który odpowiedzialny jest za wykonywanie usług w zakresie serwisowania i napraw. Odpowiedzialny jest za wprowadzanie do historii klienta danych związanych z historią życia roweru. \\ \hline
+ Producent rowerów i części &  Organizacja, która dostarcza części i rowery dla firmy rowerowej. Firma rowerowa zamawia rowery i części u producenta, a także otrzymuje od niego szczegółowe dane dotyczące parametrów technicznych produktów. \\ \hline
+ Księgowość & Firma zewnętrzna, która zapewnia usługi księgowania wszystkich transakcji realizowanych przez firmę rowerową, musi ściśle współpracować z system firmy rowerowej w zakresie realizowanych przez klientów zakupów.   
+   \\ [1ex] 
+ \hline
+ \end{tabular}
+\end{table}
+
+
+\subsubsection{Kontekst biznesowy}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{contextb.png}}
+\caption{Kontekst biznesowy systemu firmy rowerowej}
+\label{contextb}
+\end{figure}
+
+
+\subsection{Przypadki użycia i mapa procesów biznesowych}
+
+Kontekst działania organizacji rozbudowano o biznesowe przypadki użycia, które dostarczają istotnej wartości dla aktorów biznesowych:
+
+\begin{table}[h!]
+\centering
+ \begin{tabular}{|| c || p{8cm}||} 
+ \hline
+ Lp. & Przypadek \\ [0.5ex] 
+ \hline\hline
+ 1. & Zakup wybranego produktu \\ \hline
+ 2. & Rezerwacja usługi \\ \hline
+ 3. & Korzystanie z pomocy systemu przy zakupie \\ \hline
+ 4. & Aktualizacja historii klienta \\ \hline
+ 5. & Sprawdzanie historii i statusów zamówień   
+   \\ [1ex] 
+ \hline
+ \end{tabular}
+\end{table}
+
+\newpage
+\subsubsection{Mapa procesów biznesowych}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{systemmap.png}}
+\caption{Mapa procesów biznesowych}
+\label{systemmap}
+\end{figure}
+
+
+
+
+\newpage
+\subsubsection{Zakup wybranego produktu}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Nazwa przypadku użycia:} & \textbf{Zakup wybranego produktu} \\
+\hline
+
+\quad \textbf{Numer:} & 
+\begin{minipage}[t]{\linewidth}%
+1
+\end{minipage}\\
+
+
+\quad \textbf{Aktorzy:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient, Księgowość
+\end{minipage}\\
+
+
+\quad \textbf{Opis:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient za pomocą systemu zamawia produkt, który dostępny jest w ofercie firmy rowerowej. 
+\end{minipage}\\
+
+
+\quad \textbf{Warunki wstępne:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Klient jest zalogowany w systemie. 
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Warunki końcowe:} & 
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}
+\item Dodanie zakupu do historii klienta wraz ze statusem realizacji. 
+\item Zaksięgowanie zakupu przez system księgowy 
+\end{itemize}
+
+\end{minipage}\\
+
+
+\quad \textbf{Główny przepływ zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{enumerate}
+\item Klient loguje się do systemu
+\item Klient przegląda produkty z oferty firmy rowerowej
+\item Klient dostosowuje kryteria przeglądania do własnych potrzeb
+\item Klient przechodzi do szczegółowego opisu produktu
+\item Klient wybiera liczbę produktów
+\item Klient zamawia produkty
+\item Klient wypełnia formularz dostawy
+\item Klient płaci za produkty
+\item Księgowość odbiera dane o transakcji i realizuje odpowiednie procedury
+\end{enumerate}
+\end{minipage}\\
+
+
+\quad \textbf{Alternatywne przepływy zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+-
+\end{minipage}\\
+
+
+\quad \textbf{Notatki:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Księgowanie transakcji odbywa się tylko w wypadku gdy została pomyślnie sfinalizowana. 
+\end{itemize}
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+
+
+\subsubsection{Rezerwacja usługi}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Nazwa przypadku użycia:} & \textbf{Rezerwacja usługi} \\
+\hline
+
+\quad \textbf{Numer:} & 
+\begin{minipage}[t]{\linewidth}%
+2
+\end{minipage}\\
+
+
+\quad \textbf{Aktorzy:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient
+\end{minipage}\\
+
+
+\quad \textbf{Opis:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient rezerwuje w systemie usługę świadczoną przez firmę rowerową na dany dzień. 
+\end{minipage}\\
+
+
+\quad \textbf{Warunki wstępne:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Klient jest zalogowany w systemie
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Warunki końcowe:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Rezerwacja usługi oraz jej status jest odnotowywana w historii klienta
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Główny przepływ zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{enumerate}
+\item Klient loguje się do systemu
+\item Klient przegląda dostępne usługi
+\item Klient dostosowuje wyniki przeglądania do własnych potrzeb
+\item Klient przechodzi do szczegółowego opisu wybranej usługi
+\item Klient rezerwuje usługę
+\item Klient otrzymuje mail potwierdzający rezerwację
+\end{enumerate}
+\end{minipage}\\
+
+
+\quad \textbf{Alternatywne przepływy zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+-
+\end{minipage}\\
+
+
+\quad \textbf{Notatki:} & 
+\begin{minipage}[t]{\linewidth}%
+-
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+
+
+\subsubsection{Korzystanie z pomocy systemu przy zakupie}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Nazwa przypadku użycia:} & \textbf{Korzystanie z pomocy systemu przy zakupie} \\
+\hline
+
+\quad \textbf{Numer:} & 
+\begin{minipage}[t]{\linewidth}%
+3
+\end{minipage}\\
+
+
+\quad \textbf{Aktorzy:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient, Pracownik Obsługi
+\end{minipage}\\
+
+
+\quad \textbf{Opis:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient korzysta z pomocy systemu aby znaleźć informacje o usłudze, produkcie lub nawigacji w systemie.
+\end{minipage}\\
+
+
+\quad \textbf{Warunki wstępne:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Klient jest zalogowany
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Warunki końcowe:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Klient uzyskuje żądaną informacje
+\end{itemize}
+\end{minipage}\\
+
+\quad \textbf{Główny przepływ zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{enumerate}
+\item Klient loguje się do systemu
+\item Klient korzysta ze standardowego pytania udostępnionego przez chatbot
+\item Klient uzyskuje żądaną informacje
+\end{enumerate}
+\end{minipage}\\
+
+
+\quad \textbf{Alternatywne przepływy zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+
+\begin{itemize}
+  \item[2a] - Klient wpisuje własne pytania do chatbota \\
+  \item[2b] - Klient korzysta z wyszukiwarki  \\
+  \item[2c] - Klient korzysta z danych kontaktowych infolinii, pracownik obsługi przekazuje informacje \\
+\end{itemize}
+
+
+\end{minipage}\\
+
+
+\quad \textbf{Notatki:} & 
+\begin{minipage}[t]{\linewidth}%
+W przypadku wybrania przez klienta kontaktu z infolinią, konieczna jest dostępność pracownika obsługi.
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+
+\newpage
+\subsubsection{Aktualizacja historii klienta}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Nazwa przypadku użycia:} & \textbf{Zakup wybranego produktu} \\
+\hline
+
+\quad \textbf{Numer:} & 
+\begin{minipage}[t]{\linewidth}%
+4
+\end{minipage}\\
+
+
+\quad \textbf{Aktorzy:} & 
+\begin{minipage}[t]{\linewidth}%
+Pracownik warsztatu
+\end{minipage}\\
+
+
+\quad \textbf{Opis:} & 
+\begin{minipage}[t]{\linewidth}%
+Pracownik warsztatu po wykonaniu usługi aktualizuje dane zamówienia w historii klienta, dane mogą być też aktualizowane w przypadku gdy pracownik przerwał prace na usługą i zostawia informacje o stanie prac. 
+\end{minipage}\\
+
+
+\quad \textbf{Warunki wstępne:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Pracownik jest zalogowany w systemie
+\item Pracownik wykonuje usługę dla zarejestrowanego klienta
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Warunki końcowe:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Zmiana statusu usługi w historii klienta lub dodanie informacji o tanie usługi.
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Główny przepływ zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{enumerate}
+\item Firma otrzymuje od klienta zlecenie usługi
+\item Pracownik warsztatu wykonuje usługę 
+\item Pracownik warsztatu kończy pracę nad usługą
+\item Pracownik systemu zmienia status usługi w historii klienta
+\end{enumerate}
+\end{minipage}\\
+
+
+\quad \textbf{Alternatywne przepływy zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item [4a] - Pracownik warsztatu dodaje informacje o stanie w jakim pozostawił prace nad usługą
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Notatki:} & 
+\begin{minipage}[t]{\linewidth}%
+
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+
+
+\subsubsection{Sprawdzanie historii i statusów zamówień}
+
+\begin{center}
+\begin{tabularx}{\textwidth}[t]{XX}
+
+\arrayrulecolor{black}\hline
+\textbf{Nazwa przypadku użycia:} & \textbf{Sprawdzanie historii i statusów zamówień} \\
+\hline
+
+\quad \textbf{Numer:} & 
+\begin{minipage}[t]{\linewidth}%
+5
+\end{minipage}\\
+
+
+\quad \textbf{Aktorzy:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient
+\end{minipage}\\
+
+
+\quad \textbf{Opis:} & 
+\begin{minipage}[t]{\linewidth}%
+Klient sprawdza w systemie historię wszystkich usług z jakich korzystał, a także status aktualnie realizowanych zleceń.
+\end{minipage}\\
+
+
+\quad \textbf{Warunki wstępne:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Klient jest zalogowany w systemie
+\item Klient zrealizował przynajmniej jedno zlecenie lub jest w trakcie realizacji zlecenia.
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Warunki końcowe:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{itemize}
+\item Klient otrzymuje informacje o stanie realizacji usługi i zrealizowanych zamówieniach.
+\end{itemize}
+\end{minipage}\\
+
+
+\quad \textbf{Główny przepływ zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+\begin{enumerate}
+\item Klient przegląda swój profil
+\item Klient przechodzi do ekranu z historią zamówień
+\item Klient uzyskuje informacje o swoich zamówieniach
+\end{enumerate}
+\end{minipage}\\
+
+
+\quad \textbf{Alternatywne przepływy zdarzeń:} & 
+\begin{minipage}[t]{\linewidth}%
+-
+\end{minipage}\\
+
+
+\quad \textbf{Notatki:} & 
+\begin{minipage}[t]{\linewidth}%
+-
+\end{minipage}\\
+
+
+\end{tabularx}
+\end{center}
+
+
+\newpage
+\section{Wymagania danych}
+
+\subsection{Logiczny model danych}
+
+
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{dane.png}}
+\caption{Logiczny model danych}
+\label{dane}
+\end{figure}
+
+
+\newpage
+\subsection{Słownik danych}
+
+\begin{table}[H]
+\centering
+ \begin{tabular}{|| p{2cm} | p{6cm} || p{3cm} || p{0.5cm} || p{2cm} ||} 
+ \hline
+ Element danych & Opis & Typ & Dł. & Wartości \\ [0.5ex] 
+ \hline\hline
+ \textbf{Klienci} & Encja reprezentująca klientów. & - & - & - \\ \hline
+ Imię & Imię podane przy rejestracji & Ciąg liter & 50 & - \\ \hline
+ Nazwisko & Nazwisko podane przy rejestracji &  Ciąg liter & - & \\ \hline
+ Telefon & Telefon kontaktowy podany przy rejestracji & Ciąg liczb w formacie xxxx xxx xxx xxx & 13 & - \\ \hline
+ Email & Email podany przy rejestracji & Alfanumeryczny & 50 & -   \\ \hline
+ Hasło & Hasło podane przy rejestracji & Alfanumeryczny & 50 & - \\ \hline
+ \textbf{Historia} & Encja reprezentująca historie klientów & & & \\ \hline
+ IdHistorii & Id reprezentujące unikalną historię klienta & Alfanumeryczny & 10 & - \\ \hline
+ Data Aktualizacji & Data ostatniej modyfikacji historii klienta & Data w formacie RRRR-MM-DD & 10 \\ \hline
+ \textbf{Rowery} & Encja reprezentująca rowery, którymi zajmuje się firma & - & - & - \\ \hline
+ IdRoweru & Unikalne Id reprezentujące dany rower & Alfanumeryczny & 15 & - \\ \hline
+ Model & Model roweru nadany przez producenta & Alfanumeryczny & 5 & - \\ \hline
+ Producent & Firma, która wyprodukowała rower & Alfanumeryczny & 50 & - \\ \hline
+ \textbf{Części} & Encja reprezentująca części d rowerów & - & - & - \\ \hline
+ IdCzęści & Unikalne id nadawane każdej z części & Alfanumeryczny & 10 & - \\ \hline
+ Nazwa & Nazwa części nadana przez producenta & Alfanumeryczny & 5 & 0 \\ \hline
+ Rodzaj & Określa czym jest część, np. silnik prądu stałego & Alfanumeryczny & 50 & - \\ \hline 
+ Producent & Firma, która wyprodukowała część & Alfanumeryczny & 50 & - \\ \hline
+ Cena & Cena nadana przez firmę rowerową & Walutowy w formacie y.x, gdzie y to liczba złotych, a liczba x to grosze & 10 & - \\ \hline 
+ Inne & Dane specyficzne dla danej część, np. moc silnika & Tekst & 200 & -
+   \\ [1ex] 
+ \hline
+ \end{tabular}
+\end{table}
+
+
+\begin{table}[H]
+\centering
+ \begin{tabular}{|| p{2cm} | p{6cm} || p{3cm} || p{0.5cm} || p{2cm} ||} 
+ \hline
+ 
+ \textbf{Usługi} & Encja reprezentująca serwisy oferowane przez firmę rowerową & - & - & - \\ \hline
+ IdUsługi & Unikalne id usługi, która jest realizowana przez firmę rowerową & Alfanumeryczny & 10 & - \\ \hline
+ Rodzaj & Określa usługę wykonywaną przez firmę & Ciąg liter & 50 & Naprawa; Serwis; Inne \\ \hline
+ Status & Status realizacji usługi & Alfanumeryczny & 20 & Zakończona; W trakcie \\ \hline
+ Komentarz & Komentarz dodawany przez pracownika określający stan prac & Tekst & 200 & - \\ \hline
+ Data Zlecenia & Data złożenia zamówienia & Data w formacie RRRR-MM-DD & 10 & - \\ \hline
+ Data Realizacji & Data gdy zamówienia zmieniło status na zakończone & Data w formacie RRRR-MM-DD & 10 & - \\ \hline
+ \textbf{Zakupy} & Encja reprezentująca zakupy wykonane przez klienta & - & - & - \\ \hline
+ IdZakupu & Unikalne id generowane dla każdego zakupu & Alfanumeryczny & 20 & - \\ \hline
+ Produkt & IdProduktu, który kupił klient & Alfanumeryczny & 30 &  \\ \hline
+ Status & Status transakcji zakupu & Ciąg liter & 20 & Oczekująca; Opłacona \\ \hline
+ \textbf{Pracownicy} & Encja reprezentująca pracowników firmy &  - & - & - \\ \hline
+ IdPracownika & Id pracownika generowane przez system & Alfanumeryczny & 20 &  \\ \hline 
+ Imię & Imię podane przy rejestracji & Ciąg liter & 50 & - \\ \hline
+ Nazwisko & Nazwisko podane przy rejestracji &  Ciąg liter & - & \\ \hline
+ Telefon & Telefon kontaktowy podany przy rejestracji & Ciąg liczb w formacie xxxx xxx xxx xxx & 13 & - \\ \hline
+ Email & Email podany przy rejestracji & Alfanumeryczny & 50 & -   \\ \hline
+ Hasło & Hasło podane przy rejestracji & Alfanumeryczny & 50 & - 
+   \\ [1ex] 
+ \hline
+ \end{tabular}
+\end{table}
+
+
+
+
+
+
+\newpage
+\section{Interfejsy zewnętrzne}
+W rozdziale tym zostały opisane wszystkie interfejsy wchodzące w skład systemu. Uwzględniony został podział na różne rodzaje interfejsów względem ich zastosowania. 
+
+\subsection{Interfejsy użytkownika}
+
+\subsubsection{Opis}
+
+\begin{itemize}
+\item [\textit{I-1}] - Ekran główny powinien zawierać formularz logowania oraz przycisk do logowania i rejestracji na środku strony. Oprócz tego nad formularzem tym powinno znajdować się logo firmy. \\
+\item [\textit{I-2}] - Ekran powitalny powinien zawierać menu nawigacyjne w postaci paska nawigacyjnego u góry strony. W menu powinien znajdować się przycisk do przejścia na ekran zakupów i osobny do przejścia na ekran serwisów. W prawym dolnym rogu powinien znajdować się chatbot, a w prawym górnym rogu informacje kontaktowe infolinii. Oprócz tego na środku ponad paskiem nawigacyjnym powinno być widoczne logo firmy. \\
+\item [\textit{I-3}] - Ekran prezentujący produkty powinien wyświetlać je w postaci tabeli, każda pozycja ze zdjęciem w postaci miniaturki, nazwą produktu i ceną. Opis produktu ma być widoczny jako link, który przenosi użytkownika do strony szczegółowej produktu. Nad tabelą z produktami powinna znajdować się menu do dostosowywania wyników wyszukiwania do preferencji.
+\end{itemize}
+
+\subsubsection{Makiety interfejsów}
+Poniżej przedstawiono wstępne propozycje widoków ekranów. 
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{e1.png}}
+\caption{Makieta interfejsu \textit{I-1}}
+\label{e1}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{e2.png}}
+\caption{Makieta interfejsu \textit{I-2}}
+\label{e2}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=0.6]{e3.png}}
+\caption{Makieta interfejsu \textit{I-3}}
+\label{ekosys}
+\end{figure}
+
+
+
+\subsection{Interfejsy programistyczne}
+
+\begin{itemize}
+
+\item [\textit{IP-1-Warsztat \\}] \mbox{} \\
+\begin{itemize}
+\item [\textit{IP-1.1-Warsztat}] - System warsztatu udostępnia REST API, które udostępnia informacje o stanie napraw i przeglądów. 
+\item [\textit{IP-1.1-Warsztat}] - System warsztatu udostępnia REST API, dzięki któremu można zapisać dane o nowej usłudze. Każda nowa usługa realizowana przez firmę powinna być wysyłana do systemu warsztatu.  
+\end{itemize}
+
+
+\item [\textit{IP-2-Producent \\}] \mbox{} \\
+\begin{itemize}
+\item [\textit{IP-2.1-Producent}] - System producenta udostępnia dane o wszystkich produktach w postaci plików XML po wysłaniu odpowiedniego zapytania. 
+\item [\textit{IP-2.2-Producent}] - System producenta powinien zostać poinformowany w razie gdy zakupiony zostanie rower lub część. Dane te należy przesłać do REST API udostępnianego przez producenta.  
+\end{itemize}
+
+
+\item [\textit{IP-3-Księgowość \\}] \mbox{} \\
+\begin{itemize}
+\item [\textit{IP-3.1-Księgowość}] - System księgowość wysyła do systemu firmy rowerowej zmiany statusu automatycznie po zmianie ich statusu, zachodzi więc potrzeba obsługi tych powiadomień w systemie. System księgowy wysyła zapytania w postaci żądań HTTP z parametrami określającymi status transakcji. 
+\item [\textit{IP-3.2-Księgowość}] - System powinien wysyłać do systemu księgowości informacje o transakcji, która ma zostać zrealizowana każdorazowo po zakupie przez klienta usługi lub produktu. System księgowości udostępnia REST API, które wymaga hasła oraz danych o transakcji.  
+\end{itemize}
+
+
+\end{itemize}
+
+
+\subsection{Interfejsy sprzętowe}
+Nie zidentyfikowano żadnych interfejsów sprzętowych.
+
+
+\subsection{Interfejsy komunikacyjne}
+
+\begin{itemize}
+\item [IK-1] - System powinien wysyłać do klienta wiadomość SMS przypominające mu o przeglądzie i zawierające ofertę wymiany roweru na nowy. Wiadomości te wysyłane są tylko pod warunkiem, że klient zapisał się do newslettera.
+\item [IK-2] - System powinien wysyłać do użytkownika wiadomości podsumowujące email każdorazowo po zakupie przez klienta usługi lub produktu. 
+\end{itemize}
+
+
+
+\newpage
+\section{Wymagania pozafunkcjonalne}
+
+\subsection{Użyteczność}
+
+\begin{itemize}
+\item [\textit{WP-U-1}] - Użytkownik przy wyborze daty realizacji usługi powinien móc wybrać żądaną datę z kalendarza \\
+\item [\textit{WP-U-2}] - Użytkownik po rejestracji powinien być od razu zalogowany w systemie, nie musi dodatkowo się logować. \\
+\item [\textit{WP-U-3}] - Sesja użytkownika powinna być zachowywana po ponownym uruchomieniu przeglądarki
+\end{itemize}
+
+
+\subsection{Działanie}
+
+\begin{itemize}
+\item [\textit{WP-D-1}] - System powinien móc przechowywać do 10 000 użytkowników oraz obsugiwać do 2000 użytkowników działających równolegle, dla których czas trwania sesji to około 10 minut. \\
+
+\item [\textit{WP-D-2}] - Wszystkie strony powinny ładować się w czasie nie dłuższym nić 4s przy połączeniu internetowym 10Mb/s lub szybszym.
+
+\end{itemize}
+ 
+\subsection{Bezpieczeństwo}
+
+\begin{itemize}
+\item [\textit{WP-B-1}] - Wszystkie dane użytkowników powinny być zabezpieczone przez dostępem do nich osób nieuprawnionych. \\
+
+\item [\textit{WP-B-2}] - Hasło użytkowników powinny być szyfrowane. \\
+
+\item [\textit{WP-B-3}] - Każdy klient ma możliwość wyświetlania tylko swojego profilu i historii. \\
+
+\item [\textit{WP-B-4}] - Wszystkie dane finansowe przesyłane do systemu księgowego powinny być szyfrowane.
+
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+\end{document}
