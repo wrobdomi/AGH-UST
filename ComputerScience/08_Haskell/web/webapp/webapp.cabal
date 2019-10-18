@@ -1,0 +1,103 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 213976b58b7cef6d36ca99ba50dae2f04c184a4003008b48c4d93e272d38568c
+
+name:           webapp
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/hs-empty-project-plain#readme>
+homepage:       https://github.com/micwypych/webapp#readme
+bug-reports:    https://github.com/micwypych/webapp/issues
+author:         Michał Wypych
+maintainer:     mwypych@agh.edu.pl
+copyright:      2019 Michał Wypych
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/micwypych/webapp
+
+library
+  exposed-modules:
+      App
+      Lib
+      Student
+      StudentController
+      StudentRepository
+  other-modules:
+      Paths_webapp
+  hs-source-dirs:
+      src
+  default-extensions: OverloadedStrings
+  ghc-options: -Wall -fwarn-tabs
+  build-depends:
+      HDBC >=2.4
+    , HDBC-sqlite3 >=2.3
+    , aeson
+    , attoparsec
+    , base >=4.7 && <5
+    , convertible
+    , http-types
+    , scotty
+    , text
+    , transformers
+    , wai
+  default-language: Haskell2010
+
+executable webapp-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_webapp
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -fwarn-tabs -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HDBC >=2.4
+    , HDBC-sqlite3 >=2.3
+    , aeson
+    , attoparsec
+    , base >=4.7 && <5
+    , convertible
+    , http-types
+    , scotty
+    , text
+    , transformers
+    , wai
+    , webapp
+  default-language: Haskell2010
+
+test-suite webapp-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      StudentControllerTest
+      StudentRepositoryTest
+      StudentTest
+      Paths_webapp
+  hs-source-dirs:
+      test
+  default-extensions: OverloadedStrings
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HDBC >=2.4
+    , HDBC-sqlite3 >=2.3
+    , HUnit
+    , aeson
+    , attoparsec
+    , base >=4.7 && <5
+    , convertible
+    , http-types
+    , scotty
+    , text
+    , transformers
+    , wai
+    , webapp
+  default-language: Haskell2010

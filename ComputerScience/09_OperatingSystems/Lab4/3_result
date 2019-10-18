@@ -1,0 +1,20 @@
+~/OperatingSystems/Lab4$ ./save tmp1.txt
+One argument
+RLIMIT_FSIZE: cur=-1, max=-1
+Writing 100 bytes into tmp1.txt file...
+Returning zero
+
+
+~/OperatingSystems/Lab4$ cat tmp1.txt | wc -c
+100
+
+
+~/OperatingSystems/Lab4$ ./save 53 tmp2.txt
+Two arguments
+s is 53RLIMIT_FSIZE: cur=-1, max=-1
+Writing 53 bytes into tmp2.txt file...
+Returning zero
+
+
+~/OperatingSystems/Lab4$ cat tmp2.txt | wc -c
+53

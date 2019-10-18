@@ -1,0 +1,45 @@
+@ ./save tmp1.txt || echo FAIL
+Parsed command(s):
+Command 1:
+argv[0]: ./save
+argv[1]: tmp1.txt
+argv[2]: (null)
+Command 1:
+argv[0]: echo
+argv[1]: FAIL
+argv[2]: (null)
+One argument
+RLIMIT_FSIZE: cur=50, max=-1
+Writing 100 bytes into tmp1.txt file...
+
+@ ./save tmp4.txt && ./save tmp5.txt
+Parsed command(s):
+Command 1:
+argv[0]: ./save
+argv[1]: tmp4.txt
+argv[2]: (null)
+Command 1:
+argv[0]: ./save
+argv[1]: tmp5.txt
+argv[2]: (null)
+One argument
+RLIMIT_FSIZE: cur=50, max=-1
+Writing 100 bytes into tmp4.txt file...
+
+@ wc -c tmp4.txt
+Parsed command(s):
+Command 1:
+argv[0]: wc
+argv[1]: -c
+argv[2]: tmp4.txt
+argv[3]: (null)
+50 tmp4.txt
+
+@ wc -c tmp5.txt
+Parsed command(s):
+Command 1:
+argv[0]: wc
+argv[1]: -c
+argv[2]: tmp5.txt
+argv[3]: (null)
+wc: tmp5.txt: No such file or directory

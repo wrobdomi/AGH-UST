@@ -1,0 +1,25 @@
+512: 
+copy2:
+	"Total (user/sys/real)", 0, 5, 12
+	"Child (user/sys)", 0, 0
+copy3:
+	"Total (user/sys/real)", 50, 1, 78
+	"Child (user/sys)", 0, 0
+
+
+1024: 
+copy2:
+	"Total (user/sys/real)", 0, 3, 8
+	"Child (user/sys)", 0, 0
+copy3:
+	"Total (user/sys/real)", 50, 1, 74
+	"Child (user/sys)", 0, 0
+
+
+1100: 
+copy2:
+	"Total (user/sys/real)", 0, 3, 8
+	"Child (user/sys)", 0, 0
+copy3:
+	"Total (user/sys/real)", 53, 0, 78
+	"Child (user/sys)", 0, 0

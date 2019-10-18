@@ -1,0 +1,2 @@
+dominik@dominik-VirtualBox:~/OperatingSystems/Lab6$ ./check_buf
+PIPE_BUF = 4096

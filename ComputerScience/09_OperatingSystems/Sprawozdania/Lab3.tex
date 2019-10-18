@@ -1,0 +1,400 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{tcolorbox}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Systemy Operacyjne - Laboratorium}}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\newcommand{\ask}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=gray,title={Pytanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\assignment}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={Zadanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mKeyword}{RGB}{0,0,242}
+\definecolor{backgroundColour}{RGB}{242,242,242}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{mKeyword},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Zaawansowane operacje wejścia-wyjścia dla plików}} \\ \hline Dominik Wróbel & 14 III 2019 & Czw. 17:00 \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+\section{Pozyskiwanie i wyświetlanie metadanych pliku}
+\subsection{Odpowiedz na pytania}
+
+\ask{}{Proszę przejrzeć manual do funkcji z rodziny stat(2). Czym różnią się te funkcje ?}
+
+\begin{itemize}
+\item  Funkcja stat przyjmuje ścieżkę jako argument i szuka i-node podążając tą ścieżką. 
+\item Funkcja lstat jest identyczna jak stat, ale w przypadku gdy ścieżka prowadzi do linku symbolicznego, wyświetla metadane powiązane z tym linkiem, a nie z tym do czego on wskazuje, jak w przypadku stat.
+\item  Funkcja fstat przyjmuje deskryptor, a nie ścieżkę do pliku, znajduje i-node w tablicy aktywnych i-node w jądrze systemu
+\end{itemize}
+
+\ask{}{
+Co reprezentuje flaga S\_IFMT zdefiniowana dla pola st\_mode ? 
+}
+
+Jest to makro reprezentujące maskę dzięki której można sprawdzić typ pliku. Aby przy pomocy tego makra uzyskać typ pliku należy wykonać logiczny AND z polem st\_mode struktury stat. 
+
+
+
+\ask{}{
+Zmienna sb jest wypełnioną strukturą typu struct stat. Czy można sprawdzić typ pliku (np. czy plik jest urządzeniem blokowym) w następujący sposób ?
+Odpowiedź uzasadnij.
+}
+\begin{lstlisting}[style=CStyle, label=some-code]
+if (( sb.st_mode & S_IFBLK) == S_IFBLK) { /* plik jest urzadzeniem blokowym */}
+\end{lstlisting}
+
+Nie, nie można sprawdzić typu pliku w taki sposób. Najpierw należy wykonać logiczny AND z maską pliku w celu uzyskania typu pliku, a następnie przyrównać wynik do odpowiedniej flagi. Prawidłowa wersja to:
+\begin{lstlisting}[style=CStyle, label=some-code]
+if (( sb.st_mode & S_IFMT) == S_IFBLK) { /* plik jest urzadzeniem blokowym */}
+\end{lstlisting}
+
+\subsection{Program stat\_info.c}
+\assignment{}{
+Proszę pobrać, skompilować i uruchomić poniższy program. stat\_info.c
+}
+
+\newpage
+\assignment{}{
+4. Proszę zmodyfikować funkcję print\_type tak aby badała wszystkie możliwe typy pliku i wyświetlała odpowiednią informację. \\
+5. Proszę zmodyfikować funkcję print\_perms tak aby wyświetlała prawa dostępu do pliku w postaci numerycznej, np. 755. \\
+6. Proszę zmodyfikować funkcję print\_owner tak aby wyświetlała nazwę właściciela i grupy właścicieli oraz podawała identyfikatory w nawiasach, np. wta(1234) iastaff(5678) \\
+7. Proszę zmodyfikować funkcję print\_perms tak aby wyświetlone zostały prawa dostępu do pliku użytkownika uruchamiającego program np. Your permisions: read: yes, write: no, execute: no. \\
+8. Proszę zmodyfikować funkcję print\_size tak aby wyświetlała informacje o rozmiarze pliku w sformatowany sposób - w kilo/megabajtach itp., np. 1MB zamiast 1024bytes \\
+9. Proszę zmodyfikować funkcje print\_laststch, print\_lastacc i print\_lastmod tak aby wyświetlały czas, który minął od daty ostatniej zmiany statusu/dostępu/modyfikacji, np. 3 day ago \\
+10. Proszę zmodyfikować funkcje print\_name tak, aby w przypadku gdy podany jako argument plik jest linkiem symbolicznym wyświetlał jego nazwę w formacie: nazwa\_linku  nazwa\_plik\_na\_ktory\_wskazuje. 
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code,caption=Zadania 4-10]
+static void print_file_info(struct stat *sb, char *name){
+
+	  // 4.
+      printf("File type:                ");
+      switch (sb->st_mode & S_IFMT) {
+      case S_IFBLK:  printf("block device\n");            break;
+      case S_IFCHR:  printf("character device\n");        break;
+  	  case S_IFDIR:	 printf("directory\n");				  break;
+  	  case S_IFIFO:	 printf("named or unnamed pipe\n");   break;
+	  	case S_IFLNK:  printf("symbolic link\n");			  break;
+  	  case S_IFREG:  printf("regular file\n");		      break;
+      case S_IFSOCK: printf("Socket\n");			      break;
+      default:       printf("unknown?\n");                break;
+      }
+      
+      
+      // 5. i 7.
+      char *perms = (char *) malloc(sizeof(char) * 128);
+	  strcat(perms, "Your permissions: read: ");	
+	  
+	  int usr = 0;
+	  int grp = 0;
+	  int oth = 0; 
+      printf("Mode:                     %lo (octal)\n", (unsigned long) sb->st_mode);
+	  if( (sb->st_mode & S_IRUSR) == S_IRUSR){
+	  	usr += 4;
+		strcat(perms, "yes, write: ");
+	  }
+	  else{
+	  	strcat(perms, "no, write: ");
+	  }
+	  if( (sb->st_mode & S_IWUSR) == S_IWUSR){
+	  	usr += 2;
+		strcat(perms, "yes, execute: ");
+	  }
+	  else{
+	  	strcat(perms, "no, execute: ");
+	  }
+	  if( (sb->st_mode & S_IXUSR) == S_IXUSR){
+	  	usr += 1;
+		strcat(perms, "yes");
+	  }
+	  else {
+	  	strcat(perms, "no");
+	  }
+	  if( (sb->st_mode & S_IRGRP) == S_IRGRP){
+	  	grp += 4;
+	  }
+	  if( (sb->st_mode & S_IWGRP) == S_IWGRP){
+	  	grp += 2;
+	  }
+	  if( (sb->st_mode & S_IXGRP) == S_IXGRP){
+	  	grp += 1;
+	  }	
+	  if( (sb->st_mode & S_IROTH) == S_IROTH){
+	  	oth += 4;
+	  }
+	  if( (sb->st_mode & S_IWOTH) == S_IWOTH){
+	  	oth += 2;
+	  }
+	  if( (sb->st_mode & S_IXOTH) == S_IXOTH){
+	  	oth += 1;
+	  }		
+	  printf("Permission: %d %d %d \n", usr, grp, oth);
+	  printf("%s\n", perms);
+	  
+	  
+	  // 6.	  
+	  char *userName =(char *)malloc(64*sizeof(char));
+	  char *groupName =(char *)malloc(64*sizeof(char));  
+		
+	  long uid = (long) sb->st_uid;
+	  long gid = (long) sb->st_gid;
+	  struct passwd *pwd = getpwuid(uid);
+	  struct group *grp = getgrgid(gid);
+	 
+	  userName = pwd->pw_name;
+	  groupName = grp->gr_name;
+
+	  printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb->st_uid, (long) sb->st_gid);
+	  printf("Ownership:                %s(%ld) %s(%ld)\n", userName, (long) sb->st_uid, groupName, (long) sb->st_gid );
+	  
+	  
+	  // 7. rozwiazanie w 5.
+	  
+	  
+	  // 8.
+	  printf("Preferred I/O block size: %ld bytes\n", (long) sb->st_blksize);
+      
+	  printf("File size:                %lld bytes\n",(long long) sb->st_size);
+ 
+      printf("Kb File size:           %f kb\n",(float)sb->st_size/1024);
+  
+	  printf("MB File size:           %f Mb\n",(float)sb->st_size/(1024*1024));
+		
+      printf("Blocks allocated:         %lld\n",(long long) sb->st_blocks);
+      
+      // 9. 
+	  printf("Last status change:       %s", ctime(&sb->st_ctime));	  
+	  time_t currentTime;
+  	  time(&currentTime);
+  	  long long diffTime;
+	  diffTime = difftime(currentTime,sb->st_ctime);
+		
+	  printf("Last status change:         %lld days ago\n",diffTime/(60*60*24) );
+	  
+	  printf("Last file access:         %s", ctime(&sb->st_atime));
+		
+	  time_t currentTime;
+  	  time(&currentTime);
+  	  long long diffTime;
+	  diffTime = difftime(currentTime,sb->st_atime);
+		
+	  printf("Last file access:         %lld days ago\n",diffTime/(60*60*24) );
+	  
+	  printf("Last file modification:   %s", ctime(&sb->st_mtime));
+		
+	  time_t currentTime;
+  	  time(&currentTime);
+  	  long long diffTime;
+	  diffTime = difftime(currentTime,sb->st_mtime);
+		
+	  printf("Last file modification:         %lld days ago\n",diffTime/(60*60*24) );
+	  
+	  
+	  // 10.
+	  char* bname = basename(name);
+      printf("Name of the file:         %s\n", bname);
+		
+	  char* lname = (char*) malloc(256 * sizeof(char));
+	  ssize_t bytesRead;
+	  
+	  if( (sb->st_mode & S_IFMT) == S_IFLNK ){
+		printf("Is Link");
+		if((bytesRead = readlink(name,lname, sizeof(lname)) != -1)){
+			if(lname != NULL){
+		  		lname[bytesRead] = '\0';
+		  		printf("SymLink %s -> File %s\n",lname,bname);
+			}
+			else{
+		  		exit(EXIT_FAILURE);
+			}
+	  	} 
+	}
+	  
+	  
+}
+\end{lstlisting}
+
+\newpage
+\section{Wejście / wyjście asynchroniczne}
+\assignment{}{
+Do programu z poprzedniego ćwiczenia dopisz funkcję print\_content, której deklaracja może wyglądać następująco static void print\_content(char *name). Powyższa funkcja implementuje następującą funkcjonalność: 
+\begin{itemize}
+\item Pyta użytkownika czy chce wypisać zawartość podanego jako argument pliku.
+\item Jeżeli tak, to otwiera i przy pomocy funkcji czytania asynchronicznego aio\_read(3) odczytuje zawartość pliku i wypisuje ją na ekran.
+\end{itemize}
+Powyższe zadanie najlepiej wykonać stosując taki oto scenariusz:
+\begin{itemize}
+\item Otwieramy plik open(2)
+\item Inicjalizujemy wczytywanie pierwszej porcji danych aio\_read(3).
+\item Przy pomocy funkcji aio\_error(3) czekamy do momentu aż odczyt się zakończy.
+\item Wyświetlamy wczytane dane i wracamy do 2 jeżeli nie osiągnęliśmy końca pliku.
+\end{itemize}
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code,caption=print\_content]
+static void print_content(char * name){
+		
+		char * choice = (char*) malloc(1*sizeof(char));
+		
+		printf("Would you like to print content of your file ?\n");
+		printf("Press Y - Yes, any key otherwise");
+		
+		int fd;
+		struct aiocb cb;
+		char check[256];
+		
+		scanf("%c", choice);
+		if(*choice == 'y' || *choice == 'Y'){
+			
+			fd = open(name, O_RDONLY); // open file
+			memset(&cb, 0, sizeof(struct aiocb));
+			cb.aio_fildes = fd; // configure struct
+			cb.aio_buf = check;
+			cb.aio_nbytes = 256;
+			printf("reading aio");
+			int n;
+			while(1){
+				n = aio_read(&cb); // read 
+				if(n==-1){
+					printf("AIO Error"); // handle errors
+					exit(EXIT_FAILURE);
+				}
+				int err;
+				printf("reading aio 2");
+				while((err = aio_error (&cb)) == EINPROGRESS); // wait for asynchronous read to complete
+				printf("%s\n", check);
+				if(n==0){
+					break;
+				}
+			}
+				
+		} else {
+			printf("Printing cancelled");
+		}
+		
+		return;
+		
+}
+\end{lstlisting}
+
+
+
+
+
+\end{document}

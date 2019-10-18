@@ -1,0 +1,554 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{tcolorbox}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+\pagenumbering{arabic}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {}
+  {\thepage}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Systemy Operacyjne - Laboratorium}}
+	{}
+	
+	\setfoot
+	{}
+	{\thepage}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\newcommand{\ask}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=gray,title={Pytanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\assignment}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={Zadanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mKeyword}{RGB}{0,0,242}
+\definecolor{backgroundColour}{RGB}{242,242,242}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{mKeyword},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Komunikacja międzyprocesowa - łącza nienazwane}} \\ \hline Dominik Wróbel & 11 IV 2019 & Czw. 17:00 \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+\section{Tworzenia prostych łączy jednokierunkowych}
+
+
+\assignment{1.1 1.2 1.3}{ Zmodyfikuj kod programu:
+\begin{itemize}
+\item Podziel program na 2 procesy (użyj fork()).
+\item Korzystając z funkcji close zamknij zbędne łącza (WAŻNE: które?/dlaczego?).
+\item Przekaż komunikat pomiędzy procesami.
+\end{itemize}
+}
+\ask{1.3}{
+Korzystając z funkcji close zamknij zbędne łącza (WAŻNE: które?/dlaczego?).
+}
+Po rozdziale programu na dwa procesy musimy zamknąć deskryptory:
+\begin{itemize}
+\item Odpowiadający operacji czytania w procesie, który zapisuje dane, ponieważ powinien istnieć tylko jeden deskryptor do czytania we wszystkich procesach
+\item Odpowiadający operacji zapisywania w procesie, który czyta dane, ponieważ jeden proces nie powinien mieć możliwości czytania i zapisywania jednocześnie
+\end{itemize}
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=simple\_pipe.c]
+    #include <stdio.h>
+    #include <unistd.h>
+    #include <string.h>
+    #include <stdlib.h>
+    #include <sys/types.h>
+     
+    int main(int argc, char *argv[]){
+     
+        int pfd[2]; // file descriptors 
+        size_t nread;
+        char buf[100];
+        pid_t newProcessPID;
+
+        pipe(pfd); // create pipe
+
+        char * str ="Ur beautiful pipe example";
+        
+        newProcessPID = fork(); // create child process
+
+        if(newProcessPID == 0){ // child process
+            close(pfd[1]); // close writing descriptor
+            nread=read(pfd[0],buf,sizeof(buf));
+            (nread!=0)?printf("%s (%ld bytes)\n",buf,(long)nread):printf("No data\n");
+            _exit(EXIT_SUCCESS);
+        } else{ // parent process
+            close(pfd[0]); // close reading descriptor
+            write(pfd[1], str, strlen(str));
+            _exit(EXIT_SUCCESS);
+        }
+     
+        return 0;
+}
+\end{lstlisting}
+
+\assignment{1.4}{
+Korzystając z funkcji fpathconf sprawdź wielkość bufora dla łączy komunikacyjnych na Twoim systemie. Odp. na pytanie: do czego potrzebna jest ta informacja?
+}
+\begin{lstlisting}[style=CStyle, label=some-code, caption=zadanie1\_4.c]
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
+int main(){
+    
+    int pfd[2];
+    long v;
+
+    pipe(pfd);
+
+    v = fpathconf(pfd[0], _PC_PIPE_BUF);
+    printf("PIPE_BUF = %ld\n", v);
+    
+}
+
+// WYNIK DZIALANIA:
+// dominik@dominik-VirtualBox:~/OperatingSystems/Lab6$ ./check_buf
+// PIPE_BUF = 4096
+\end{lstlisting}
+
+\ask{1.4}{
+Korzystając z funkcji fpathconf sprawdź wielkość bufora dla łączy komunikacyjnych na Twoim systemie. Odp. na pytanie: do czego potrzebna jest ta informacja?
+}
+
+Jest to stała definiująca ile danych można zapisać do łącza w operacji atomicznej. Wartość ta jest nie mniejsza niż 512, oznacza to, że przy zapisywaniu zawsze 512 bajtów danych nie będzie przerwane przez inne dane. Jest to ważne z punktu widzenia działania funkcji read, write na łączach, ponieważ zbyt duża ilość danych może doprowadzić do zablokowania funkcji write.
+
+\newpage
+\section{Praca z łączami komunikacyjnymi}
+\assignment{2}{
+ \begin{itemize}
+ \item Funkcja pipe w przypadku błędu ustawia zmienną errno. Zaimplementuj obsługę błędów wyświetlającą informację dla użytkownika dot. błędu. 
+ \item Do powyższego programu dodaj niezbędne funkcje close zamykające w odpowiednich miejscach otwarte deskryptory plików, a zamiast funkcji dup użyj dup2. 
+ \end{itemize}
+}
+
+\ask{2}{Do czego w procesie potomnym użyta jest funkcja close(0).}
+W tym przypadku 0 odnosi się do deskryptora standardowego wejścia. Deskryptor ten jest zamykany i jest dzięki temu zwalniany. Wywołanie close dla deskryptorów łączy zapisujących powoduje, że read otrzymuje znak EOF, a w wypadku zamknięcia deskryptora czytającego zwracany jest błąd dla deskryptorów zapisujących. 
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=dup-example.c]
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
+    
+int main(void)
+{
+    int     pfd[2];
+    pid_t   pid;
+    char    string[] = "Test";
+    char    buf[10];
+
+    if(pipe(pfd) == -1){ // 1. error handling
+        perror("Pipe call failed.");
+        exit(EXIT_FAILURE);
+    }
+
+    pid = fork();
+
+    if(pid == 0) {
+        close(0);              
+        // dup(pfd[0]);
+        dup2(pfd[0],0);
+        read(STDIN_FILENO, buf, sizeof(buf));
+        close(pfd[0]);
+        printf("Wypisuje: %s", buf);
+    } else {
+        close(pfd[0]);
+        write(pfd[1], string, (strlen(string)+1));    
+        close(pfd[1]);    
+    }
+
+    return 0;
+}
+
+\end{lstlisting}
+
+\section{Komunikacja z kilkoma procesami}
+\subsection{Komunikacja z kilkoma procesami}
+\assignment{3.1}{
+Napisz program, który utworzy proces czytający dane z pliku (słownika), a następnie utworzy dwa podprocesy, z których jeden policzy liczbę linii (liczbę słów w słowniku), a drugi policzy liczbę linii, zawierających podciąg pipe (liczbę słów, które  zawierają słowo pipe). 
+}
+Komentarze opisujące wykonane w programie działania zamieszczono na listingu.
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Komunikacja z kilkoma procesami.]
+#include<stdio.h>
+#include<fcntl.h>
+#include<stdlib.h>
+#include<string.h>
+#include<unistd.h>
+
+#define BUFFSIZE 4096
+
+int main()
+{
+    // ---------------------------------------------
+    // parent --> child1
+    // communication
+    int pfd1[2];
+
+    // child1 --> parent
+    // communication
+    int pfd2[2];
+    
+    pipe(pfd1);
+    pipe(pfd2);
+    // ---------------------------------------------
+
+    // ---------------------------------------------
+    // parent --> child2
+    // communication
+    int ppfd1[2];
+
+    // child2 --> parent
+    // communication
+    int ppfd2[2];
+    
+    pipe(ppfd1);
+    pipe(ppfd2);
+    // ---------------------------------------------
+
+    int childOne;
+    int childTwo;
+
+    char childOneReceived[BUFFSIZE];
+    char parentSent[BUFFSIZE];
+    char childOneToParent[BUFFSIZE];
+    char parentFromChildOneReceived[BUFFSIZE];
+
+    char childTwoReceived[BUFFSIZE];
+    char childTwoToParent[BUFFSIZE];
+    char parentFromChildTwoReceived[BUFFSIZE];
+
+    const char * lookForThisWord = "pipe";
+
+    int linesNumber = 0;
+
+    int pipesWordNumber = 0;
+
+    // open file
+    int fdDictionary = open("dictionary.txt", O_RDONLY);
+    if(fdDictionary == -1){
+        printf("Error opening dictionary.txt");
+        exit(EXIT_FAILURE);
+    }
+
+    // printf("BreakPoint1");
+
+    childOne = fork();
+
+    if(childOne == 0) // from parent to childOne
+    {
+        int j = 0;
+
+        close(pfd1[1]);
+        close(pfd2[0]);
+
+        // parent --> childOne
+        // receive and count lines
+        while(read(pfd1[0], childOneReceived, BUFFSIZE) != 0) {
+            for(j=0; j < BUFFSIZE; j++){
+                if(childOneReceived[j]=='\n'){
+                    linesNumber++;
+                }
+            }
+        }
+        
+        // childOne --> parent
+        // send number of counted lines
+        printf("There are %d lines", linesNumber);
+
+        sprintf(childOneToParent, "%d", linesNumber);
+       
+        write(pfd2[1],childOneToParent,BUFFSIZE);
+        close(pfd2[1]);
+        
+        // printf("\nchild recieved is %s and lines are %d", childOneReceived, linesNumber);
+
+        exit(EXIT_SUCCESS);
+    }
+
+    childTwo = fork();
+
+    // printf("Child two is %d", childTwo);
+
+    if(childTwo == 0) { // from parent to childTwo
+
+        printf("BreakPoint2.1");
+
+        close(ppfd1[1]);
+        close(ppfd2[0]);
+
+        char * s;
+        const char * start = NULL;
+
+        // parent --> childTwo
+        // receive and count lines
+        while(read(ppfd1[0], childTwoReceived, BUFFSIZE) != 0) {
+                while ( (s = strstr(start, lookForThisWord)) != NULL ) {
+                    pipesWordNumber++;
+                }
+        }
+
+        // childTwo --> parent
+        // send number of counted lines
+        printf("Lines are %d", pipesWordNumber);
+
+        sprintf(childTwoToParent, "%d", pipesWordNumber);
+       
+        write(ppfd2[1], childTwoToParent, BUFFSIZE);
+        close(ppfd2[1]);
+
+        exit(EXIT_SUCCESS);
+        
+        // printf("\nchild recieved is %s and lines are %d", childOneReceived, linesNumber);
+    }
+
+
+    if(childOne > 0 && childTwo > 0) { // parent
+        
+        close(pfd1[0]);
+        close(pfd2[1]);
+        close(ppfd1[0]);
+        close(ppfd2[1]);
+
+    // printf("BreakPoint4");
+    // send from parent to children
+        while(read(fdDictionary, parentSent, BUFFSIZE) != 0){
+            // printf("BreakPoint5");
+            write(pfd1[1], parentSent, BUFFSIZE);
+            write(ppfd1[1], parentSent, BUFFSIZE);
+            // printf("BreakPoint7");
+        }
+        close(pfd1[1]);
+        close(ppfd1[1]);
+
+    // printf("BreakPoint10");
+    // receive from children
+        read(pfd2[0], parentFromChildOneReceived, BUFFSIZE);
+
+        printf("\nFrom childOne recieved is %s", parentFromChildOneReceived);
+
+        read(ppfd2[0], parentFromChildTwoReceived, BUFFSIZE);
+
+        printf("\nFrom childTwo recieved is %s", parentFromChildTwoReceived);
+
+        exit(EXIT_SUCCESS);
+
+    }
+
+
+}
+
+\end{lstlisting}
+
+\newpage
+\subsection{Przekazywanie danych przez kilka łączy}
+
+\assignment{3.2}{
+Proszę napisać program, który utworzy dwa procesy potomne p1 i p2.
+Proces potomny p1 generuje kolejne liczby od 1 do 10 (można użyć seq).
+Proces p1 powinien za pomocą łącza nienazwanego przekazać je do procesu p2, który pomnoży każdą z liczb razy 5.
+Następnie proces p2 przekaże liczby do procesu macierzystego p0, który wyświetli otrzymane liczby. . 
+}
+
+W kodzie proces childOne odpowiedzialny jest za generację liczb w pętli od 1 do 10. Liczby są wysyłane 'po jednej' do procesu childTwo, który odbiera dane w postaci string, konwertuje je na int i mnoży przez 5, a następnie wysyła do procesu rodzica w postaci string, rodzic wyświetla otrzymane dane. Program działa poprawnie, ponieważ funkcję read czekają na zamknięcie deskryptorów plików zapisujących oraz na dane do odczytania, co umożliwia poprawną kolejność przepływu danych.
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Przekazywanie danych przez kilka łączy.]
+#include<stdio.h>
+#include<fcntl.h>
+#include<stdlib.h>
+#include<string.h>
+#include<unistd.h>
+
+#define BUFFSIZE 4096
+
+int main()
+{
+
+    // ---------------------------------------------
+    // child1 --> child2
+    int ch1ch2Pipe[2];
+
+    // child2 --> parent
+    int ch2pPipe[2];
+    
+    pipe(ch1ch2Pipe);
+    pipe(ch2pPipe);
+    // ---------------------------------------------
+
+    int childOne;
+    int childTwo;
+
+    char childOneToChildTwo[BUFFSIZE];
+    char childTwoReceived[BUFFSIZE];
+
+    // char childTwoToParent[BUFFSIZE];
+    char parentReceived[BUFFSIZE];
+    
+    childOne = fork();
+
+    if(childOne == 0){ // child one
+
+        printf("Inside child one ! \n");
+
+        int i = 0;
+        close(ch1ch2Pipe[0]);
+
+        for(i=0; i<10; i++){
+            sprintf(childOneToChildTwo, "%d", (i+1));
+            write(ch1ch2Pipe[1],childOneToChildTwo,BUFFSIZE);
+        }
+
+        close(ch1ch2Pipe[0]);
+        exit(EXIT_SUCCESS);
+    }
+    
+
+    childTwo = fork();
+
+    if(childTwo == 0){ // child two
+
+        printf("Inside child two ! \n");
+        int numReceived = 0;
+
+        close(ch1ch2Pipe[1]);
+        close(ch2pPipe[0]);
+
+        while(read(ch1ch2Pipe[0], childTwoReceived, BUFFSIZE) != 0) {
+            printf("Child two received %s \n", childTwoReceived);
+            numReceived = (atoi(childTwoReceived) * 5);
+            sprintf(childTwoReceived, "%d", numReceived);
+            write(ch2pPipe[1], childTwoReceived, BUFFSIZE);
+        }
+        
+        close(ch2pPipe[1]);
+      
+        exit(EXIT_SUCCESS);
+    }
+    else { // parent
+       printf("I am inside parent ! \n");
+
+       close(ch2pPipe[1]);
+     
+        while(read(ch2pPipe[0], parentReceived, BUFFSIZE) != 0) {
+            printf("Parent Received %s \n", parentReceived);
+        }
+
+        exit(EXIT_SUCCESS);
+    }
+
+    return 0;
+
+}
+
+\end{lstlisting}
+
+
+\end{document}

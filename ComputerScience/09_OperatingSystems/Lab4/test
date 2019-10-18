@@ -1,0 +1,13 @@
+@ echo test
+test
+Process exited: 0
+@ ls
+funcs.c  funcs.h  funcs.o  makefile  shell  shell.c  shell.o  test
+Process exited: 0
+@ ls hhh
+ls: cannot access 'hhh': No such file or directory
+Process exited: 512
+@ cat aaa
+cat: aaa: No such file or directory
+Process exited: 256
+@ 

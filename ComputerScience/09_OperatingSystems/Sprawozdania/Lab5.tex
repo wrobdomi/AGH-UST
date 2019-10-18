@@ -1,0 +1,608 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{tcolorbox}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+\pagenumbering{arabic}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {}
+  {\thepage}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Systemy Operacyjne - Laboratorium}}
+	{}
+	
+	\setfoot
+	{}
+	{\thepage}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\newcommand{\ask}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=gray,title={Pytanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\assignment}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={Zadanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mKeyword}{RGB}{0,0,242}
+\definecolor{backgroundColour}{RGB}{242,242,242}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{mKeyword},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Procesy 2 - Procesy i wątki}} \\ \hline Dominik Wróbel & 04 IV 2019 & Czw. 17:00 \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+\section{Tworzenie wątku}
+
+
+\subsection{Tworzenia wątku}
+\assignment{1}{Zmodyfikuj program tak by tworzył 10 wątków, z których każdy wypisze swój numer przesłany jako argument wywołania funkcji rozpoczęcia.}
+
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadania 1 - hello.c]
+    #include <pthread.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    // ----------------------------------------------------------
+     
+    void *PrintHello(void *arg);
+    // ----------------------------------------------------------
+     
+    int main(int argc, char *argv[]){
+
+         const int THREADS_NUM = 10;
+         pthread_t threads[THREADS_NUM];
+         int i;
+
+         for(i = 0; i < THREADS_NUM ; i++){ // tworzenie 10 watkow
+            
+            int rc = pthread_create(&threads[i], NULL, PrintHello, (void*)i);
+            if (rc){
+                printf("Return code: %d\n", rc);
+                exit(-1);
+            }
+            sleep(1);
+
+         }
+
+        
+         return 0;
+    }
+    // ----------------------------------------------------------
+     
+    void *PrintHello(void *arg){
+         printf("Next boring 'Hello World!' version! Thread number %d\n", ((int*) arg));
+         return NULL;
+}
+\end{lstlisting}
+
+\subsection{Czekanie na zakończenie wątku}
+\assignment{2}{Zmodyfikuj program z pierwszego zadania w taki sposób, aby wątek główny (main) czekał na zakończenie pracy przez pozostałe wątki. Aby przetestować poprawność rozwiązania zmień kod poprzedniego programu w następujący sposób:
+\begin{itemize}
+\item Usuń wywołanie sleep(1); z funkcji main.
+\item Dodaj identyczne wywołanie sleep(1); na samym początku funkcji rozpoczęcia.
+\item Bezpośrednio przed instrukcją return w funkcji main wypisz informację o zakończeniu wątku głównego.
+\item Zmodyfikuj program w celu oczekiwania na zakończenie wątku. Poprawnie zmodyfikowany program powinien wyświetlać taki oto komunikat: \\ 
+Next boring 'Hello World!' version! \\
+End of the main thread!
+\end{itemize}
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadanie 2 - hello.c]
+ #include <pthread.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    // ----------------------------------------------------------
+     
+    void *PrintHello(void *arg);
+    // ----------------------------------------------------------
+     
+    int main(int argc, char *argv[]){
+
+         const int THREADS_NUM = 10;
+         pthread_t threads[THREADS_NUM];
+         int i;
+
+         for(i = 0; i < THREADS_NUM ; i++){
+            
+            int rc = pthread_create(&threads[i], NULL, PrintHello, (void*)i);
+            if (rc){
+                printf("Return code: %d\n", rc);
+                exit(-1);
+            }
+            
+         // sleep(1); I - usun wywolanie sleep(1) z main
+         }
+
+        for(i = 0 ; i < THREADS_NUM; i++){ // IV - zmodyfikuj program aby czekal na koniec watkow
+            pthread_join(threads[i], NULL); // wait for a thread to finish
+        }
+
+         printf("End of the main thread!\n"); // III - przed return wypisz info. o zakoncz. watku glow.
+        
+         return 0;
+    }
+    // ----------------------------------------------------------
+     
+    void *PrintHello(void *arg){
+        sleep(1); // II -dodaj identyczne wywolanie sleep(1) na poczatku f. rozpoczecia
+         printf("Next boring 'Hello World!' version! Thread number %d\n", ((int*) arg));
+         return NULL;
+}
+\end{lstlisting}
+
+W wyniku działania programu uzyskano następujący wynik:
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadanie 2 - hello.c - wynik dzialania]
+Next boring 'Hello World!' version! Thread number 6
+Next boring 'Hello World!' version! Thread number 7
+Next boring 'Hello World!' version! Thread number 5
+Next boring 'Hello World!' version! Thread number 8
+Next boring 'Hello World!' version! Thread number 9
+Next boring 'Hello World!' version! Thread number 4
+Next boring 'Hello World!' version! Thread number 3
+Next boring 'Hello World!' version! Thread number 2
+Next boring 'Hello World!' version! Thread number 1
+Next boring 'Hello World!' version! Thread number 0
+End of the main thread!
+\end{lstlisting}
+
+\newpage
+\subsection{Synchronizacja wątków}
+\assignment{3}{
+... \\ 
+Uzupełnij poniższy szkielet programu, tak aby realizował powyższą funkcjonalność:
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadanie 3 - func.c]
+ #include <pthread.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+     
+    #define NUM 4
+    #define LENGTH 100
+    // ----------------------------------------------------------
+     
+    typedef struct {
+         long* a;
+         long sum; 
+         int veclen; 
+    } CommonData;
+    // ----------------------------------------------------------
+     
+    CommonData data; 
+    pthread_t threads[NUM];
+    pthread_mutex_t mutex;
+     
+    void* calc(void* arg); // Funkcja rozpoczecia
+    // ----------------------------------------------------------
+     
+    int main (int argc, char *argv[]){
+     
+         int threadCreated;
+         long i, sum = 0;
+         void* status;
+         long* a = (long*) malloc (NUM*LENGTH*sizeof(long));     
+         pthread_attr_t attr;
+     
+         //Prepare data structure
+         for (i=0; i<LENGTH*NUM; i++) {
+              a[i] = i;
+              sum += i;
+         }
+     
+         data.veclen = LENGTH; 
+         data.a = a; 
+         data.sum = 0;
+     
+         //mutex initialization
+         pthread_mutex_init(&mutex, NULL);
+     
+         //[1] setting thread attribute
+         pthread_attr_init(&attr);
+         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+     
+         for(i=0;i<NUM;i++){ // stworzeniu NUM liczby watkow
+            threadCreated = pthread_create(&threads[i], &attr, calc, (void*) i); // tworzenie watkow
+         }
+     
+         //join
+         for(i=0;i<NUM;i++) {
+              pthread_join(threads[i], &status);
+         }
+
+        //[1] destroy - not needed anymore
+         pthread_attr_destroy(&attr);
+     
+         //Print
+         printf ("Correct result is: %ld \n", sum);
+         printf ("Function result is: %ld \n", data.sum);
+     
+         //Clean
+         free (a);
+         pthread_mutex_destroy(&mutex);
+         return 0;
+    }
+    // ----------------------------------------------------------
+     
+    void* calc(void* arg)
+    {
+         long* x = data.a;
+         long mysum = 0;
+         int i;
+
+         int partitionNumber = (int) arg;
+
+         printf("%d  ", partitionNumber);
+
+         int startIndex = partitionNumber * LENGTH;
+         int endIndex = startIndex + LENGTH;
+ 
+        printf("s: %d, e: %d", startIndex, endIndex);
+
+         for (i=startIndex; i<endIndex; i++){
+              mysum += x[i];
+         }
+     
+        printf("%ld\n", mysum);
+        // sekcja krytyczna
+         pthread_mutex_lock(&mutex);
+         data.sum += mysum;
+         pthread_mutex_unlock(&mutex);
+        // koniec sekcji krytycznej
+     
+         pthread_exit((void*) 0);
+    }
+// ----------------------------------------------------------
+\end{lstlisting}
+
+W wyniku działania programu uzyskano: 
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadanie 3 - func.c - wynik dzialania]
+3  s: 300, e: 40034950
+2  s: 200, e: 30024950
+1  s: 100, e: 20014950
+0  s: 0, e: 1004950
+Correct result is: 79800 
+Function result is: 79800 
+\end{lstlisting}
+
+
+
+\newpage
+\subsection{Zmienne warunkowe}
+\assignment{4}{
+Rozbuduj poniższy program, który ma realizować prostą funkcjonalność:
+\begin{itemize}
+\item 2 wątki inkrementują (funkcja increment) wartość zmiennej globalnej globalvariable.
+\item Trzeci wątek (funkcja printinfo) oczekuje na sygnał, aby oznajmić, że osiągnięto żądaną wartość MAXVAL.
+\item Po wypisaniu informacji wszystkie wątki i cały program kończą działanie.
+\end{itemize}
+}
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadanie 4 - cond.c]
+#include <pthread.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    // ----------------------------------------------------------
+     
+    #define MAXVAL 100
+     
+    int globalvariable = 0;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+     
+    void* increment(void*);
+    void* printinfo(void*);
+    // ----------------------------------------------------------
+     
+    int main(){
+     
+         pthread_t t1, t2, t3;
+         pthread_attr_t attr;
+     
+         // mutex initialization
+         pthread_mutex_init(&mutex, NULL);
+     
+         // conditional initialization
+         pthread_cond_init(&cond, NULL);
+     
+         pthread_attr_init(&attr);
+         pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+     
+         pthread_create(&t1, &attr, increment, NULL); 
+         pthread_create(&t2, &attr, increment, NULL);
+         pthread_create(&t3, &attr, printinfo, NULL);  
+     
+         pthread_join(t1, NULL);
+         printf("t1 finished!\n");
+         pthread_join(t2, NULL);
+         printf("t2 finished!\n");
+         pthread_join(t3, NULL);
+         printf("t3 finished!\n");
+     
+         printf("Finishing...\n");
+         return 0;
+    }
+    // ----------------------------------------------------------
+     
+    void* increment(void* arg) {
+
+        while(1){
+            pthread_mutex_lock(&mutex); // zamknij Mutex
+
+            if(globalvariable == MAXVAL){ // jesli osiagnieta wartosc max
+                pthread_cond_signal(&cond); // poinformuj watek wypisujacy
+                pthread_mutex_unlock(&mutex); // otworz mutex
+                break;
+            }
+
+            globalvariable++; // jesli nie osiagnieto max to inkrementuj
+            pthread_mutex_unlock(&mutex); // otworz mutex po inkrementacji
+        }
+
+        
+
+         pthread_exit((void*) 0);
+    }
+    // ----------------------------------------------------------
+     
+    void* printinfo(void* arg) {
+        int val;
+        int i;
+
+        pthread_mutex_lock(&mutex); // zamknij mutex
+
+        while(globalvariable < MAXVAL)
+            pthread_cond_wait(&cond, &mutex); // czekaj az dwa watki skoncza
+
+        pthread_mutex_unlock(&mutex); // otworz mutex
+
+        printf("Adding values completed, globalvariable is %d \n", globalvariable);
+
+        pthread_exit((void*) 0);
+    }
+// ----------------------------------------------------------
+\end{lstlisting}
+
+W wyniku działania programu uzyskano wynik:
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadanie 4 - cond.c - wynik dzialania]
+Adding values completed, globalvariable is 100 
+t1 finished!
+t2 finished!
+t3 finished!
+Finishing...
+\end{lstlisting}
+
+\newpage
+\subsection{Kasowanie wątku}
+\assignment{5}{
+Uzupełnij poniższy program o:
+\begin{itemize}
+\item Przesłanie do tworzonych wątków argumentów (wykorzystaj strukturę thread\_params) zawierających informację o: Indeksie wątku, który jest równy wartości ti w pętli tworzącej wątki. Wartości szukanej.
+\item Informację o liczbie iteracji jakie wykonał każdy kończący się wątek w celu odnalezienia wartości (wykorzystaj mechanizmy czyszczące pthread\_ cleanup\_ push, pthread\_ cleanup\_ pop ).
+\end{itemize}
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Zadanie 5 - randomsearch.c]
+#include <stdio.h>
+    #include <unistd.h>
+    #include <stdlib.h>
+    #include <sys/types.h>
+    #include <pthread.h>
+    #include <errno.h>
+    // ----------------------------------------------------------
+     
+    #define NUM_THREADS 5
+    #define TARGET 100
+    // ----------------------------------------------------------
+     
+
+  
+
+
+    struct thread_params {
+         int target; // I. wartosc szukana
+         int thread_idx; // I. indeks watku
+         int threadNumber;
+         int *tries; // liczba iteracji
+    };
+    // ----------------------------------------------------------
+
+
+   void thread_cancel_handler(void * arg){ // funkcja wolana gdy watek ginie
+        struct thread_params * tp = (struct thread_params*) arg;
+        printf("Thread %d, iteration %d\n" , tp->threadNumber, *(tp->tries));
+    }
+
+     
+    struct thread_params tp[NUM_THREADS];
+    pthread_t threads[NUM_THREADS];
+    pthread_mutex_t mutex;
+    int tries;
+     
+    void *search(void *arg);
+    void cleanup(void *args);
+    // ----------------------------------------------------------
+     
+    int main (int argc, char *argv[]){
+         int ti;
+         int target=TARGET;
+     
+         tries = 0;
+         pthread_mutex_init(&mutex, NULL); 
+     
+         printf("Searching for: %d\n", target);
+     
+         for (ti=0;ti<NUM_THREADS;ti++){
+              tp[ti].target = target;
+              tp[ti].thread_idx = ti;
+              tp[ti].tries = &tries;
+              pthread_create(&threads[ti], NULL, search, &(tp[ti]));
+         }
+     
+         for (ti=0;ti<NUM_THREADS;ti++){ 
+              pthread_join(threads[ti], NULL);
+         }
+     
+         printf("Number of all iterations: %d.\n", tries);
+         pthread_mutex_destroy(&mutex);
+         return 0;
+    }
+    // ----------------------------------------------------------
+     
+    
+
+    void *search(void *arg){
+
+    struct thread_params * tp = (struct thread_params*) arg;
+
+    pthread_cleanup_push(thread_cancel_handler, &tp); // wykorzystanie mechanizmow czyszczacych
+    pthread_cleanup_pop(1);
+
+     int threadIdx = tp->thread_idx; // indeks watku
+     int toFind = tp->target;   // wartosc do odszukania
+     int ti = 0;
+     int rnd;
+ 
+     pthread_t tid = pthread_self();
+     srand(tid);
+ 
+     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+     pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+    
+ 
+     while(1){
+          while(pthread_mutex_trylock(&mutex) == EBUSY){
+               pthread_testcancel();
+          }
+       
+         *(tp->tries)++;
+
+          pthread_mutex_unlock(&mutex);
+ 
+          rnd = (int)(rand()%1000);
+          
+          if (toFind == rnd) {
+               while(pthread_mutex_trylock(&mutex) == EBUSY){
+                    pthread_testcancel();
+               }
+               printf("Number found by %d!\n", threadIdx);
+               for(ti=0;ti<NUM_THREADS;ti++){
+                    if(ti == threadIdx)      // kasowanie innych watkow - ten watek zakoczy sie normalnie
+                         continue;
+                    pthread_cancel(threads[ti]);
+               }
+               sleep(1);
+               pthread_mutex_unlock(&mutex);
+               break;
+          }
+     }
+ 
+     return((void *)0);
+}
+\end{lstlisting}
+
+
+
+
+\end{document}

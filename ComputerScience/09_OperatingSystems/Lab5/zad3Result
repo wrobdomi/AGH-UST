@@ -1,0 +1,6 @@
+3  s: 300, e: 40034950
+2  s: 200, e: 30024950
+1  s: 100, e: 20014950
+0  s: 0, e: 1004950
+Correct result is: 79800 
+Function result is: 79800 

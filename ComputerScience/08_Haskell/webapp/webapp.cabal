@@ -1,0 +1,83 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: b2a4a0f423c039201d72a6de66a8a338ac398c5bfc17d5e123b9c276345b4b59
+
+name:           webapp
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/hs-empty-project-plain#readme>
+homepage:       https://github.com/micwypych/webapp#readme
+bug-reports:    https://github.com/micwypych/webapp/issues
+author:         Michał Wypych
+maintainer:     mwypych@agh.edu.pl
+copyright:      2019 Michał Wypych
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/micwypych/webapp
+
+library
+  exposed-modules:
+      Lib
+      Student
+      StudentRepository
+  other-modules:
+      Paths_webapp
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -fwarn-tabs
+  build-depends:
+      HDBC >=2.4
+    , HDBC-sqlite3 >=2.3
+    , aeson
+    , attoparsec
+    , base >=4.7 && <5
+    , convertible
+    , text
+  default-language: Haskell2010
+
+executable webapp-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_webapp
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -fwarn-tabs -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HDBC >=2.4
+    , HDBC-sqlite3 >=2.3
+    , aeson
+    , attoparsec
+    , base >=4.7 && <5
+    , convertible
+    , text
+    , webapp
+  default-language: Haskell2010
+
+test-suite webapp-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_webapp
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HDBC >=2.4
+    , HDBC-sqlite3 >=2.3
+    , aeson
+    , attoparsec
+    , base >=4.7 && <5
+    , convertible
+    , text
+    , webapp
+  default-language: Haskell2010

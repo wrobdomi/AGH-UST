@@ -1,0 +1,724 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{tcolorbox}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {\thepage}
+  {}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Systemy Operacyjne - Laboratorium}}
+	{}
+	
+	\setfoot
+	{}
+	{}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\newcommand{\ask}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=gray,title={Pytanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\assignment}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={Zadanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mKeyword}{RGB}{0,0,242}
+\definecolor{backgroundColour}{RGB}{242,242,242}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{mKeyword},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Podstawowe operacje wejścia-wyjścia dla plików}} \\ \hline Dominik Wróbel & 07 III 2019 & Czw. 17:00 \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+\section{Podstawy obsługi plików w systemie UNIX}
+\subsection{Odpowiedz na pytania}
+
+\ask{}{Co to są deskryptory ?}
+
+To małe liczby całkowite, które stanowią dane powiązane z procesem, określające pliki otwarte przez proces. Deskryptory służą do realizowania operacji na plikach w wywołaniach systemowych. 
+
+\ask{}{
+Jakie są standardowe deskryptory otwierane dla procesów ? 
+}
+
+Są to deskryptory o numerach 0-2, odpowiadają one standardowemu wejściu, wyjściu i wyjściu błędów. 
+
+\ask{}{
+Jakie flagi trzeba ustawić w funkcji open aby otrzymać funkcjonalność creat ? 
+}
+
+O\_WRONLY | O\_CREAT | O\_TRUNC
+
+\ask{}{
+W wyniku wykonania polecenia umask otrzymano 0022. Jakie prawa dostępu będzie miał plik otwarty w następujący sposób:
+open(pathname, O\_RDWR | O\_CREAT, S\_IRWXU | S\_IRWXG | S\_IRWXO) 
+}
+
+Będą to prawa 0755 
+
+\ask{}{
+Co oznaczają flagi: O\_WRONLY | O\_CREAT | O\_TRUNC? 
+}
+
+O\_WRONLY - otwarcie pliku tylko do zapisu, O\_CREAT - flaga konieczna gdy chcemy utworzyć plik, O\_TRUNC - flaga usuwająca zawartość pliku podczas otwierania go
+
+\ask{}{
+Co oznacza flaga O\_APPEND?
+} 
+
+Przy każdym zapisie do pliku funkcją write() dane będą dodawane na jego koniec.
+
+\ask{}{
+Co oznacza zapis: S\_IRUSR | S\_IWUSR? 
+}
+
+Prawa dostępu dla usera: read oraz write. 
+
+\newpage
+\subsection{Program copy1.c}
+\assignment{}{
+Proszę rozbudować program o obsługę błędów. Proszę wyszczególnić następujące problemy:
+\begin{itemize}
+\item brak pliku
+\item złe prawa dostępu do pliku
+\item Dla tych błędów proszę wyświetlić odpowiedni komunikat
+\item Podpowiedź: sprawdź wartości zwracane przez funkcję oraz zmienną errno
+\end{itemize}
+}
+
+
+\begin{lstlisting}[style=CStyle, label=some-code,caption=copy1.c]
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <errno.h> /* add errno.h to get errno variable */
+#include <stdlib.h>
+
+#define BUFSIZE 512
+ 
+void copy(char *from, char *to) 
+{
+	int fromfd = -1, tofd = -1;
+	ssize_t nread;
+	char buf[BUFSIZE];
+ 
+	fromfd = open(from, O_RDONLY);
+	if(fromfd == -1){
+		if(errno == ENOENT ){
+			printf("fromfd - Errno is %d", errno); /* No such file or directory */
+			perror("Error: ");
+			exit(EXIT_FAILURE);
+		}
+		if(errno == EACCES){
+			printf("fromfd - Errno is %d", errno); /* Permission denied */
+			perror("Error: ");
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+	
+	tofd = open(to, O_WRONLY | O_CREAT | O_TRUNC,
+				S_IRUSR | S_IWUSR);
+	if(tofd == -1){
+		if(errno == ENOENT )
+		{
+			printf("to - Errno is %d", errno); /* No such file or directory */
+			perror("Error: ");
+			close(fromfd);		
+			exit(EXIT_FAILURE);
+		}
+		if(errno == EACCES)
+		{
+			printf("to - Errno is %d", errno); /* Permission denied */
+			perror("Error: ");
+			close(fromfd);
+			close(tofd);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	
+	
+	while ((nread = read(fromfd, buf, sizeof(buf))) > 0)
+	    write(tofd, buf, nread);	
+	if(nread == -1){
+		if(errno == ENOENT )
+		{
+			printf("read - Errno is %d", errno); /* No such file or directory */
+			perror("Error: ");
+			close(fromfd);
+			close(tofd);
+			exit(EXIT_FAILURE);
+		}
+		if(errno == EACCES)
+		{
+			printf("read - Errno is %d", errno); /* Permission denied */
+			perror("Error: ");
+			close(fromfd);
+			close(tofd);
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+    close(fromfd);
+	close(tofd);
+	return;
+}
+ 
+int main(int argc, char **argv){
+	if (argc != 3)
+	{
+		fprintf(stderr,"usage: %s from_pathname to_pathname\n", argv[0]);
+		return 1;
+	}
+	copy(argv[1], argv[2]);
+	return 0;
+}
+\end{lstlisting}
+
+
+\section{Operacje pisania i czytania z pliku}
+\subsection{Odpowiedz na pytania}
+\ask{}{
+Czy w momencie powrotu z funkcji write dane są już zapisana na urządzenie wyjściowe ?
+} 
+Nie, dane po wywołaniu write są przechowywane w buforze, zapisywane są dopiero w odpowiedniej dla systemu chwili. 
+
+\newpage
+\ask{}{
+	Przeanalizować kod writeall.c, co robi ta funkcja ? Jakiej sytuacji dotyczy wartość EINTR ? 
+} 
+Funkcja \textit{writeall(int fd, const * buf,  size\_t nbytes)} zapisuje ilość bajtów określoną przez nbytes z bufora buf do pliku o deskryptorze fd. EINTR dotyczy przerwania wykonywania funkcji, np. przez inny proces.
+
+\subsection{Funkcja readall.c}
+
+\assignment{}{
+Proszę napisać funkcję readall. Funkcja ma zwracać wartości jak read ale obsługiwać błędy analogicznie jak writeall. Proszę uwzględnić możliwość przeczytania końca pliku.
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=readall.c]
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <unistd.h>
+
+#define BUFSIZE 512
+
+ssize_t readall(int fd, void *buf, size_t nbyte)
+{
+     ssize_t nread = 0;
+	 ssize_t n;	
+	
+     do {
+		if ( (n = read(fd, &((char *)buf)[nread], nbyte - nread)) == -1 ) {
+             if (errno == EINTR)
+                 continue;
+             else
+                 return -1;
+         }
+		 if(n == 0){ // if end of file is reached
+		 	return 0;
+		 }
+         nread += n;
+     } while (nread < nbyte);
+     
+	return nread;
+	
+}
+
+
+
+    int main(int argc, char **argv){
+
+		int toRead = -1;
+		char buf[BUFSIZE];
+		
+    	if (argc != 2)
+    	{
+    		fprintf(stderr,"usage: %s from_pathname to_pathname\n", argv[0]);
+    		return 1;
+    	}
+
+        toRead = open(argv[1], O_RDONLY);
+    	if(toRead == -1){
+            if(errno == ENOENT){
+                perror("File does not exists: ");
+                exit(EXIT_FAILURE);
+            }
+            if(errno == EACCES){
+                perror("Permission denied: ");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        readall(toRead, buf, BUFSIZE);
+		
+		printf("%s", buf);
+    	
+		return 0;
+}	
+\end{lstlisting}
+
+
+\ask{}{
+Jaki znak jest czytany gdy osiągnięty zostanie koniec pliku ? 
+} 
+Czytany jest wtedy EOF, wówczas wartość zwracana przed read to 0.
+
+\subsection{Program realizujący funkcjonalność cat - cat.c}
+
+
+\assignment{}{
+Proszę napisać program realizujący funkcjonalność polecenia cat bez opcji. 
+\begin{itemize}
+\item Polecenie powinno działać bez podania pliku oraz z podaniem pliku
+\end{itemize}
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=cat.c]
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <unistd.h>
+
+#define BUFSIZE 512
+
+ssize_t readall(int fd, void *buf, size_t nbyte)
+{
+     ssize_t nread = 0;
+	 ssize_t n;	
+	
+     do {
+		if ( (n = read(fd, &((char *)buf)[nread], nbyte - nread)) == -1 ) {
+             if (errno == EINTR)
+                 continue;
+             else
+                 return -1;
+         }
+		 if(n == 0){
+		 	return 0;
+		 }
+         nread += n;
+     } while (nread < nbyte);
+     
+	return nread;
+	
+}
+
+
+
+    int main(int argc, char **argv){
+
+		int toRead = -1;
+		char buf[BUFSIZE];
+		
+    	if (argc != 2)
+    	{
+    		printf("Podaj tekst dla cat: ");
+			scanf("%s", buf); // standardowe wejscie
+			printf("%s", buf);
+			return 0;
+    	}
+
+        toRead = open(argv[1], O_RDONLY);
+    	if(toRead == -1){
+            if(errno == ENOENT){
+                perror("File does not exists: ");
+                exit(EXIT_FAILURE);
+            }
+            if(errno == EACCES){
+                perror("Permission denied: ");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        readall(toRead, buf, BUFSIZE); // plik
+		
+		printf("%s", buf);
+    	
+		return 0;
+}
+\end{lstlisting}
+
+
+
+\newpage
+\section{3. Wskaźnik pliku i sygnalizator O\_APPEND}
+
+\subsection{Odpowiedz na pytania}
+
+\ask{}{
+Dwa deskryptory: fd1 i fd2 użyto do otwarcia pliku podając tę samę ścieżkę dostępu do pliku. Wskaźnik pliku ustawiony jest na początku pliku. Następnie korzystając z deskryptora fd1 wykonano operację zapisania 100b do pliku. Następnie przy użyciu deskryptora fd2 wykonano operację czytania z pliku. Pytanie: Na jakiej pozycji jest wskaźnik pliku? Jakie dane odczytano przy użyciu fd2?
+} 
+Wskaźnik pliku jest na pozycji po 100b. fd2 odczyta dane, które zapisał fd1, bo dwa różne deskryptory mają niezależne offsety plików.
+
+\ask{}{
+Do otwarcia pliku użyto jednego deskryptora fd3. Następnie wykonano kolejno operację pisania 100b i czytania 100b. Na jakiej pozycji jest wskaźnik pliku? Co zostało przeczytane? 
+} 
+Zostały przeczytane dane, które znajdują się po 100b, które zapisaliśmy, EOF jeśli plik się kończył po 100b, ponieważ fd3 ma jeden offset pliku, który przy zapisaniu jest przesuwany o 100b, a read zaczyna od tego miejsca.
+
+
+\ask{}{
+Czy każdorazowe poprzedzenie operacji pisania ustawieniem wskaźnika pliku na końcu pliku za pomocą funkcji lseek daje taki sam rezultat jak otwarcie pliku w trybie z ustawioną flagą O\_APPEND? Odpowiedź uzasadnij. 
+} 
+Nie, O\_APPEND gwarantuje każdorazowe zapisywanie na końcu pliku, nawet w sytuacji gdy na pliku działa wiele procesów, co nie jest prawdą w przypadku wywoływanie osobno lseek i write.
+
+\ask{}{
+Jak wygląda wywołanie funkcji lseek które:
+\begin{itemize}
+\item ustawia wskaźnik na zadanej pozycji
+\item znajduje koniec pliku
+\item zwraca bieżącą pozycję wskaźnika
+\end{itemize}
+} 
+\begin{itemize}
+\item ustawia wskaźnik na zadanej pozycji - lseek(fd, pos, SEEK\_SET); 
+\item znajduje koniec pliku - lseek(fd, 0, SEEK\_END)
+\item zwraca bieżącą pozycję wskaźnika - lseek(fd, 0, SEEK\_CUR)
+\end{itemize}
+
+\subsection{Funkcja copyappend.c}
+\assignment{}{
+Napisz funkcję copy, która będzie za każdym razem dodawać zawartość na końcu pliku.
+}
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=copyappend.c]
+void copyAppend(char *from, char *to) 
+    {
+    	int fromfd = -1, tofd = -1;
+    	ssize_t nread;
+    	char buf[BUFSIZE];
+     
+    	fromfd = open(from, O_RDONLY | O_APPEND); // dodanie flagi append
+    	if(fromfd == -1){
+            if(errno == ENOENT){
+                perror("File does not exists: ");
+                exit(EXIT_FAILURE);
+            }
+            if(errno == EACCES){
+                perror("Permission denied: ");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        
+        tofd = open(to, O_WRONLY | O_CREAT | O_TRUNC,
+    				S_IRUSR | S_IWUSR | O_APPEND); // dodanie flagi append
+        if(tofd == -1){
+            if(errno == ENOENT){
+                perror("File does not exists: ");
+                exit(EXIT_FAILURE);
+            }
+            if(errno == EACCES){
+                perror("Permission denied: ");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+
+    	while ((nread = read(fromfd, buf, sizeof(buf))) > 0)
+    	    write(tofd, buf, nread);	
+        if(nread == -1){
+            perror("Reading failed: ");
+        }
+            
+        close(fromfd);
+    	close(tofd);
+    	return;
+    }
+
+\end{lstlisting}
+
+\ask{}{
+Czy zmiana wywołań lseek i read na pread jest równoważna ? 
+} 
+Nie do końca, ponieważ pread ignoruje offset, jest on ustawiany jawnie przez argument offset.
+
+
+\section{4. Buforowanie operacji I/O}
+
+\subsection{Porównanie czasu działania kopiowania}
+
+\assignment{}{
+Proszę pobrać poniższy program wykorzystujący funkcje ze standardowej biblioteki wejścia-wyjścia. \\
+Proszę stworzyć duży plik, np. plik 1MB wypełniony zerami: \\
+dd if=/dev/zero of=/path/to/desired/big/file count=10k \\ \\
+Korzystając z funkcji mierzących czas z poprzedniego laboratorium proszę napisać program testujący ile czasu zajmują funkcje kopiujące copy2 (copy1 z napisaną przez nas obsługą błędów) i copy3 \\ \\
+Proszę napisać program, który liczy czas wykonania funkcji copy2 przy różnych rozmiarach bufora (proszę przyjąć przynajmniej następujące wartości rozmiaru bufora: 1, 512, 1024, 1100)
+}
+
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=timecmp.c]
+compare: t.o timecmp.o
+	gcc timecmp.o t.o -o compare -I.
+
+t.o : t.c t.h
+	gcc -c -Wall -pedantic t.c -I.
+
+timecmp.o: timecmp.c t.h
+	gcc -c -Wall -pedantic timecmp.c -I.
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <errno.h> /* add errno.h to get errno variable */
+#include <stdlib.h>
+#include <t.h>
+
+#define BUFSIZE 1100
+ 
+void copy(char *from, char *to)  /* has a bug */
+{
+	int fromfd = -1, tofd = -1;
+	ssize_t nread;
+	char buf[BUFSIZE];
+ 
+	fromfd = open(from, O_RDONLY);
+	if(fromfd == -1){
+		if(errno == ENOENT ){
+			printf("fromfd - Errno is %d", errno); /* No such file or directory */
+			perror("Error: ");
+			exit(EXIT_FAILURE);
+		}
+		if(errno == EACCES){
+			printf("fromfd - Errno is %d", errno); /* Permission denied */
+			perror("Error: ");
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+	
+	tofd = open(to, O_WRONLY | O_CREAT | O_TRUNC,
+				S_IRUSR | S_IWUSR);
+	if(tofd == -1){
+		if(errno == ENOENT )
+		{
+			printf("to - Errno is %d", errno); /* No such file or directory */
+			perror("Error: ");
+			close(fromfd);		
+			exit(EXIT_FAILURE);
+		}
+		if(errno == EACCES)
+		{
+			printf("to - Errno is %d", errno); /* Permission denied */
+			perror("Error: ");
+			close(fromfd);
+			close(tofd);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	
+	
+	while ((nread = read(fromfd, buf, sizeof(buf))) > 0)
+	    write(tofd, buf, nread);	
+ 	
+	if(nread == -1){
+		if(errno == ENOENT )
+		{
+			printf("read - Errno is %d", errno); /* No such file or directory */
+			perror("Error: ");
+			close(fromfd);
+			close(tofd);
+			exit(EXIT_FAILURE);
+		}
+		if(errno == EACCES)
+		{
+			printf("read - Errno is %d", errno); /* Permission denied */
+			perror("Error: ");
+			close(fromfd);
+			close(tofd);
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+    close(fromfd);
+	close(tofd);
+	return;
+}
+
+
+void copy3(char *from, char *to)
+{
+	FILE *stfrom, *stto;
+	int c;
+ 
+	if ((stfrom = fopen(from, "r") ) == NULL){}
+	if(( stto = fopen(to, "w") ) == NULL) {}
+	while ((c = getc(stfrom)) != EOF)
+		putc(c, stto);
+	fclose(stfrom);
+	fclose(stto);
+	return;
+ 
+}
+
+
+
+int main(int argc, char **argv){
+	if (argc != 3)
+	{
+		fprintf(stderr,"usage: %s from_pathname to_pathname\n", argv[0]);
+		return 1;
+	}
+	
+	timestart();
+	
+	copy(argv[1], argv[2]);
+	
+	timestop("copy2");
+	
+	
+	timestart();
+	
+	copy3(argv[1], argv[2]);
+	
+	timestop("copy3");
+	
+	
+	return 0;
+}
+
+\end{lstlisting}
+
+
+Wyniki uzyskane z eksperymentu: 
+
+\begin{lstlisting}[style=CStyle, label=some-code, caption=Logi z programu timecmp.c]
+
+26 lines (21 sloc) 433 Bytes
+512: 
+copy2:
+	"Total (user/sys/real)", 0, 5, 12
+	"Child (user/sys)", 0, 0
+copy3:
+	"Total (user/sys/real)", 50, 1, 78
+	"Child (user/sys)", 0, 0
+
+
+1024: 
+copy2:
+	"Total (user/sys/real)", 0, 3, 8
+	"Child (user/sys)", 0, 0
+copy3:
+	"Total (user/sys/real)", 50, 1, 74
+	"Child (user/sys)", 0, 0
+
+
+1100: 
+copy2:
+	"Total (user/sys/real)", 0, 3, 8
+	"Child (user/sys)", 0, 0
+copy3:
+	"Total (user/sys/real)", 53, 0, 78
+"Child (user/sys)", 0, 0
+\end{lstlisting}
+
+Czas dla 1100 jest zgodnie z przypuszczeniami większy niż czas osiągany dla 512 czy 1024.
+
+
+\end{document}
