@@ -1,0 +1,1255 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{subfig}
+\usepackage{tcolorbox}
+\lstloadlanguages{Matlab}
+\usepackage{lstlinebgrd}
+\usepackage{niceframe}
+\usepackage{swrule}% englische Linien 
+ 
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+\pagenumbering{arabic}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {}
+  {\thepage}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Wzorce Projektowe}}
+	{}
+	
+	\setfoot
+	{}
+	{\thepage}
+	{}
+}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\definecolor{mGreen}{HTML}{00ff40}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mKeyword}{RGB}{0,0,242}
+\definecolor{backgroundColour}{RGB}{242,242,242}
+
+\newcommand{\definition}[2]{
+    \begin{tcolorbox}[colback=green!5!white,colframe=mGreen,title={Definicja -  #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\ques}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={
+\includegraphics[scale=0.20]{icon.png}
+Pytanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+
+
+
+\lstset{ %
+  backgroundcolor=\color{backgroundColour},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  numberstyle=\tiny\color{mGray},
+  stringstyle=\color{mymauve},     % string literal style
+  numbers=left,                    
+  numbersep=5pt   
+}
+
+
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{Wzorce projektowe} \\ \hline \multicolumn{3}{|c|}{\textbf{Opracowanie}} \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+\section{Na podstawie}
+
+\begin{itemize}
+\item \url{https://refactoring.guru/design-patterns/} - najlepsze znalezione źródło do wzorców projektowych
+\item wzorce projektowe, opracowanie 2019 z wiki - napisane na podstawie powyższego linka
+\item Książka - Designed Patterns exaplined simply
+\item \url{https://www.journaldev.com/1827/java-design-patterns-example-tutorial}
+\item Książka - Head first Design Patterns
+\end{itemize}
+
+
+
+\newpage
+\section{Podział wzorców projektowych}
+
+\ques{}{
+Na jakie rodzaje dzielimy wzorce projektowe ?
+}
+Wzorce projektowe dzielimy na:
+\begin{itemize}
+\item Kreacyjne - opisują, w jaki sposób obiekty są tworzone, zapewniają sposoby na instancjację obiektów w najlepszy możliwy sposób w danej sytuacji
+\item Behawioralne - opisują zachowanie obiektów, w jaki sposób obiekty komunikują się ze sobą
+\item Strukturalne -  opisują sposób, w jaki obiekty są zbudowane, definiują jak klasy i interfejsy mają być zbudowane w celu realizacji pewnych działań
+\item Architektoniczne - opisują oprogramowanie na bardziej abstrakcyjnym poziomie, skupiają się na architekturze rozwiązań raczej niż na ich szczegółach
+\end{itemize}
+
+
+\newpage
+\section{Podstawy diagramów klas UML}
+Przy rozważaniach o wzorcach często stosujemy notację UML w celu przedstawienia jak dany wzorzec jest implementowany, konieczne jest więc abyśmy poznali przynajmniej jakieś podstawy tej notacji. Ograniczymy się do niezbędnego minimum z diagramów klas. \\
+
+
+Podstawowe komponenty z których budujemy nasz diagram klas to klasy i interfejsy, które rozumiemy w takim sensie jak są rozumiane w językach programowania.
+
+\subsection{Klasa}
+Klasa składa się z trzech obszarów, pierwszy z nich jest przeznaczony na nazwę klasy, środkowy to miejsce na atrybuty klasy, a na dole umieszczamy metody klasy. Przykładowo:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp1.png}
+  \caption{Przykładowa reprezentacja klasy w UML}
+\end{figure}
+
+\subsubsection{Widoczność atrybutów klasy}
+
+Na diagramie klas możemy uwzględnić widoczność atrybutów i metod (private, protected, itd.). Widoczność ta jest oznaczana symbolem poprzedzającym nazwę atrybutu w następujący sposób:
+\begin{itemize}
+\item + (public)
+\item - (private)
+\item \# (protected)
+\item \textasciitilde (default, package)
+\item / (do reprezentacji atrybutu, który został odziedziczony)
+\end{itemize} 
+
+Pozmieniajmy więc widoczność paru pól w naszej klasie Person:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp2.png}
+  \caption{Uwzględnienie widoczności atrybutów}
+\end{figure}
+
+\subsubsection{Atrybuty statyczne i typy atrybutów}
+Na diagramie klas możemy także uwzględnić atrybuty statyczne, reprezentujemy je przez podkreślenie atrybutu, a także typy atrybutów, te reprezentujemy po nazwie atrybutu i dwukropku. Typy mogą się oczywiście różnić pomiędzy językami, możemy wybrać ten w którym aktualnie kodujemy lub przyjąć jakieś ogólnie rozumiane typy. Dodajemy więc atrybut statyczny oraz typy do naszej klasy Person.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp3.png}
+  \caption{Uwzględnienie atrybutów statycznych oraz typów atrybutów.}
+\end{figure}
+
+
+
+\subsubsection{Widoczność metod klasy}
+W analogiczny sposób do atrybutów możemy dodawać informacje o widoczności do naszych metod:
+\begin{itemize}
+\item + (public)
+\item - (private)
+\item \# (protected)
+\item \textasciitilde (default, package)
+\end{itemize}
+
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp4.png}
+  \caption{Uwzględnienie atrybutów statycznych oraz typów atrybutów.}
+\end{figure}
+
+
+\subsubsection{Metody statyczne, typy argumentów i typ zwracany}
+Analogicznie jak dla atrybutów możemy oznaczyć w klasie metodę statyczną poprzez jej podkreślenie. Typy argumentów wejściowych zaznaczamy tak samo jak typy atrybutów, tj. po dwukropku. Typ zwracany przez metodę zapisujemy po dwukropku po nazwie metody, jeśli typem tym jest void to nic nie zapisujemy. Dodajmy więc nowe możliwości do naszej klasy Person:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp5.png}
+  \caption{Uwzględnienie metod statycznych, typów argumentów i typu zwracanego}
+\end{figure}
+
+\subsection{Interfejsy}
+
+Interfejsy różnią się od klas jedynie tym, że w pierwszej sekcji zawierają dodatkowo przed nazwą wyrażenie <<interface>> oznaczające, że dany komponent jest interfejsem. Poza tym, metody i atrybuty definiujemy analogicznie jak dla klas. W programie STAR UML interfejs ma dodatkowo w reprezentacji graficznej kółko jak widać na obrazku poniżej, jednak w ogólności nie jest ono zawierane w interfejsach na diagramach UML.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp6.png}
+  \caption{Przykład interfejsu}
+\end{figure}
+
+
+\subsection{Relacje}
+Relacje służą nam do opisu zależności pomiędzy interfejsami i klasami. Możemy wyrażać wszystkie relacje, które typowo stosujemy w programowaniu, tj. agregacje, implementacje, dependencje itd. 
+
+\subsubsection{Dziedziczenie (generalizacja)}
+Dziedziczenie jest relacją, którą znamy z programowania obiektowego. Na diagramie UML jest reprezentowane strzałką w pustym grotem, strzałka zawsze wskazuje na superklase. 
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp7.png}
+  \caption{Relacja dziedziczenia na diagramie UML}
+\end{figure}
+
+
+\subsubsection{Agregacja}
+To relacja, która informuje nas, że dana klasa jest częścią innej klasy, ale również może istnieć niezależnie od tej klasy. Przykładowo koło od samochodu może istnieć zanim jeszcze samochód zostanie wyprodukowany. Można więc powiedzieć, że koło istnieje niezależnie od samochodu, pomimo, że każdy samochód ma koła. Taką relacje modelujemy przy pomocy agregacji, czyli strzałki z grotem w kształcie pustego rombu. Grot ten jest zawsze skierowany w stronę klasy, która zawiera inne klasy. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp8.png}
+  \caption{Przykład agregacji}
+\end{figure}
+
+
+\subsubsection{Kompozycja}
+To relacja bardzo podobna do agregacji z tą różnicą, że obiekt który jest częścią innego nie może istnieć niezależnie, tj. jeśli obiekt, który zawiera inne obiekty zostaje zniszczony, również wszystkie obiekty w nim zawarte zostają zniszczone. Dodatkowo, każdy z obiektów stanowiących części innego ma przypisany dokładnie jeden taki obiekt. Przykładem takiej relacji może być firma i jej działy. Każda firma ma wiele działów, jednak nie ma sensu mówić o działach bez kontekstu firmy. Relację taką reprezentujemy tak jak relację agregacji z tą różnicą, że tym razem romb jest wypełniony. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp9.png}
+  \caption{Przykład kompozycji}
+\end{figure}
+
+
+
+\subsubsection{Realizacja}
+To relacja, która odpowiada relacji implementacji interfejsu jaką znamy z języków programowania. Relacja tą oznaczamy strzałką przerywaną z pustym grotem (podobnie jak dziedziczenie, ale tutaj strzałka jest przerywana, a nie ciągła). Strzałka zawsze skierowana jest w stronę interfejsu, który implementujemy. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp10.png}
+  \caption{Przykład realizacji}
+\end{figure}
+
+
+\subsubsection{Asocjacja}
+To relacja, która informuje nas, że dana klasa korzysta z funkcjonalności innej klasy lub komunikuje się z nią. Może ona być jednokierunkowa (strzałka z cienkim grotem) lub dwukierunkowa (prosta linia). Asocjacja może też wyrażać, że dana klasa zawiera inną klasę (tak jak agregacja czy kompozycja). Jaka jest więc różnica pomiędzy asocjacją, a agregacją i kompozycją ? Otóż asocjacja jest terminem bardziej ogólnym, może wyrażać więcej niż tylko zawieranie, ale także komunikacje, korzystanie z funkcjonalności itp. Dlatego do zawierania się klas w klasach raczej należy stosować agregację lub kompozycje.  
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp11.png}
+  \caption{Asocjacja dwukierunkowa}
+\end{figure}
+
+\newpage
+\section{Wzorce kreacyjne}
+
+\subsection{Builder}
+
+\subsubsection{Charakterystyka}
+To wzorzec kreacyjny, który pozwala na konstruowanie złożonych obiektów krok po kroku. Wzorzec ten pozwala na tworzenie różnych reprezentacji obiektów tej samej klasy w zależności od potrzeb klienta. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Zastąpienie w kodzie konstruktorów z bardzo dużą liczbą parametrów lub takich, które wywołują inne konstruktory
+\item W sytuacji gdy chcemy w kodzie tworzyć różne reprezentacje obiektów tej samej klasy
+\item W przypadku gdy tworzymy w kodzie bardzo złożone obiekty - o wielu polach lub o specyficznej strukturze
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp19.png}
+  \caption{Wzorzec Builder}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Obiekty tworzone są krok po kroku, kroki mogą być pomijane lub wywoływane rekurencyjnie
+\item Odizolowanie skomplikowanej logiki tworzenia obiektów od logiki działania obiektu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Wymaga utworzenia wielu nowych klas i interfejsów 
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+\newpage
+\subsection{Prototype}
+
+\subsubsection{Charakterystyka}
+To kreacyjny wzorzec projektowy, który pozwala na klonowanie obiektów przy braku zależności od klas tych obiektów. Wzorzec ten przerzuca odpowiedzialność za kopiowanie obiektów na obiekty, które są kopiowane. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy chcemy móc kopiować obiekty bez bycia zależnym od klas tych obiektów
+\item Zamiast tworzyć podklasy, które różnią się tylko wartościami pól, możemy stworzyć obiekty o danej konfiguracji, a potem je klonować - klonowanie zamiast dziedziczenia
+\item Mechanizm implementowany przez ten wzorzec często jest implementowany w językach programowania do klonowania obiektów
+\end{itemize}
+
+\subsubsection{UML}
+
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.75]{dp20.png}
+  \caption{Wzorzec Prototype}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Możliwość klonowania obiektów bez wiedzy o ich konkretnych klasach
+\item Pozbycie się powtarzalnego kodu inicjalizacji obiektów, zamiast pisać to samo można klonować
+\item Tworzenie złożonych obiektów w wygodny sposób poprzez \textit{clone}, zamiast ustawiać referencje
+\item Alternatywa dla dziedziczenia dla obiektów o różnych konfiguracjach
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Klonowanie obiektów, które zawierają pętle referencji może być bardzo trudne
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+
+\newpage
+\subsection{Factory Method}
+
+\subsubsection{Charakterystyka}
+Factory Method to kreacyjny wzorzec projektowy, który w nadklasie definiuje interfejs metody do tworzenia obiektów, ale pozwala podklasom na określenie typu obiektów, które będą tworzone przez tą metodę. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy nie znamy wszystkich typów i zależności obiektów z którymi ma współpracować nasz kod
+\item W przypadku gdy chcemy dać możliwość klientom biblioteki rozszerzania jej wewnętrznych komponentów poprzez nadpisanie factoryMethod z klasy bazowej, która jest w bibliotece
+\item W przypadku gdy chcemy zaoszczędzić zasoby systemowe poprzez użycie istniejących instancji obiektów zamiast tworzenia nowych, logikę zwracania istniejących instancji zawieramy w factory method
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp21.png}
+  \caption{Wzorzec Factory Method}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Brak zależności od konkretnego typu obiektu
+\item Kod tworzenia obiektów znajduje się w jednym miejscu
+\item Łatwe wprowadzanie nowych typów obiektów do istniejącego kodu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Wymaga wprowadzania do kodu wielu dodatkowych klas
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+\newpage
+\subsection{Abstract Factory}
+\subsubsection{Charakterystyka}
+Fabryka abstrakcyjna to wzorzec kreacyjny, który pozwala na tworzenie grup powiązanych ze sobą pewnymi atrybutami obiektów z możliwością zmiany grupy, którą aktualnie tworzy fabryka. Każda z takich grup składa się z klas, które dziedziczą po pewnych ogólnych nadklasach. Dla każdej z takich grup tworzona jest fabryka, która implementuje pewien przyjęty interfejs zdefiniowany do tworzenia obiektów klas bazowych. 
+
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy w programie pracujemy z różnymi grupami powiązanych ze sobą obiektów, ale nie chcemy być zależni od konkretnych typów z danej grupy
+\item W przypadku gdy chcemy mieć w przyszłości możliwość rozszerzenia kodu o nowe grupy obiektów 
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp22.png}
+  \caption{Wzorzec Abstract Factory}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Niezależność od konkretnych typów obiektów
+\item Zgodność typów produkowanych przez fabryki
+\item Przeniesienie kodu odpowiedzialnego za tworzenia obiektów do jednego miejsca
+\item Możliwość dodawania nowych fabryk w przyszłości
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Konieczność wprowadzenia do kodu wielu dodatkowych klas i interfejsów
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+
+\newpage
+\section{Wzorce strukturalne}
+
+\subsection{Adapter}
+
+\subsubsection{Charakterystyka}
+Adapter to strukturalny wzorzec projektowy, który pozwala obiektom o niekompatybilnych interfejsach na kolaborację poprzez dostosowanie jednego z interfejsów do pozostałych. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy chcemy użyć jakiejś istniejącej klasy, ale jej interfejs nie jest kompatybilny z resztą naszego kodu
+\item W przypadku gdy chcemy użyć wspólnego interfejsu dla wielu nadklas, którym brakuje pewnej wspólnej funkcjonalności
+\end{itemize}
+
+\subsubsection{UML}
+Wzorzec adaptera może być zrealizowany przez kompozycję (Object Adapter) lub przez dziedziczenie (Class Adapter).
+
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp23.png}
+  \caption{Wzorzec Object Adapter (Adapter Obiektowy)}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp24.png}
+  \caption{Wzorzec Class Adapter (Adapter Klasowy)}
+\end{figure}
+
+
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Separacja logiki biznesowej aplikacji od kodu konwersji (Single responsibility)
+\item Możliwość wprowadzania do kodu nowych adapterów bez psucia istniejącego kodu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Wzrasta złożoność kodu, ponieważ konieczne jest wprowadzenie dodatkowych klas i interfejsów
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+\newpage
+\subsection{Bridge}
+
+\subsubsection{Charakterystyka}
+Bridge to strukturalny wzorzec projektowy, który pozwala na podzielenie hierarchii klas lub jednej dużej klasy na dwie oddzielne hierarchie. Jedna z tych hierarchii reprezentuje abstrakcję, a druga implementację. Każda z hierarchii może być rozwijana niezależnie. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy chcemy rozwinąć hierarchie klasy biorąc pod uwagę więcej niż jedną jej cechę
+\item W przypadku gdy chcemy móc zmieniać implementację zachowania klasy w czasie działania programu
+\item W przypadku gdy chcemy podzielić jedną klasę, która ma wiele wariantów wykonywania tej samej funkcjonalności
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp25.png}
+  \caption{Wzorzec Bridge}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Można dodawać nowe abstrakcje i implementacje bez potrzeby modyfikacji istniejącego kodu
+\item Różne typy zachowań są odseparowane od abstrakcji tych zachowań
+\item Można rozwijać abstrakcje i implementacje niezależnie
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Wprowadzenie wzorca wymaga dodatkowych klas i interfejsów
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+\newpage
+\subsection{Composite}
+
+\subsubsection{Charakterystyka}
+Kompozyt to strukturalny wzorzec projektowy, który służy do implementacji w programie struktur drzewiastych, a następnie na pracę z tymi strukturami tak jakby były pojedynczymi obiektami. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy w programie korzystamy z modelu danych, który ma strukturę drzewa
+\item W przypadku gdy chcemy aby obiekty proste oraz złożone były traktowane tak samo
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp26.png}
+  \caption{Wzorzec Composite}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Wygodna praca z rekursywnymi strukturami danych
+\item Można wprowadzać do aplikacji nowe typy węzłów bez konieczności modyfikacji istniejącego kodu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Konieczne jest dopasowanie każdej z klas reprezentujących węzeł do wspólnego interfejsu, co w przypadku wielu klas może być trudne
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+\newpage
+\subsection{Flyweight}
+
+\subsubsection{Charakterystyka}
+Flyweight to strukturalny wzorzec projektowy, który pozwala na zmieszczenie większej liczby obiektów pamięci RAM poprzez przeniesienie atrybutów o powtarzających się wartościach do osobnych klas.
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy program ma obsługiwać ogromną liczbę obiektów, które nie mieszczą się w pamięci RAM
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp27.png}
+  \caption{Wzorzec Flyweight}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Oszczędność pamięci przy założeniu ogromnej liczby obiektów
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Kod staje się bardziej skomplikowany
+\item Mniejsze zużycie RAM może być zyskane większym zużyciem cyklów procesora przy wywołaniach metod pyłka 
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+\newpage
+\subsection{Proxy}
+
+\subsubsection{Charakterystyka}
+Proxy to strukturalny wzorzec projektowy, który kontroluje dostęp do obiektu na którym rzeczywiście wykonywane są operacje. Proxy pozwala na wykonanie jakiś operacji przed lub po tym jak właściwe zapytanie zostanie przekazane do prawdziwego obiektu.
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Lokalne wywołanie metody obiektu, który znajduje się na zdalnym serwerze (tzw. remote proxy).
+\item Przechowywanie rezultatów zapytania w pamięci programu, zwłaszcza gdy wyniki są bardzo duże (tzw. caching proxy)
+\item W przypadku kontroli dostępu do wywołania metod obiektu (protection proxy)
+\item W celu implementacji lazy loading dla dużego obiektu, opóźnienie inicjalizacji obiektu do momentu kiedy jest potrzebny w programie (virtual proxy)
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp28.png}
+  \caption{Wzorzec Proxy}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Możliwość wywoływania operacji na obiektach 'bez wiedzy klienta'
+\item Możliwość zarządzania cyklem życia rzeczywistego obiektu
+\item Możliwość dodawania nowych Proxy bez zmiany kodu klienta oraz serwisu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Odpowiedź od rzeczywistego obiektu może zostać opóźniona
+\item Konieczne wprowadzenie dodatkowych klas i interfejsów
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+\newpage
+\subsection{Decorator}
+
+\subsubsection{Charakterystyka}
+Decorator to strukturalny wzorzec projektowy, który pozwala na dodanie do klas zachowań. Realizowane jest to poprzez kompozycje obiektów w specjalnych obiektach (dekoratorach), które zawierają dodatkowe zachowania.
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy chcemy dodać do klasy dodatkowe zachowania w czasie wykonywania programu bez popsucia istniejącego kodu
+\item W przypadku gdy nie mamy możliwości rozszerzenia klasy przez dziedziczenia, a chcemy do niej dodać dodatkowe zachowania
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp29.png}
+  \caption{Wzorzec Decorator}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Możliwość rozszerzenia klasy o nowe zachowania bez konieczności tworzenia podklasy
+\item Możliwość dodawania i usuwania zachowań w czasie wykonywania programu
+\item Możliwość łączenia nowych zachowań poprzez tworzenie stosu dekoratorów
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Trudno jest usunąć określone dekorator ze stosu dekoratorów
+\item Zachowanie zależne od kolejności w stosie dekoratorów
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+\newpage
+\subsection{Facade}
+
+\subsubsection{Charakterystyka}
+Facade to strukturalny wzorzec projektowy, który zapewnia uproszczony interfejs do złożonego zbioru klas, biblioteki lub frameworka. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W przypadku gdy chcemy mieć ograniczony, ale prosty interfejs do złożonego podsystemu
+\item W przypadku gdy chcemy podzielić podsystem na warstwy
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp30.png}
+  \caption{Wzorzec Facade}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Izoluje kod od skomplikowanego podsystemu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Fasada może stać się 'obiektem bogiem', który zawiera bardzo dużo dependencji
+\item Fasada może dawać mniejsze możliwości niż korzystanie bezpośrednio z podsystemu
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+
+\newpage
+\section{Wzorce behawioralne}
+
+\subsection{Obserwator (Observer)}
+
+\subsubsection{Charakterystyka}
+Obserwator to behawioralny wzorzec projektowy, który pozwala zdefiniować mechanizm subskrypcji
+w celu powiadamiania wielu obiektów o zdarzeniach zachodzących w obiekcie, który te obiekty
+obserwują.
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Kiedy należy powiadomić zmieniającą się listę obiektów o pewnym zdarzeniu, np. naciśnięciu elementu GUI
+\item Gdy zmiany stanu jednego obiektu mogą wymagać zmiany innych obiektów, a rzeczywisty zestaw obiektów jest wcześniej nieznany lub zmienia
+się dynamicznie
+\item Gdy niektóre obiekty w aplikacji muszą obserwować inne, ale tylko przez ograniczony czas lub w określonych przypadkach.
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp12.png}
+  \caption{Asocjacja dwukierunkowa}
+\end{figure}
+
+
+\subsubsection{Kod}
+Github.
+
+\subsubsection{Zalety i wady}
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Możesz wprowadzić nowe klasy subskrybentów bez konieczności zmiany kodu wydawcy
+(i na odwrót, jeśli istnieje interfejs wydawcy).
+\item Możesz ustanowić relacje miedzy obiektami w czasie wykonywania.
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Subskrybenci są powiadamiani w kolejności losowej
+\item Ciężko jest śledzić flow aplikacji
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Porównanie do innych wzorców}
+
+Chain of responsibility, command i obserwer poruszają różne sposoby łączenia nadawców i odbiorców: 
+
+\begin{itemize}
+\item Chain of responsibility przekazuje zadanie sekwencyjnie wzdłuż dynamicznego łańcucha potencjalnych odbiorców, dopóki jeden z nich
+nie zajmie się nim, w przeciwieństwie do Observera wzorzec ten nie wymaga zawierani w sobie referencji klas komunikujących się, 
+\item Podobnie jak Chain of responsibility i Command wzorzec Observer może być modyfikowany w czasie wykonywania programu 
+\item  Command ustanawia jednokierunkowe połaczenia miedzy nadawcami i odbiorcami
+\end{itemize}
+
+
+\newpage
+\subsection{Chain of responsibility}
+
+
+\subsubsection{Charakterystyka}
+Pozwala przekazywać zadania wzdłuż łańcucha handlerów. Po otrzymaniu zadania, każdy handler postanawia albo przetworzyć zadanie, albo przekazać je do następnego handlera w łańcuchu.
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Obsługa żądań, które wymagają walidacji danych i autoryzacji
+\item Obsługa zdarzeń w GUI, przechodząc po drzewie elementów GUI szukamy elementu mogącego obsłużyć zdarzenie
+\item Wszystkie sytuacje gdzie konieczne jest wykonanie kilku procedur obsługi w określonej kolejności
+\end{itemize}
+
+\subsubsection{UML}
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp13.png}
+  \caption{Wzorzec Chain of responsibility}
+\end{figure}
+
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Rozdzielenie klas wysyłających komunikaty od odbierających komunikaty
+\item Możliwość modyfikacji bez naruszenia istniejącego kodu
+\item Możliwość zmian w czasie wykonywania programu (np. dodanie nowego handlera, zmiana kolejności)
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Brak gwarancji obsługi żądania przez łańcuch
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców}
+
+Chain of responsibility, command i obserwator poruszają różne sposoby łączenia nadawców i odbiorców: 
+
+\begin{itemize}
+\item Chain of responsibility przekazuje zadanie sekwencyjnie wzdłuż dynamicznego łańcucha potencjalnych odbiorców, dopóki jeden z nich
+nie zajmie się nim, w przeciwieństwie do Observera wzorzec ten nie wymaga zawierania w sobie referencji klas komunikujących się
+\item Podobnie jak Observer oraz Chain of responsibility wzorzec ten może być modyfikowany w czasie wykonywania programu (modyfikacja handlerów i ich kolejności) 
+\end{itemize}
+
+\begin{itemize}
+\item Handlery w Chain of responsibility mogą być implementowane jako Command. W takim przypadku można wykonać wiele różnych operacji w tym samym obiekcie kontekstu, reprezentowanym przez zadanie.
+\end{itemize}
+
+\newpage
+\subsection{Command}
+
+\subsubsection{Charakterystyka}
+Command to behawioralny wzorzec projektowy, który zmienia zadanie do wykonania w autonomiczny obiekt zawierający wszystkie informacje o zadaniu. Zadania te są zlecane do wykonania innym obiektom (tzw. Invoker), które na podstawie obiektu zadań wykonują powierzone im zadanie. Obiekt Invoker może zarządzać otrzymanymi obiektami zadań, np. je kolejkować, zapisywać historię wykonania, opóźniać itd. Umożliwia to:
+
+\begin{itemize}
+\item parametryzowanie żądań
+\item opóźnienie (ustalenie czasu) wykonania zadania
+\item kolejkowanie wykonania zadań
+\item obsługę operacji, które można cofnąć
+\end{itemize}
+
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Kolejkowanie zadań, np. zarządzanie wątkami 
+\item Parametryzowanie żądań
+\item Wykonywanie operacji odwracalnych, np. program do rysowania może mieć opcję UNDO
+\item Planowanie wykonywania zapytań w czasie, np. opóźnienie zapytań do zdalnej usługi 
+\item Zdalnie wywoływanie metod
+\end{itemize}
+
+
+\subsubsection{UML}
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp14.png}
+  \caption{Wzorzec Command}
+\end{figure}
+
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Oddzielenie klas wykonujących operacje od klas na których są one wykonywane
+\item Możliwość modyfikacji istniejącego kodu bez popsucia go (np. dodanie Command)
+\item Możliwość modyfikacji wykonywanych zadań w czasie wykonywania programu (np. kolejkowanie Command do wykonania)
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Każda nowa akcja zwiększa liczbę klas do utrzymywania, ponieważ wymaga stworzenia nowej klasy implementującej interfejs Command
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców}
+
+Chain of responsibility, command i observer poruszają różne sposoby łączenia nadawców i odbiorców: 
+
+\begin{itemize}
+\item Command podobnie jak Chain of responsibility  nie wymaga zawierania w sobie referencji klas komunikujących się, a także może być modyfikowany w czasie wykonywania programu (modyfikacja handlerów i ich kolejności)
+\item Command nie definiuje określonej kolejności wykonywania akcji jak jest to w Chain of responsibility 
+\item Command ustanawia jednokierunkowe połączenia miedzy nadawcami i odbiorcami w którym korzysta z wprowadzenia dodatkowej warstwy, takiej warstwy nie ma w Observer ani w Chain of responsibility
+\end{itemize}
+
+\begin{itemize}
+\item Handlery w Chain of responsibility mogą być implementowane jako Command. W takim przypadku można wykonać wiele różnych operacji w tym samym obiekcie kontekstu, reprezentowanym przez zadanie.
+\end{itemize}
+
+\newpage
+\subsection{Strategy}
+
+\subsubsection{Charakterystyka}
+Wzorzec ten pozwala na wyodrębnienie z klasy operacji, która może być realizowana na wiele sposobów i utworzenia zbioru klas, które będą implementowały każdy z tych sposobów. Klasy te służą następnie do konfigurowania klasy wykonującej operacje, konfigurujemy, która strategia ma zostać wybrana do zastosowania. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item W celu użycia różnych wariantów algorytmu w obiekcie i przełączania się z jednego algorytmu na inny w czasie wykonywania
+\item W sytuacji gdy mamy w kodzie wiele podobnych klas, które różnią się tylko sposobem wykonywania niektórych zachowań, możemy wtedy stworzyć jedną klasę, która będzie miała zaimplementowany wybór jednego z tych zachowań
+\item W celu izolacji logiki biznesowej klasy od szczegółów implementacji algorytmów
+\item W celu zastąpienia istniejącego w kodzie dużego operatora warunkowego, który przełącza między różnymi wariantami tego samego algorytmu
+\end{itemize}
+
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp15.png}
+  \caption{Wzorzec Strategy}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Możliwe jest wprowadzanie nowych zmian bez zmiany kontekstu w którym są używane
+\item Możliwe jest konfigurowanie strategii w czasie wykonywania programu
+\item Izolowanie logiki algorytmu od jego kontekstu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Wprowadza dodatkowy narzut związany z koniecznością implementowania wielu klas, dla małej liczby wariantów algorytmu może być to nieopłacalne
+\item Klient musi być świadomy różnic pomiędzy strategiami
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Porównanie do innych wzorców}
+
+\begin{itemize}
+\item Command i strategia mogą wyglądać podobnie, ponieważ każdego z nich można użyć do sparametryzowania obiektu przy pomocy jakiegoś działania, używane są one jednak w różnych celach. 
+
+\begin{itemize}
+\item Command używamy aby zamienić dowolną operacje na obiekt. Parametry operacji staja się polami tego obiektu. Taka konwersja pozwala opóźnić wykonanie operacji, umieścić ją w kolejce, zapisać historie poleceń czy wysłać polecenia do usług zdalnych. Obiekt konkretnego Command może mieć własne obiekty (Receiver) na których wykonywana jest operacja (w strategii działamy w ramach jednej klasy). 
+\item Natomiast wzorzec Strategy zazwyczaj opisuje różne sposoby robienia tego samego, pozwalając na zamianę sposobu wykonywania danego zadania w ramach jednej klasy.
+\end{itemize}
+
+\end{itemize}
+
+
+\newpage
+\subsection{Template Method}
+
+\subsubsection{Charakterystyka}
+Definiuje szkielet algorytmu w nadklasie (operacje i kolejność ich wykonywania), ale pozwala podklasom zastąpić określone kroki algorytmu (poprzez zaimplementowanie metody abstrakcyjnej lub nadpisanie metody) bez zmiany jego struktury.
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Używamy wzorca gdy chcemy aby klienci rozszerzali tylko określone kroki algorytmu, ale nie cały algorytm lub jego strukturę.
+\item Używamy wzorca gdy mamy kilka klas, które zawierają prawie identyczne algorytmy z niewielkimi różnicami. W rezultacie może być konieczne zmodyfikowanie obu klas po zmianie algorytmu.
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp16.png}
+  \caption{Wzorzec Template Method}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Kod, który się nie zmienia można przechowywać w superklasie 
+\item Można pozwolić klientom na modyfikowanie tylko niektórych części algorytmu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Klienci mogą być ograniczeni przez strukturę algorytmu
+\item Dla algorytmów składających się z wielu kroków metody szablonowe mogą być trudne w utrzymywaniu
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców}
+\begin{itemize}
+\item Metoda szablonowa może być stosowana razem ze Strategy w celu utworzenia struktury algorytmu, który jest definiowany przez Strategy (patrz przykład na github). Możemy także zdefiniować dla jednej strategii wiele template method, tym samym otrzymujemy wiele struktur algorytmu opisywanego przez strategię.
+\item Metoda szablonowa opiera się na dziedziczeniu: pozwala na zmianę części algorytmu poprzez rozszerzenie tych części w podklasach. Strategy oparta jest na zawieraniu(composition): możesz zmieniać części zachowania obiektu, dostarczając mu różne strategie, które odpowiadają temu zachowaniu. Metoda szablonów działa na poziomie klasy, wiec jest statyczna. Strategia działa na poziomie obiektu, umożliwiając zmianę zachowań w czasie wykonywania.
+\end{itemize}
+
+
+
+
+\newpage
+\subsection{State (State machine)}
+
+\subsubsection{Charakterystyka}
+To behawioralny wzorzec projektowy, który pozwala na zmianę zachowania klasy w zależności od jej wewnętrznego stanu. Działanie State przypomina działanie skończonej maszyny stanowej - w zależności od stanu w którym się znajdujemy, efekty wykonywania działań mają inne rezultaty. 
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Używamy wzorca gdy klasa zachowuje się inaczej w zależności od stanu w którym się znajduje, istnieje duża liczba możliwych stanów oraz stany często się zmieniają
+\item Używamy wzorca gdy mamy klasę, która zawiera metody zawierające ogromną liczbę instrukcji \textit{switch} oraz \textit{if}
+\item Używamy wzorca gdy mamy dużo zduplikowanego kodu, który wykonywany jest w w instrukcjach warunkowych
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp17.png}
+  \caption{Wzorzec State}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Zachowuje zasadę pojedynczej odpowiedzialności - każdy stan to inna klasa
+\item Możliwość wprowadzania nowych stanów bez konieczności modyfikacji kodu stanów istniejących
+\item Eliminuje dużą liczbę wyrażeń warunkowych, o skutkuje lepszą organizacją kodu
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Stosowanie wzorca jest ograniczone do wielkiej ilości stanów, które często się zmieniają, dla małej liczby lub rzadko zmieniających się stanów wzorzec ten może być zbytnim skomplikowaniem
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+
+
+\newpage
+\subsection{Visitor}
+
+\subsubsection{Charakterystyka}
+Wizytator to behawioralny wzorzec projektowy, który pozwala na oddzielenie obiektów od algorytmów, które są na nich wykonywane. Wzorzec ten pozwala wykonać odpowiedni algorytm na odpowiednim typie obiektu bez konieczności stosowanie złożonych instrukcji warunkowych. To obiekt posiadający implementacje algorytmów odwiedza obiekty i wykonuje na nich odpowiedni algorytm w zależności od typu obiektu, który odwiedza. 
+
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item Stosujemy wzorzec gdy dany algorytm może być wykonywany na dużej liczbie klas i każda z implementacji jest inna
+\item Stosujemy wzorzec aby przenieść podobne zachowania wielu klas do jednej klasy, co daje lepszą organizację kodu
+\item Często przydatny w sytuacji gdy chcemy przejść po skomplikowanej strukturze obiektów o różnym typie, np. drzewie
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp18.png}
+  \caption{Wzorzec Visitor}
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item Łatwe wprowadzanie nowego zachowania dla klas bez modyfikacji tych klas
+\item Możliwość przeniesienia metod o takim samym działaniu z wielu klas w jedno miejsce
+\item Podczas przechodzenia do strukturach wizytator może zbierać użyteczne dla programu informacje, np. liczba odwiedzonych węzłów
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item Wizytator nie ma dostępu do prywatnych składowych obiektów klas z którymi współpracuje
+\item Konieczność aktualizacji kodu wizytatora w przypadku dodania klasy z którą ma współpracować
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item 
+\end{itemize}
+
+
+\newpage
+\section{Szablon na opracowanie pojedynczego wzorca}
+
+
+\subsection{Nazwa wzorca}
+
+\subsubsection{Charakterystyka}
+
+
+\subsubsection{Zastosowanie}
+\begin{itemize}
+\item 
+\end{itemize}
+
+\subsubsection{UML}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{dp19.png}
+  \caption{Wzorzec }
+\end{figure}
+
+\subsubsection{Kod}
+Github
+
+\subsubsection{Zalety i wady}
+
+
+\begin{itemize}
+\item Zalety
+\begin{itemize}
+\item 
+\end{itemize}
+\item Wady
+\begin{itemize}
+\item 
+\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Porównanie do innych wzorców TODO}
+\begin{itemize}
+\item
+\end{itemize}
+
+
+\end{document}
+

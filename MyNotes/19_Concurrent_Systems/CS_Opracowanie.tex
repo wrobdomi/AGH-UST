@@ -1,0 +1,1531 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{tcolorbox}
+\lstloadlanguages{Matlab}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+\pagenumbering{arabic}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {}
+  {\thepage}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Programowanie współbieżne i rozproszone - ADA, Erlang}}
+	{}
+	
+	\setfoot
+	{}
+	{\thepage}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\newcommand{\ask}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=gray,title={Pytanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\ex}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={Zadanie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+ \definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+ 
+\definecolor{mGreen}{RGB}{2,217,39}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{RGB}{223,32,214}
+\definecolor{mKeyword}{RGB}{204,152,15}
+\definecolor{backgroundColour}{RGB}{68,68,68}
+\definecolor{commentColor}{RGB}{243,253,254}
+
+
+\lstdefinestyle{Ada}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{commentColor},
+    keywordstyle=\color{mKeyword},
+	basicstyle=\color{mGreen}\footnotesize,    
+    numberstyle=\tiny\color{mPurple},
+    stringstyle=\color{mPurple},
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+\lstset{style=Ada}
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+
+\begin{document}
+
+\tableofcontents
+
+\newpage
+\section{Erlang}
+
+\subsection{Wartościowanie - rodzaje}
+W Erlangu można korzystać z dwóch rodzajów wartościowania:
+\begin{itemize}
+\item zachłanne (eager evaluation) - kiedy argumenty funkcji są wyznaczane przed jej wywołaniem, zaletą tego podejścia jest to, że można określić kolejność wykonywania obliczeń, a wadą narzut związany z wykonywaniem tych obliczeń
+\item leniwe (lazy evaluation) - kiedy argumenty funkcji wyznaczane są tylko wtedy kiedy są potrzebne, na żądanie, takie podejście daje również możliwość tworzenia nieskończonych struktur danych
+\end{itemize}
+
+\ask{}{
+Jakie rodzaje wartościowania są w Erlangu ?
+}
+
+\subsection{Typy danych: atom, liczba, t. funkcyjny, pid, krotka, lista, rekord, term}
+Erlang jest językiem dynamicznie typowanym, typy są przypisywane zmiennym w trakcie działania programu na podstawie ich wartości, nie są znane na etapie kompilacji. W Erlangu wyróżniamy następujące typy danych:
+\begin{itemize}
+\item Term - dana o jakimkolwiek typie nazywana jest termem
+\item Number - integer lub float, liczbę możemy zapisywać normalnie lub jako \textit{base\#value}, gdzie base to podstawa systemu liczbowego
+\begin{lstlisting}[language=Erlang]
+1> 42.
+42
+2> $A.
+65
+4> 2#101.
+5
+\end{lstlisting}
+\item Atom - stała z nazwą, zaczyna się z małej litery bez znaków specjalnych, a jeśli nie to musi być ujęta w apostrofy, np. \textit{sample, 'Luty'}.
+\begin{lstlisting}[language=Erlang]
+hello
+phone_number
+'Monday'
+'phone number'
+\end{lstlisting}
+\item Fun - to zmienna do której przypisujemy funkcję, dzięki temu możemy ją np. przekazywać do innej funkcji
+\begin{lstlisting}[language=Erlang]
+1> Fun1 = fun (X) -> X+1 end.
+#Fun<erl_eval.6.39074546>
+\end{lstlisting}
+\item Pid - to typ, który przechowuje pid procesu składający się z trzech liczb
+\begin{lstlisting}[language=Erlang]
+1> spawn(m, f, []).
+<0.51.0>
+\end{lstlisting}
+\item Krotka - krotka to złożony typ danych składający się z niezmiennej liczby termów
+\begin{lstlisting}[language=Erlang]
+1> P = {adam,24,{july,29}}.
+{adam,24,{july,29}}
+\end{lstlisting}
+\item Lista - to złożony typ danych, który przechowuje zmienną liczbę termów, pierwszy element listy to głowa, z reszta listy to tzw. ogon
+\begin{lstlisting}[language=Erlang]
+1> L1 = [a,2,{c,4}].
+[a,2,{c,4}]
+2> [H|T] = L1.
+[a,2,{c,4}]
+\end{lstlisting}
+\item Rekord - to złożony typ danych, który przechowuje niezmienną liczbą termów, rekord ma nazywane pola, jest podobny do struktury z języka C
+\begin{lstlisting}[language=Erlang]
+-record(person, {name, age}).
+
+new(Name, Age) ->
+    #person{name=Name, age=Age}.
+\end{lstlisting}
+\item Inne - oprócz tego w Erlangu mamy też typy danych: Boolean, Reference, Map... więcej na stronie \url{http://erlang.org/doc/reference_manual/data_types.html#reference}
+\item UWAGA: W Erlangu nie mamy typu String jako takiego, Stringi to tak naprawdę listy zawierające symbole jako elementy listy.
+\item WAŻNE: W Erlangu zmienne zapisujemy dużymi literami, a stałe małymi literami
+\end{itemize}
+
+
+\ask{}{
+Jakie typy danych są w Erlangu ? Jakim rodzajem języka programowania jest Erlang względem typów zmiennych ?
+}
+
+\subsection{Generatory list (List Comprehensions)}
+List comprehensions służą do generacji list, składają się z przypisania i predykatów, pozwalają na wygenerowanie listy wartości, które spełniają określone warunki. 
+\begin{lstlisting}[language=Erlang]
+> [X || X <- [1,2,a,3,4,b,5,6], X > 3].
+[a,4,b,5,6]
+> [X || X <- [1,2,a,3,4,b,5,6], integer(X), X > 3].
+[4,5,6]
+\end{lstlisting}
+
+
+\ask{}{
+Czym są Generatory List (List Comprehensions) w Erlangu ?
+}
+
+
+\subsection{Funkcje z modułu lists}
+Moduł lists zawiera wiele użytecznych funkcji, które działają na listach, jest ich bardzo dużo, dlatego po opis wszystkich należy sięgnąć do dokumentacji, przedstawmy sobie kilka użytecznych:
+\begin{itemize}
+\item \textit{zipwith} - z dwóch list tworzy listę krotek o pierwszym elemencie z pierwszej, a drugim z drugiej listy
+\begin{lstlisting}[language=Erlang]
+lists:zipwith(fun(X, Y) -> {X, Y} end,[1,2,3],[a,b,c]).
+[{1,a},{2,b},{3,c}]
+\end{lstlisting}
+\item \textit{foldl} - składa listę do jednej wartości przez wykonanie określonej przez użytkownika funkcji, podajemy funkcję, wartość początkową zmiennej do której składamy listę i na końcu samą listę do poskładania
+\begin{lstlisting}[language=Erlang]
+lists:foldl(fun(X, Sum) -> X + Sum end, 0, [1,2,3,4,5]).
+15
+\end{lstlisting}
+\item \textit{append} - dokleja listę na koniec innej listy
+\begin{lstlisting}[language=Erlang]
+lists:append([1,2,3],[a,b,c]).
+[1,2,3,a,b,c]
+\end{lstlisting}
+\item \textit{map} - zmienia każdy element listy według zadanej funkcji, podajemy funkcję, a po niej listę
+\begin{lstlisting}[language=Erlang]
+lists:map(fun(X)-> {X} end , [1,2,3,4]).
+[{1},{2},{3},{4}]
+\end{lstlisting}
+\item \textit{mapfoldl} - połączenie map i foldl
+\begin{lstlisting}[language=Erlang]
+lists:mapfoldl(fun(X, Sum) -> {2*X, X+Sum} end,
+0, [1,2,3,4,5]).
+{[2,4,6,8,10],15}
+\end{lstlisting}
+\end{itemize}
+
+
+\ask{}{
+Omów przykładowe funkcje z modułu \textit{lists}.
+}
+
+\subsection{Wyjątki - rodzaje i składnia}
+
+W Erlangu mamy trzy rodzaje wyjątków:
+\begin{itemize}
+\item \textit{error} - to wyjątki powstające wskutek wykonywania programu lub poprzez wywołanie 
+\begin{lstlisting}[language=Erlang]
+erlang:error(Why) % Give reason of the exception
+\end{lstlisting}
+Wyjątki te kończą działanie procesu
+\item \textit{exit} - to wyjątki wyrzucane przez wywołanie
+\begin{lstlisting}[language=Erlang]
+exit(Why) % Give reason of the exception
+\end{lstlisting}
+Wywołanie exit kończy działanie procesu i wysyła wiadomość $\{'EXIT',Pid,Why\}$ do powiązanych procesów.
+\item \textit{throw} - to typ wyjątków, który programista może obsłużyć w kodzie, wyjątki te nie kończą procesu, ale zmieniają przepływ wykonywania instrukcji 
+\begin{lstlisting}[language=Erlang]
+throw(Why) % Give reason of the exception
+\end{lstlisting}
+Przykładowo
+\begin{lstlisting}[language=Erlang]
+im_impressed() ->
+try 
+	talk(),
+	_Knight = "None shall Pass!",
+	_Doubles = [N*2 || N <- lists:seq(1,100)],
+	throw(up),
+	_WillReturnThis = tequila
+catch
+	Exception:Reason -> {caught, Exception, Reason}
+end.
+\end{lstlisting}
+\end{itemize}
+
+\ask{}{
+Omów wyjątki w Erlangu.
+}
+
+
+\subsection{Funkcja, w tym fun. z dozorem (warunek), rekurencja}
+
+Funkcja w Erlangu składa się z głowy i z ciała, które są oddzielone znakiem \textit{->}. \\ 
+
+Głowa składa się z nazwy funkcji, listy argumentów oraz opcjonalnie strażnika. Można zdefiniować wiele 'wersji' funkcji oddzielając je średnikiem, ostatnią z wersji kończymy kropką. \\
+
+ 
+Funkcje w Erlangu często wywołują same siebie (rekurencja), co zastępuje nam iterowanie po liście/zakresie. \\
+
+Przykład obliczania silni w Erlangu z rekurencją i strażnikami:
+\begin{lstlisting}[language=Erlang, caption=Silnia]
+fact(N) when N>0 ->  % first clause head
+    N * fact(N-1);   % first clause body
+
+fact(0) ->           % second clause head
+    1.               % second clause body
+\end{lstlisting}
+Wywołanie funkcji w Erlangu poszukuje odpowiedniej wersji funkcji tj. takiej w której:
+\begin{itemize}
+\item Argumenty pasują do wzorca
+\item Spełniony jest strażnik
+\end{itemize}
+
+\ask{}{
+Omów funkcje w Erlangu, jak zaimplementować rekurencje ? Jak zaimplementować dozór (warunek, inaczej strażnik) ? 
+}
+
+
+\subsection{Instrukcje warunkowe if i case}
+Instrukcja \textit{if} w Erlangu działa poprzez zastosowanie strażników. Definiujemy kilka strażników, a \textit{if} skanuje je po kolei w poszukiwaniu pierwszego, który jest spełniony. Jeśli żaden nie jest spełniony to wyrzucany jest błąd, dlatego dobrze zawsze zapewnić strażnika \textit{true}, który łapie wszystkie inne przypadki (działa jak else).
+\begin{lstlisting}[language=Erlang, caption=Przyklad if]
+is_greater_than(X, Y) ->
+    if
+        X>Y ->
+            true;
+        true -> % works as an 'else' branch
+            false
+    end
+\end{lstlisting}
+
+Instrukcja \textit{case} działa bardzo podobnie do \textit{if}, ale ta wykorzystuje \textit{Pattern Matching} zamiast strażników. Najwięcej pokaże nam przykład
+\begin{lstlisting}[language=Erlang, caption=Przyklad case]
+is_valid_signal(Signal) ->
+    case Signal of
+        {signal, _What, _From, _To} ->
+            true;
+        {signal, _What, _To} ->
+            true;
+        _Else ->
+            false
+    end.
+\end{lstlisting}
+
+\ask{}{
+Omów instrukcje if i case w Erlangu.
+}
+
+\subsection{BONUS - procesy i komunikacja między procesami}
+Procesy w Erlangu tworzymy przy pomocy funkcji \textit{spawn}, która zwraca id procesu:
+\begin{lstlisting}[language=Erlang]
+PID = spawn(m, f, [a]) 
+% m - module name
+% f - function name
+% [a] - arguments list
+\end{lstlisting}
+Wiadomości w Erlangu wysyłamy przy użyciu symbolu wykrzyknika. Podajemy PID procesu do którego chcemy wysłać wiadomość:
+\begin{lstlisting}[language=Erlang]
+PID ! {self(), message}
+\end{lstlisting}
+Wiadomości w procesie odbieramy poprzez użycie \textit{receive} oraz \textit{end}, stosujemy pattern matching aby odebrać wiadomość:
+\begin{lstlisting}[language=Erlang]
+receive
+	{reset, Board} -> reset(Board);
+	_Other -> {error, unknown_msg}
+end
+\end{lstlisting}
+\ask{}{
+Omów tworzenie i przekazywanie wiadomości pomiędzy procesami w Erlang.
+}
+
+
+
+\section{Ada}
+
+\subsection{Klasyfikacja typów}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.8]{pwir1.png}
+\end{figure}
+
+\ask{}{
+Omów klasyfikację typów w Adzie
+}
+
+Trochę więcej informacji o typach:
+\begin{itemize}
+\item Ada jest językiem o statycznym typowaniu (w przeciwieństwie do Erlanga, który jest typowany dynamicznie), oznacza to, że typy zmiennych muszą być znane na etapie kompilacji.
+\item W Adzie typy zmiennych zaczynają się dużą literą
+\item Typy zapisujemy po dwukropku po nazwie zmiennej (patrz przykład poniżej)
+\end{itemize}
+
+Najważniejsze podstawowe typy danych w Adzie to:
+
+\begin{itemize}
+\item Integer - literał zapisujemy jako ciąg cyfr
+\item Float - literał zapisujemy jako ciąg cyfr z częścią ułamkową po kropce (kropka jest konieczna !)
+\item Boolean - przyjmuje wartość \textit{True} lub \textit{False}
+\item Character - stałe zapisujemy w pojedynczych apostrofach, np. 'A'
+\item String - literały zapisujemy w cudzysłowach
+\item UWAGA: Wartość do zmiennej przypisujemy za pomocą operatora \textit{:=}
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Silne typowanie]
+procedure Strong_Typing is
+Alpha: Integer := 1; 
+Beta: Integer := 10;
+Result: Float;
+begin
+	Result := Float (Alpha) / Float (Beta);
+end Strong_Typing;
+\end{lstlisting}
+
+\subsection{Definiowanie typów i podtypów}
+
+\subsubsection{Definiowanie typów}
+W Adzie możemy w prosty sposób definiować własne typy na podstawie typów wbudowanych. Tak utworzone typy możemy później używać w programie tak jak wszystkie inne. Do definiowania typu używamy słowa kluczowego \textit{type}. Tak zdefiniowane typy nazywamy \textit{derived types}, ponieważ w pewnym sensie dziedziczą one po istniejących w Adzie typach. Przykład:
+
+\begin{lstlisting}[language=Ada]
+procedure Main is
+   --  ID card number type, incompatible with Integer.
+   type Social_Security_Number
+   is new Integer range 0 .. 999_99_9999;
+   --                   ^ Since a SSN has 9 digits max, and cannot be
+   --                     negative, we enforce a validity constraint.
+
+   SSN : Social_Security_Number := 555_55_5555;
+   --                              ^ You can put underscores as formatting in
+   --                                any number.
+
+   I   : Integer;
+
+   Invalid : Social_Security_Number := -1;
+   --                                  ^ This will cause a runtime error
+   --                                    (and a compile time warning with
+   --                                     GNAT)
+begin
+   I := SSN;                           -- Illegal, they have different types
+   SSN := I;                           -- Likewise illegal
+   I := Integer (SSN);                 -- OK with explicit conversion
+   SSN := Social_Security_Number (I);  -- Likewise OK
+end Main;
+\end{lstlisting}
+
+\ask{}{
+Jak w Adzie definiujemy typy ?
+}
+
+\subsubsection{Podtypy}
+
+Podtypy używane są w Adzie zazwyczaj w celu zawężenia ograniczeń wartości dla danego typu. Definiujemy je używając słowa kluczowego subtype, a następnie używamy ich w kodzie tak jak innych typów. 
+
+\begin{lstlisting}[language=Ada]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet is
+   type Days is (Monday, Tuesday, Wednesday, Thursday,
+                 Friday, Saturday, Sunday);
+
+   --  Declaration of a subtype
+   subtype Weekend_Days is Days range Saturday .. Sunday;
+   --                           ^ Constraint of the subtype
+
+   M : Days := Sunday;
+
+   S : Weekend_Days := M;
+   --  No error here, Days and Weekend_Days are of the same type.
+begin
+   for I in Days loop
+      case I is
+         --  Just like a type, a subtype can be used as a
+         --  range
+         when Weekend_Days =>
+            Put_Line ("Week end!");
+         when others =>
+            Put_Line ("Hello on " & Days'Image (I));
+      end case;
+   end loop;
+end Greet;
+\end{lstlisting}
+
+
+
+\subsection{Podprogramy - procedury i funkcje}
+W Adzie mamy dwa rodzaje podprogramów: procedury i funkcje.
+
+\ask{}{
+Czym w Adzie różni się procedura od funkcji ?
+}
+Procedura nic nie zwraca, a funkcja coś zwraca. \\
+Pierwszy przykładowy program w języku Ada z laboratorium:
+\begin{lstlisting}[language=Ada, caption=Lab1.adb]
+-- Lab1.adb
+-- komentarz do konca linii
+
+-- wykorzystany pakiet 
+with Ada.Text_IO;
+use Ada.Text_IO;
+
+-- procedura glowna - dowolna nazwa (ale taka jak nazwa pliku)
+procedure Lab1 is
+
+-- czesc deklaracyjna  
+  
+  -- funkcja - forma pelna
+  function Max2(A1, A2 : in Float ) return Float is
+  begin
+    if A1 > A2 then return A1;
+    else return A2; 
+    end if;
+  end Max2;    
+
+  -- funkcja wyrazeniowa 
+  -- forma uproszczona funkcji
+  -- jej tresc jest tylko wyrazeniem w nawiasie   
+  
+  function Add(A1, A2 : Float) return Float is
+    (A1 + A2);
+       
+  function Max(A1, A2 : in Float ) return Float is
+    (if A1 > A2 then A1 else A2);    
+    
+  -- Fibonacci      
+  function Fibo(N : Natural) return Natural is   
+    (if N = 0 then 1 elsif N in 1|2 then  1 else Fibo(N-1) + Fibo(N-2) );   
+  
+    -- procedura 
+    -- zparametryzowany ciag instrukcji  
+  procedure Print_Fibo(N: Integer) is
+  begin
+    if N <1 or N>46 then raise Constraint_Error;
+    end if;
+    Put_Line("Ciag Fibonacciego dla N= " & N'Img);
+    for I in 1..N loop
+      Put( Fibo(I)'Img & " " );
+    end loop;   
+    New_Line;
+  end Print_Fibo;    
+   
+-- ponizej tresc procedury glownej   
+begin
+  Put_Line("Suma = " & Add(3.0, 4.0)'Img ); 
+  Put_Line( "Max =" & Max(6.7, 8.9)'Img);
+  Put_Line( "Max2 =" & Max2(6.7, 8.9)'Img);
+  Print_Fibo(12);
+end Lab1;  
+\end{lstlisting}
+
+\ask{}{
+Jaka jest postać deklaracji funkcji i procedury ?
+}
+Funkcje i procedury można zdefiniować w momencie ich deklaracji. 
+\begin{itemize}
+\item Procedury bez argumentow
+\begin{lstlisting}[language=Ada]
+procedure Lab1 is -- procedura bez argumentow
+-- miejsce na deklaracje
+begin
+-- cialo procedury
+end Lab1;
+\end{lstlisting}
+\item Procedury z argumentami
+\begin{lstlisting}[language=Ada]
+procedure Print_Fibo(N: Integer) is -- procedura z argumentami
+-- wiecej argumentow tworzymy po sredniku
+-- miejsce na deklaracje
+begin
+-- cialo procedury
+end Print_Fibo
+\end{lstlisting}
+\item Funkcja wyrażeniowa, jej ciało to pojedyncza instrukcja
+\begin{lstlisting}[language=Ada]
+function Add(A1, A2 : Float) return Float is
+    (A1 + A2);
+\end{lstlisting}
+\item Zwykła funkcja z argumentami
+\begin{lstlisting}[language=Ada]
+function Max2(A1, A2 : in Float ) return Float is
+  -- miejsce na deklaracje
+  begin
+    if A1 > A2 then return A1;
+    else return A2; 
+  end if;
+end Max2;   
+\end{lstlisting}
+\end{itemize}
+
+Zauważmy, że jeśli procedura lub funkcja nie ma wcale argumentów, to wówczas wcale nie piszemy nawiasów. 
+
+\ask{}{
+Co oznaczają słowa \textbf{in}, \textbf{out}, \textbf{in out} używane z argumentami procedur i funkcji ?
+}
+\begin{itemize}
+\item \textbf{in} - parametr może być tylko czytany w ciele funkcji/procedury (defaultowo wszystkie argumenty są typu \textbf{in})
+\item \textbf{out} - do parametru można zapisać dane, a po zapisaniu je także czytać
+\item \textbf{in out} - parametr może być zarówno czytany jak i nadpisywany
+\end{itemize}
+
+Przykłady
+
+\begin{lstlisting}[language=Ada, caption=Blad - nadpisywanie in]
+procedure Swap (A, B : Integer) is
+   Tmp : Integer;
+begin
+   Tmp := A;
+
+   --  Error: assignment to "in" mode parameter not allowed
+   A := B;
+   --  Error: assignment to "in" mode parameter not allowed
+   B := Tmp;
+end Swap;
+\end{lstlisting}
+
+\begin{lstlisting}[language=Ada, caption=Poprawna wersja]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure In_Out_Params is
+	-- tutaj deklarujemy wszystkie funkcje, procedury i zmienne
+	-- uzywane w procedurze glownej
+   procedure Swap (A, B : in out Integer) is
+      Tmp : Integer; -- miejsce na deklaracje !
+   begin
+      Tmp := A;
+      A := B;
+      B := Tmp;
+   end Swap;
+
+   A : Integer := 12;
+   B : Integer := 44;
+begin
+    Swap (A, B);
+    Put_Line (Integer'Image (A)); --  Prints 44
+end In_Out_Params;
+\end{lstlisting}
+
+Zwróćmy w powyższym przykładzie w jakich miejscach deklarowane są funkcje, procedury i zmienne oraz, że zmienne mogą być zadeklarowane \textit{bez} lub \textit{z} inicjalizacją, rolę operatora przypisania pełni w Adzie operator \textit{:=} \\
+Pamiętajmy też, że słowa kluczowe \textbf{in, out, in out} tyczą się tylko argumentów funkcji i procedur, a nie zmiennych, które zostały zadeklarowane przed ciałem procedur lub funkcji. 
+
+\subsection{Rekordy}
+
+\begin{itemize}
+\item Rekordy to złożony typ danych w Adzie
+\item Są odpowiednikiem klas z języków obiektowych
+\item Można zadeklarować domyślne wartości dla pól rekordu, wtedy jeśli zadeklarujemy zmienną typu tego rekordu i nie przypiszemy polom wartości, zostaną im nadane wartości domyślne
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Przyklad rekordu w Adzie]
+type Date is record
+   --  The following declarations are components of the record
+   Day   : Integer range 1 .. 31;
+   Month : Month_Type;
+   Year  : Integer range 1 .. 3000; --  You can add custom constraints on fields
+end record;
+\end{lstlisting}
+
+\begin{itemize}
+\item Rekordom nadajemy wartość korzystając z tzw. agregatów, agregat to po prostu wartość (literał) dla rekordu (lub dowolnego innego typu złożonego, np. tablicy), wartości dla kolejnych pól zapisujemy po przecinku w nawiasach w przypadku rekordu
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Przyklady agregatow dla typu Date]
+Ada_Birthday    : Date := (10, December, 1815); -- tutaj okreslamy wartosci przez pozycje pola
+Leap_Day_2020   : Date := (Day => 29, Month => February, Year => 2020); -- tutaj okreslamy wartosci podajac nazwe pola
+--                ^ By name
+\end{lstlisting}
+
+\begin{itemize}
+\item Do pól komponentu odwołujemy się podobnie jak do atrybutów obiektów w Javie/C++, podajemy nazwę pola po kropce
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Stosowanie rekordow]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Record_Selection is
+
+   type Month_Type is
+     (January, February, March, April, May, June, July,
+      August, September, October, November, December);
+
+   type Date is record
+      Day   : Integer range 1 .. 31;
+      Month : Month_Type;
+      Year  : Integer range 1 .. 3000 := 2032;
+   end record;
+
+   Some_Day : Date := (1, January, 2000);
+
+begin
+   Some_Day.Year := 2001;
+   Put_Line ("Day:" & Integer'Image (Some_Day.Day)
+             & ", Month: " & Month_Type'Image (Some_Day.Month)
+             & ", Year:" & Integer'Image (Some_Day.Year));
+end Record_Selection;
+\end{lstlisting}
+
+\ask{}{
+Omów rekordy w Adzie.
+}
+
+
+\subsection{Tablice}
+
+Tablice w Adzie są tym co rozumiemy przez tablicę w innych językach programowania - przechowują wiele zmiennych tego samego typu w jednym kontenerze. Mimo to, tablice w Adzie różnią się trochę sposobem w jaki je definiujemy i używamy, omówimy sobie te różnice.
+
+\begin{itemize}
+\item Tablicę w Adzie definiujemy tworząc nowy typ i określając, że typ ten ma być tablicą
+\item Przy definiowaniu tego typu, określamy jak będziemy indeksować tablicę, tutaj Ada jest inna od innych języków, indeksami tablicy mogą być dowolne wartości z dowolnego zakresu, zamiast podawać rozmiar tablicy, podajemy zakres indeksów który określa ten rozmiar
+\item Na końcu definicji musimy określić jakie typy ma przechowywać tablica
+\end{itemize}
+
+
+\begin{lstlisting}[language=Ada, caption=Definiowanie tablicy z jawnie określonymi indeksami]
+with Ada.Text_IO; use Ada.Text_IO;
+
+-- Definiujemy tablice ktora bedzie indeksowana liczbami calkowitymi od 1 do 5
+-- Tablica ta bedzie miala 5 elementow, kazdy z nich bedzie typu My_Int
+procedure Greet is
+   type My_Int is range 0 .. 1000;
+   type Index is range 1 .. 5;
+
+   type My_Int_Array is array (Index) of My_Int;
+   --                                    ^ Type of elements
+   --                          ^ Bounds of the array
+   Arr : My_Int_Array := (2, 3, 5, 7, 11);
+   --                    ^ Array literal, called aggregate in Ada
+begin
+   for I in Index loop	-- Zwrocmy uwage na sposob iteracji !!!
+      Put (My_Int'Image (Arr (I))); -- UWAGA ! Tak odwolujemy sie do elementow tablicy!
+      --                     ^ Take the Ith element
+   end loop;
+   New_Line;
+end Greet;
+\end{lstlisting}
+
+\begin{itemize}
+\item indeksem tablicy może być dowolny typ, nie musi być to Integer
+\item nie jest konieczne deklarowanie osobnego typu dla indeksów tablicy, indeksy można równie dobrze zdefiniować przy definiowaniu tablicy
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Rozne typy jako indeksy tablicy]
+-- rozne typy moga byc indeksami:
+type Month_Duration is range 1 .. 31;
+   type Month is (Jan, Feb, Mar, Apr, May, Jun,
+                  Jul, Aug, Sep, Oct, Nov, Dec);
+
+   type My_Int_Array is array (Month) of Month_Duration;
+   
+-- ...
+-- Mozna tez tak:
+type My_Int is range 0 .. 1000;
+   type My_Int_Array is array (1 .. 5) of My_Int;
+\end{lstlisting}
+
+
+\begin{itemize}
+\item w Laboratorium 1 mówiliśmy już o atrybutach (np. 'Image, 'Value), tablice też mają swoje atrybuty, są one szczególnie przydatne do iterowania po tablicy
+\item Atrybut 'Range pozwala na uzyskanie zakresu indeksów tablicy
+\item Atrybuty 'First i 'Last pozwalają na uzyskanie pierwszego i ostatniego indeksu tablicy
+\item Atrybut 'Length daje dostęp do długości tablicy
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Atrybuty tablic]
+-- atrybut 'Range
+for I in Tab'Range loop
+   --          ^ Gets the range of Tab
+      Put (My_Int'Image (Tab (I)));
+   end loop;
+   
+-- ...
+-- atrybuty 'First i 'Last
+for I in Tab'First .. Tab'Last - 1 loop
+   --          ^ Iterate on every index except the last
+      Put (My_Int'Image (Tab (I)));
+   end loop;
+\end{lstlisting}
+
+
+\begin{itemize}
+\item Jedną z najpotężniejszych cech tablic w Adzie są tablice bez zdefiniowanego zakresu indeksów
+\item Ada pozwala na utworzeniu typu tablicowego bez określenia zakresu indeksów, zakres określany jest dla konkretnej instancji, przy deklaracji typu określamy tylko typ jaki będą miały indeksy
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Tablice bez okreslonych ograniczen]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Unconstrained_Array_Example is
+   type Days is (Monday, Tuesday, Wednesday,
+                 Thursday, Friday, Saturday, Sunday);
+
+   type Workload_Type is array (Days range <>) of Natural;
+   --  Indefinite array type
+   --                           ^ Bounds are of type Days,
+   --                             but not known
+
+   Workload : constant Workload_Type (Monday .. Friday) :=
+   --                                 ^ Specify the bounds
+   --                                   when declaring
+      (Friday => 7, others => 8); -- UWAGA: tak mozna ! 
+   --               ^ Default value
+   --  ^ Specify element by name of index
+begin
+   for I in Workload'Range loop
+      Put_Line (Integer'Image (Workload (I)));
+   end loop;
+end Unconstrained_Array_Example;
+\end{lstlisting}
+
+\ask{}{
+Omów tablice w Adzie.
+}
+
+\subsection{Kwantyfikatory}
+
+\begin{itemize}
+\item Kwantyfikatory to w Adzie konstrukcje językowe, które naśladują kwantyfikatory znane z matematyki - 'dla każdego', 'istnieje'
+\item Kwantyfikatory zwracają wartość typu \textit{Boolean}
+\item Kwantyfikator sprawdza dla każdego elementu tablicy czy dany warunek (predykat określony przez programistę) jest spełniony
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Przyklad kwantyfikatorow 'dla kazdego']
+-- ogolna forma kwantyfikatora 'dla kazdego' to:
+-- (forall Identyfikator in [reverse] 
+-- Definicja_Podtypu_Dyskretnego => Wyrazenie_Logiczne) 
+(forall I in A'First..(A'Last-1) => A(I)>=A(I+1) )
+-- lub dla kontenerow, tablic itp:
+-- (forall Identyfikator of [reverse] Kontener_lub_Tablica =>
+-- Wyrazenie_Logiczne) 
+(forall E of A => E>0.0 )
+\end{lstlisting}
+
+\begin{lstlisting}[language=Ada, caption=Przyklad kwantyfikatorow 'istnieje']
+-- ogolna forma kwantyfikatora 'istnieje' to:
+-- (forsome Identyfikator in [reverse] 
+-- Definicja_Podtypu_Dyskretnego => Wyrazenie_Logiczne) 
+(forsome I in A'Range => A(I) mod 2 =0) 
+-- lub dla kontenerow, tablic itp:
+-- (forsome Identyfikator of [reverse] 
+-- Kontener_lub_Tablica => Wyrazenie_Logiczne) 
+(forsome E of A => E=0.0 )
+\end{lstlisting}
+
+\ask{}{
+Omów kwantyfikatory w Adzie.
+}
+
+
+\subsection{Instrukcje sterujące}
+
+
+\begin{itemize}
+\item Instrukcja \textit{if-then-else-end if} działa tak samo jak w innych językach programowania, po \textit{if} następować musi wyrażenie, które daje w wyniku wartość logiczną. \textit{else} jest opcjonalne
+\begin{lstlisting}[language=Ada, caption=if-then-else-end if]
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+
+procedure Check_Positive is
+   N : Integer;
+begin
+   Put ("Enter an integer value: ");  -- Put a String
+   Get (N);  --  Reads in an integer value
+   Put (N);  --  Put an Integer
+   if N > 0 then
+      Put_Line (" is a positive number");
+   else
+      Put_Line (" is not a positive number");
+   end if;
+end Check_Positive;
+\end{lstlisting}
+
+\item Instrukcja \textit{if-then-elsif-...-elsif-end if} pozwala na zapisanie kilku warunków po sobie
+\begin{lstlisting}[language=Ada, caption=if-then-elsif-...-elsif-else-end if]
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+
+procedure Check_Direction is
+   N : Integer;
+begin
+   Put ("Enter an integer value: ");  -- Puts a String
+   Get (N);  --  Reads an Integer
+   Put (N);  --  Puts an Integer
+   if N = 0 or N = 360 then
+      Put_Line (" is due east");
+   elsif N in 1 .. 89 then -- zwrocmy uwage na sprawdzanie zakresem !
+      Put_Line (" is in the northeast quadrant");
+   elsif N = 90 then -- uzywamy jednego znaku = do porownywania !
+      Put_Line (" is due north");
+   elsif N in 91 .. 179 then
+      Put_Line (" is in the northwest quadrant");
+   elsif N = 180 then
+      Put_Line (" is due west");
+   elsif N in 181 .. 269 then
+      Put_Line (" is in the southwest quadrant");
+   elsif N = 270 then
+      Put_Line (" is due south");
+   elsif N in 271 .. 359 then
+      Put_Line (" is in the southeast quadrant");
+   else
+      Put_Line (" is not in the range 0..360");
+   end if;
+end Check_Direction;
+\end{lstlisting}
+
+\item pętla \textit{for} tak jak w innych językach pozwala na wielokrotne wykonywanie tego samego kodu, liczba iteracji określana jest poprzez zakres
+\begin{lstlisting}[language=Ada, caption=Podstawowa petla for]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet_5a is
+begin
+   for I in 1 .. 5 loop
+      Put_Line ("Hello, World!" & Integer'Image (I)); --  Procedure call
+      --        ^ Procedure parameter
+   end loop;
+end Greet_5a;
+\end{lstlisting}
+
+\item \textit{reverse for} pozwala na iterowanie po indeksach w kolejności odwrotnej niż określona
+\begin{lstlisting}[language=Ada, caption=reverse for]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet_5a_Reverse is
+begin
+   for I in reverse 1 .. 5 loop
+      Put_Line ("Hello, World!" & Integer'Image (I));
+   end loop;
+end Greet_5a_Reverse;
+\end{lstlisting}
+
+\item pętla \textit{while}
+
+\begin{lstlisting}[language=Ada, caption=while]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Greet_5c is
+   I : Integer := 1;
+begin
+   --  Condition must be a Boolean value (no Integers).
+   --  Operator "<=" returns a Boolean
+   while I <= 5 loop
+      Put_Line ("Hello, World!" & Integer'Image (I));
+
+      I := I + 1;
+   end loop;
+end Greet_5c;
+\end{lstlisting}
+
+
+\end{itemize}
+
+\ask{}{
+Omów instrukcje sterujące w Adzie.
+}
+
+
+
+
+\subsection{Definicje i zastosowania pojęć jak: atrybuty, agregaty, aspekty, pragmy, wyróżniki}
+
+\subsubsection{Atrybuty}
+
+Atrybuty są częścią typów, obiektów, podprogramów i pozwalają na uzyskanie informacji lub wykonanie operacji na danym obiekcie. Do atrybutów odwołujemy się umieszczając po nazwie zmiennej pojedynczy apostrof, a po nim nazwę atrybutu. \\
+Najczęściej używane atrybuty to \textit{'Image} oraz \textit{'Value}, które pozwalają na konwersję zmiennych różnego typu na typ \textit{String} i odwrotnie:
+
+\begin{lstlisting}[language=Ada, caption='Value i 'Image]
+declare 
+	A: Integer := 99;
+begin
+	Put_Line(Integer'Image(A));
+	A := Integer'Value("99");
+end;
+\end{lstlisting}
+Atrybutów można również używać z zadeklarowanymi zmiennymi. Można także pisać w skrócie \textit{Img} zamiast \textit{Image}.
+
+\ask{}{
+Czym są i do czego służą atrybuty ?
+}
+
+\subsubsection{Agregaty}
+Patrz -> Rekordy
+
+\subsubsection{Pragmy, Aspekty}
+Generalnie to instrukcje dla kompilatora, nie będziemy ich tu jednak zgłębiać.
+
+\subsection{Wskaźniki i ich rodzaje. Element listy. Wskaźniki do podprogramów.}
+
+W Adzie mamy dwa rodzaje wskaźników
+\begin{itemize}
+\item ograniczony - do obsługi dynamicznych struktur danych, np. list, drzew, grafów
+\begin{lstlisting}[language=Ada]
+type Nazwa_Typu_Wskaznikowego is access Wskazanie_Podtypu;
+% np.
+type Wsk_Int is access Integer;
+\end{lstlisting}
+\item ogólny - wskazują na zadeklarowane obiekty lub podprogramy
+\begin{lstlisting}[language=Ada]
+type Nazwa_Typu is access constant Typ;
+% np.
+type Wsk_St_Integer is access constant Integer;
+\end{lstlisting}
+\end{itemize}
+
+\begin{itemize}
+\item W Adzie możliwe jest korzystanie ze wskaźników do obiektów, które są tym czym są wskaźniki w innych językach programowania, np. C++
+\item Aby móc utworzyć wskaźnik do danego typu, musimy utworzyć nowy typ, który będzie typu \textit{Access}, a następnie podajemy do jakiego typu ma on być wskaźnikiem
+\item \textit{Access} to ogólny typ, który sygnalizuje, że zmienna jest wskaźnikiem, następie podajemy do jakiego typu ma ona być wskaźnikiem
+\item \textit{Access} (wskaźnik) może zostać zdefiniowany w kilku trybach (podobnie jak argument do funkcji), tryby te różnią się tym czy wskaźnik może być modyfikowany czy nie
+\item Tryb \textit{all} to tryb, który pozwala zarówno na odczyt jak i zapis do zmiennej wskaźnikowej
+\end{itemize} 
+
+\ask{}{
+Jakie są rodzaje wskaźników w Adzie i jak je zapisujemy w kodzie ? Czym są tryby wskaźników w Adzie i jak je oznaczamy w kodzie ?
+}
+
+Przykład
+\begin{lstlisting}[language=Ada, caption=Tworzenie wskaznikow w Adzie]
+-- definiujemy nowy typ ktory jest obiektem
+type Element is 
+  record 
+    Data : Integer := 0;
+    Next : access Element := Null;
+  end record; 
+ 
+-- definiujemy nowy typ, ktory jest wskaznikiem do naszego typu
+-- wskaznik ten jest zdefiniowany w trybie all 
+type Elem_Ptr is access all Element; 
+\end{lstlisting}
+
+\subsubsection{new keyword}
+
+\begin{itemize}
+\item W Adzie możliwe jest tworzenie obiektów recordów przy użyciu słowa kluczowego \textbf{new}
+\item Taka instrukcja zwraca wskaźnik do nowo utworzonego obiektu i może zostać przypisana do zmiennej wskaźnikowej
+\end{itemize}
+Przykład
+\begin{lstlisting}[language=Ada, caption=Uzycie slowa new]
+with Dates; use Dates;
+
+package Access_Types is
+    type Date_Acc is access Date;
+
+    D : Date_Acc := new Date;
+    --              ^ Allocate a new Date record
+end Access_Types;
+\end{lstlisting}
+
+\begin{itemize}
+\item Możliwe jest też zainicjalizowanie obiektu przy jego tworzeniu
+\end{itemize} 
+\begin{lstlisting}[language=Ada, caption=Uzycie slowa new]
+with Dates; use Dates;
+
+package Access_Types is
+   type Date_Acc is access Date;
+   type String_Acc is access String;
+
+   D   : Date_Acc   := new Date'(30, November, 2011);
+   Msg : String_Acc := new String'("Hello");
+end Access_Types;
+\end{lstlisting}
+
+\subsubsection{Dereferencja wskaźników}
+\begin{itemize}
+\item Dereferencje całego obiektu można uzyskać stosując składnie \textit{.all}
+\item Jeśli chcemy uzyskać dostęp do jednego z atrybutów wystarczy zapisać jego nazwę po kropce
+\end{itemize}
+
+Przykład
+\begin{lstlisting}[language=Ada, caption=Dereferencja]
+with Dates; use Dates;
+
+package Access_Types is
+   type Date_Acc is access Date;
+
+   D     : Date_Acc := new Date'(30, November, 2011);
+
+   Today : Date := D.all;
+   --              ^ Access value dereference
+   J     : Integer := D.Day;
+   --                 ^ Implicit dereference for record and array components
+   --                 Equivalent to D.all.day
+end Access_Types;
+\end{lstlisting}
+
+\subsection{Pakiety}
+
+\begin{itemize}
+\item Pomimo, że Ada pozwala na definiowanie wszystkich funkcji, procedur i typów w jednym pliku, nie jest to oczywiście dobre rozwiązanie gdy mamy napisać większą aplikację
+\item Podział programów na pakiety w Adzie jest tak prosty, że aż zęby bolą
+\item Nowy pakiet definiujemy przy użyciu słowa package na początku pliku
+\item Pakiet importujemy przy użyciu słowa with na początku pliku
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=Definicja pakietu - plik week.ads]
+package Week is -- Zwroc uwage na rozszerzenie pliku ! Potem to wyjasnimy !
+
+   Mon : constant String := "Monday";
+   Tue : constant String := "Tuesday";
+   Wed : constant String := "Wednesday";
+   Thu : constant String := "Thursday";
+   Fri : constant String := "Friday";
+   Sat : constant String := "Saturday";
+   Sun : constant String := "Sunday";
+
+end Week; 
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Ada, caption=Uzycie pakietu]
+with Ada.Text_IO; use Ada.Text_IO;
+with Week;
+--  References the Week package, and adds a dependency from Main
+--  to Week
+
+procedure Main is
+begin
+   Put_Line ("First day of the week is " & Week.Mon);
+end Main;
+\end{lstlisting}
+
+\begin{itemize}
+\item korzystając z \textit{use} można używać zmiennych i funkcji bez nazw kwalifikowanych
+\item Plik .ads służy tylko do tworzenia deklaracji, definicje tych deklaracji umieszczamy w pliku o takiej samej nazwie, ale z rozszerzeniem normalnym dla Ady, czyli \textit{.adb}
+\item W pliku w który znajdują się definicje używamy słowa kluczowego \textit{body} na początku pliku, patrz przykłady poniżej
+\end{itemize}
+
+\begin{lstlisting}[language=Ada, caption=operations.ads]
+package Operations is
+
+   --  Declaration
+   function Increment_By
+     (I    : Integer;
+      Incr : Integer := 0) return Integer;
+
+   function Get_Increment_Value return Integer;
+
+end Operations;
+\end{lstlisting}
+
+\begin{lstlisting}[language=Ada, caption=operations.adb]
+package body Operations is -- UWAGA: musi byc body !
+
+   Last_Increment : Integer := 1; -- Do tej zmiennej nie ma dostepu program
+								  -- ktory importuje ten pakiet !!!
+   function Increment_By
+     (I    : Integer;
+      Incr : Integer := 0) return Integer is
+   begin
+      if Incr /= 0 then
+         Last_Increment := Incr;
+      end if;
+
+      return I + Last_Increment;
+   end Increment_By;
+
+   function Get_Increment_Value return Integer is
+   begin
+      return Last_Increment;
+   end Get_Increment_Value;
+
+end Operations;
+\end{lstlisting}
+
+\begin{lstlisting}[language=Ada, caption=Uzycie pakietu operations]
+with Ada.Text_IO; use Ada.Text_IO;
+with Operations;
+
+procedure Main is
+   use Operations;
+
+   I : Integer := 0;
+   R : Integer;
+
+   procedure Display_Update_Values is
+      Incr : constant Integer := Get_Increment_Value;
+   begin
+      Put_Line (Integer'Image (I)
+                & " incremented by " & Integer'Image (Incr)
+                & " is "             & Integer'Image (R));
+      I := R;
+   end Display_Update_Values;
+begin
+   R := Increment_By (I);
+   Display_Update_Values;
+   R := Increment_By (I);
+   Display_Update_Values;
+
+   R := Increment_By (I, 5);
+   Display_Update_Values;
+   R := Increment_By (I);
+   Display_Update_Values;
+
+   R := Increment_By (I, 10);
+   Display_Update_Values;
+   R := Increment_By (I);
+   Display_Update_Values;
+end Main;
+\end{lstlisting}
+
+\begin{itemize}
+\item Jeśli chcemy skompilować program składający się z wielu modułów korzystamy z narzędzia \textit{gnatmake}
+\item Jako argument dla tej komendy przekazujemy nazwę pliku z plikiem, który zawiera główną procedurę
+\item Narzędzie samo znajduje wszystkie potrzebne dependencje, kompiluje je i linkuje więc w wyniku dostajemy wykonywalny program o nazwie takiej jak plik z rozszerzeniem .adb
+\end{itemize}
+
+\ask{}{
+Omów pakiety w Adzie.
+}
+
+\subsection{Wyjątki}
+
+W Adzie mamy dwa rodzaje wyjątków:
+\begin{itemize}
+\item wyjątki predefiniowane - udostępniane przez język w swoich pakietach
+\item wyjątki użytkownika - zadeklarowane przez programistę
+\end{itemize}
+
+Wyjątki zgłasza się przez użycie słowa kluczowego \textit{raise}:
+\begin{lstlisting}[language=Ada]
+raise [Nazwa_Wyjatku] [with Komunikat];
+raise Error;
+raise Pewien_Blad with "Komunikat o wyjatku";
+\end{lstlisting}
+Wyjątki obsługujemy w segmencie kodu o etykiecie \textit{exception}:
+\begin{lstlisting}[language=Ada]
+procedure Proc is
+begin
+-- tresc procedury
+exception
+when others => Put_Line("Blad w procedurze Proc");
+end Proc;
+\end{lstlisting}
+\ask{}{
+Omów wyjątki w Adzie.
+}
+
+\subsection{Zadania i typy zadaniowe. Tworzenie i kończenie zadań.}
+
+Zadania są tym w Adzie, co w Javie określamy wątkiem. Zadania definiujemy w programie z użyciem słowa kluczowego Task.  
+\begin{lstlisting}[language=Ada]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Show_Simple_Task is
+   task T;
+
+   task body T is
+   begin
+      Put_Line ("In task T");
+   end T;
+begin
+   Put_Line ("In main");
+end Show_Simple_Task;
+\end{lstlisting}
+Wątek jest uruchamiany w momencie uruchamiania procedury głównej programu, nie wymaga specjalnego uruchamiania w kodzie. Zadania kończy się gdy wykona wszystkie swoje instrukcje lub gdy zgłosi wyjątek lub gdy wykona się instrukcja terminate lub abort. \\
+
+Komunikacja w zadaniach odbywa się przez tzw. mechanizm \textit{randez-vous}. Task definiuje nazwę entry, a następnie w swoim ciele akceptuje tą nazwę, czyli czeka aż inny proces wywoła nazwę tego entry. Przykład
+
+\begin{lstlisting}[language=Ada]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Show_Rendezvous is
+
+   task T is
+      entry Start;
+   end T;
+
+   task body T is
+   begin
+      accept Start; -- Waiting for somebody to call the entry
+      Put_Line ("In T");
+   end T;
+
+begin
+   Put_Line ("In Main");
+   T.Start; --  Calling T's entry
+end Show_Rendezvous;
+\end{lstlisting}
+
+Można też zdefiniować wybór pomiędzy entries z użyciem pętli i select:
+\begin{lstlisting}[language=Ada]
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Show_Rendezvous_Loop is
+
+   task T is
+      entry Reset;
+      entry Increment;
+   end T;
+
+   task body T is
+      Cnt : Integer := 0;
+   begin
+      loop
+         select
+            accept Reset do
+               Cnt := 0;
+            end Reset;
+            Put_Line ("Reset");
+         or
+            accept Increment do
+               Cnt := Cnt + 1;
+            end Increment;
+            Put_Line ("In T's loop (" & Integer'Image (Cnt) & ")");
+         or
+            terminate;
+         end select;
+      end loop;
+   end T;
+
+begin
+   Put_Line ("In Main");
+
+   for I in 1 .. 4 loop
+      T.Increment; --  Calling T's entry multiple times
+   end loop;
+
+   T.Reset;
+   for I in 1 .. 4 loop
+      T.Increment; --  Calling T's entry multiple times
+   end loop;
+
+end Show_Rendezvous_Loop;
+\end{lstlisting}
+
+Można też zastosować instrukcję select z dozorami:
+\begin{lstlisting}[language=Ada]
+select
+	when Warunek1 =>
+		accept We1 do
+		-- instrukcje
+		end We1;
+		-- instrukcje
+		or
+	when Warunek2 =>
+		accept We2 do
+		-- instrukcje
+		end We2;
+		-- instrukcje
+end select;
+\end{lstlisting}
+
+\ask{}{
+Jak realizowana jest wielowątkowość w Adzie ?
+}
+
+\subsection{Zmienne dzielone}
+To zmienne, które wykorzystywane są przez dwa lub więcej zadań. Bezpieczny dostęp do takiej zmiennej zapewniamy w Adzie dodając do niej pragmę \textit{atomic}. 
+
+
+\begin{lstlisting}[language=Ada]
+procedure Zadania is
+	Koniec: Boolean := False
+		with Atomic;
+		
+task Zadanie1;
+task Zadanie2;
+task body Zadanie1 is
+	begin
+		loop
+			exit when Koniec;
+			...
+			end loop;
+end Zadanie1; 
+
+task body Zadanie2 is
+	begin
+		loop
+			exit when Koniec;
+			...
+		end loop;
+end Zadanie2;
+
+begin -- procedury
+...
+Koniec := True;
+end Zadania;
+\end{lstlisting}
+
+\ask{}{
+Omów realizację zmiennych dzielonych w Adzie.
+}
+
+\subsection{Obiekt chroniony}
+
+Obiekt chroniony jest konstrukcją języka Ada. Bazuje na dwóch pojęciach:
+\begin{itemize}
+\item sekcja krytyczna
+\item warunkowy rejon krytyczny
+\end{itemize}
+Obiekt chroniony zawiera w sobie operacje i dane. Tylko do operacji jest dostęp z zewnątrz. Operacje wykonują się z wzajemnym wykluczaniem. 
+Obiekty chronione używane są do asynchronicznej komunikacji. W Adzie obiekty chronione oznaczamy słowem kluczowym \textit{protected}.
+
+\ask{}{
+Omów obiekty chronione w Adzie. 
+}
+
+\newpage
+\section{Wiedza ogólna}
+
+\subsection{Proces i jego stany. Szeregowanie. Przeplot. Priorytety.}
+\begin{itemize}
+\item Program definiujemy jako ciąg instrukcji dla maszyny (pojęcie statyczne). Natomiast proces możemy utożsamiać z programem, który jest wykonywany na danej maszynie (pojęcie dynamiczne). Proces ma swój własny oddzielny obszar pamięci niezależny od innych procesów.
+\item Obsługą procesów zajmuje się program szeregujący (część systemu operacyjnego)
+\item Możliwe stany procesu (wersja minimalna):
+\begin{itemize}
+\item gotowy - czeka na przydział procesora
+\item aktywny - wykonywany przez procesor
+\item zawieszony - oczekuje na spełnienie swoich żądań
+\end{itemize}
+\end{itemize}
+
+\ask{}{
+Opisz czym jest proces i jakie może mieć stany.
+}
+
+Szeregowanie polega na przydziale procesora do procesów. Tą czynnością zajmuje się program systemu operacyjnego nazywany scheduler. Program ten przydziela procesy do procesora według pewnego przyjętego algorytmu. \\
+Szeregowanie z wywłaszczaniem to takie w którym scheduler decyduje kiedy dany proces zostanie przełączony, a bez wywłaszczania to sytuacja w której to proces informuje system operacyjny, że chce uzyskać dostęp do procesora. Większość współczesnych systemów opiera się o szeregowanie z wywłaszczaniem. 
+
+\ask{}{
+Opisz czym jest szeregowanie. Jakie znasz dwa rodzaje ?
+}
+
+
+Przeplot to technika umożliwiająca wirtualną realizację równoległości. Jeśli mamy do dyspozycji tylko jeden procesor, to równoległe wykonywanie na nim wielu procesów nie jest możliwe, dlatego stosuje się szybkie zmiany wykonywanego procesu na procesorze, czyli właśnie tzw. przeplot. 
+
+\ask{}{
+Opisz czym jest przeplot.
+}
+
+Priorytety określają względną ważność procesu. Priorytet wykorzystywany jest w algorytmie szeregowania przez system operacyjny. Priorytet może być:
+\begin{itemize}
+\item statyczny - wartość nadana początkowo nie zmienia się
+\item dynamiczny - wartość priorytetu może zmieniać się w trakcie wykonywania procesu
+\end{itemize}
+
+\ask{}{
+Opisz czym są priorytety i jakie znasz ich rodzaje. 
+}
+
+
+\subsection{Współbieżność a równoległość.}
+
+Jaka jest różnica ? 
+\begin{itemize}
+\item równoległość - oznacza wykonywanie wielu procesów jednocześnie w tym samym czasie
+\item współbieżność - oznacza, że jeden proces rozpoczyna się przed zakończeniem drugiego, ale nie są one wykonywane jednocześnie, takie podejście wymaga przeplotu
+\item (bonus) przetwarzanie rozproszone -  informacja jest obrabiana jednocześnie przez wiele komputerów (procesorów), rozmieszczonych terytorialnie i połączonych ze sobą w sieć. Wykonują one osobno poszczególne etapy zadania i odsyłają wyniki do jednego wspólnego centrum nadzoru.
+\end{itemize}
+
+\ask{}{
+Omów różnicę pomiędzy współbieżnością, a równoległością. 
+}
+
+
+\subsection{Wzajemne wykluczanie. Sekcja krytyczna.}
+
+Sekcja krytyczna to niepodzielny ciąg instrukcji, wykonywany w tym samym czasie tylko przez jeden proces czyli z wzajemnym wykluczaniem.
+
+\ask{}{
+Omów czym jest sekcja krytyczna i wzajemne wykluczanie.
+}
+
+
+\subsection{Metody synchronizacji i komunikacji procesów, w tym semafory, komunikaty, monitory, spotkania.}
+
+Zacznijmy od tego czym w ogóle jest synchronizacja i komunikacja procesów:
+\begin{itemize}
+\item synchronizacja - zapewnienie wymagań kolejnościowych, proces, który ma coś zrobić wcześniej zrobi to wcześniej 
+\item komunikacja - przesyłanie danych pomiędzy procesami, komunikacja może być synchroniczna lub asynchroniczna
+\end{itemize}
+
+Omówimy sobie teraz kilka mechanizmów służących do synchronizacji i komunikacji procesów.
+
+\begin{itemize}
+\item Zmienne dzielone - to jedna z najprostszych metod komunikacji procesów, polega na dostępie do tej samej zmiennej przez kilka procesów, operacje wykonywane na tej zmiennej powinny być atomowe
+\item Semafory - semafor to zazwyczaj liczba całkowita o wartościach nieujemnych, która zmienia swój stan w zależności od tego czy dana sekcja programu jest wykonywana przez jakiś proces, semafor ogranicza liczbę procesów, które mogą wykonywać daną część programu, inne procesy muszą czekać aż zmienna zmieni swój stan na taki, który pozwoli na dostęp 
+\item Monitor - obiekt, zawierający wykluczające się procedury, tzn. tylko jedna z procedur może być wykonywana w danym momencie czasu 
+\end{itemize}
+
+Spotkania omówimy sobie w następnym podrozdziale.
+
+\ask{}{
+Omów podstawowe metody komunikacji i synchronizacji procesów.
+}
+
+\subsection{Spotkania i ich rodzaje.}
+Mechanizm synchronizacyjny udostępniany przez Adę to tzw. spotkania albo randki. W spotkaniu uczestniczą dwa (lub więcej) procesy, które w Adzie noszą nazwę zadań. Zacznijmy od omówienia randki między dwoma zadaniami. \\
+
+Spośród zadań uczestniczących w randce jedno jest zadaniem aktywnym, a drugie zadaniem pasywnym. Zadanie aktywne inicjuje randkę, ale w czasie jej trwania nie robi nic. Zadanie pasywne jest zadaniem, które udostępnia pewne wejścia. Wejścia te mogą być wywoływane przez zadanie aktywne, które chce zainicjować randkę. Gdy dojdzie do randki, zadanie pasywne zajmuje się jej obsługą, wykonując określony fragment programu, podczas gdy zadanie aktywne jest wstrzymywane w oczekiwaniu na zakończenie randki. \\
+
+Zadania w Adzie składają się z dwóch części. Pierwsza część to tzw. specyfikacja zadania. Specyfikacja określa jakie wejścia są udostępniane przez zadanie i jakie są ich argumenty. Właściwa treść zadania jest określona w osobnym fragmencie kodu. \\
+
+Spotkania w Adzie mogą być symetryczne lub asymetryczne.
+
+\ask{}{
+Omów spotkania i ich rodzaje.
+}
+
+\subsection{Komunikacja synchroniczna i asynchroniczna.}
+
+\begin{itemize}
+\item komunikacja synchroniczna - z komunikacją synchroniczną mamy do czynienia wtedy, gdy chcące się ze sobą skomunikować procesy są wstrzymywane do chwili, gdy komunikacja będzie się mogła odbyć.
+\item komunikacja asynchroniczna - komunikacja asynchroniczna nie wymaga współistnienia komunikujących się procesów w tym samym czasie. Polega na tym, że nadawca wysyła komunikat nie czekając na nic. Komunikaty są buforowane w jakimś miejscu (odpowiada za to system operacyjny lub mechanizmy obsługi sieci) i stamtąd pobierane przez odbiorcę.
+\end{itemize}
+
+\ask{}{
+Omów różnicę pomiędzy komunikacją synchroniczną, a asynchroniczną.
+}
+
+\subsection{Proces/wątek - podobieństwa i różnice.}
+Różnice:
+\begin{itemize}
+\item Wątki zostały zaprojektowane aby komunikować się ze sobą, a procesy działają w większości wypadków niezależnie
+\item Każdy proces ma własną przestrzeń pamięci, a wątki korzystają z zasobów procesu
+\item Kiedy kończy się proces umierają wszystkie wątki, ale koniec wątku nie oznacza końca procesu
+\item Wątki zawierają się w procesach
+\end{itemize}
+
+Podobieństwa:
+\begin{itemize}
+\item Zarówno wątki jak i procesy mają swoje id
+\item Wątki i procesy mają priorytety
+\item Możemy tworzyć procesy wewnątrz procesów, tak jak wątki wewnątrz wątków
+\end{itemize}
+
+\ask{}{
+Omów podobieństwa i różnice między wątkami, a procesami.
+}
+
+
+
+
+
+
+\end{document}

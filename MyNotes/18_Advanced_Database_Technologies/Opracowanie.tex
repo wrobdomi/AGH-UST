@@ -1,0 +1,1670 @@
+\documentclass[a4paper,15pt]{article}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[english, polish]{babel}
+\usepackage[utf8]{inputenc}   % lub utf8
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{anysize}
+\usepackage{enumerate}
+\usepackage{times}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage{titleps,kantlipsum}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{framed}
+\usepackage{tcolorbox}
+\lstloadlanguages{Matlab}
+\usepackage{listings}
+ 
+\usepackage[justification=centering]{caption}
+\titlelabel{\thetitle.\quad}
+
+\pagenumbering{arabic}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{%
+  \parbox{\textwidth}{\colorbox{darkgreen}{\parbox{\textwidth}{#1#2#3}}\vskip-4pt}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{frame=lrb,xleftmargin=\fboxsep,xrightmargin=-\fboxsep}
+
+% Definicja nowego stylu strony
+\newpagestyle{mypage}
+{
+  \headrule
+  
+  \sethead
+  { \MakeUppercase{\thesection\quad \sectiontitle} } 
+  {}
+  {\thesubsection\quad \subsectiontitle}
+  
+  \setfoot
+  {}
+  {}
+  {\thepage}
+}
+
+\newpagestyle{mypage_1}
+{
+	\headrule
+	
+	\sethead
+	{  }
+	{\MakeUppercase{Zaawansowane technologie bazodanowe - egzamin}}
+	{}
+	
+	\setfoot
+	{}
+	{\thepage}
+	{}
+}
+
+\settitlemarks{section,subsection,subsubsection}
+
+\pagestyle{mypage_1}
+
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mKeyword}{RGB}{0,0,242}
+\definecolor{backgroundColour}{RGB}{242,242,242}
+
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{mRed}{RGB}{234,67,53}
+\definecolor{mBlue}{RGB}{0,153,242}
+\definecolor{issueColor}{RGB}{0,51,102}
+
+\definecolor{darkred}{rgb}{0.9,0,0}
+\definecolor{grey}{rgb}{0.4,0.4,0.4}
+\definecolor{orange}{rgb}{1,0.6,0.05}
+\definecolor{darkgreen}{rgb}{0.2,0.5,0.05}
+
+\definecolor{commentColor}{RGB}{243,253,254}
+
+\newcommand{\definition}[2]{
+    \begin{tcolorbox}[colback=green!5!white,colframe=mGreen,title={Definicja -  #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\question}[2]{
+    \begin{tcolorbox}[colback=black!5!white,colframe=black,title={Zagadnienie #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\egz}[2]{
+    \begin{tcolorbox}[colback=mRed!5!white,colframe=mRed,title={Egzamin #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\example}[2]{
+    \begin{tcolorbox}[colback=blue!5!white,colframe=blue,title={Przykład #1}]
+        #2
+    \end{tcolorbox}
+}
+
+\newcommand{\issue}[2]{
+    \begin{tcolorbox}[colback=issueColor!5!white,colframe=issueColor,title={Pamiętaj #1}]
+        #2
+    \end{tcolorbox}
+}
+
+%\marginsize{left}{right}{top}{bottom}
+\marginsize{3cm}{3cm}{3cm}{3cm}
+\sloppy
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+ 
+
+
+
+\lstdefinestyle{Ada}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{commentColor},
+    keywordstyle=\color{mKeyword},
+	basicstyle=\color{black}\footnotesize,    
+    numberstyle=\tiny\color{mPurple},
+    stringstyle=\color{mPurple},
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+\lstset{style=Ada}
+
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{mKeyword},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    %captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+\lstdefinelanguage{JavaScript}{
+  commentstyle=\color{mGreen},
+  morekeywords=[1]{break, continue, delete, else, for, function, if, in,
+    new, return, this, typeof, var, void, while, with},
+  % Literals, primitive types, and reference types.
+  morekeywords=[2]{false, null, true, boolean, number, undefined,
+    Array, Boolean, Date, Math, Number, String, Object},
+  % Built-ins.
+  morekeywords=[3]{eval, parseInt, parseFloat, escape, unescape},
+  sensitive,
+  morecomment=[s]{/*}{*/},
+  morecomment=[l]//,
+  morecomment=[s]{/**}{*/}, % JavaDoc style comments
+  morestring=[b]',
+  morestring=[b]"
+}[keywords, comments, strings]
+
+\newcommand{\Hilight}{\makebox[0pt][l]{\color{cyan}\rule[-4pt]{0.65\linewidth}{14pt}}}
+
+\lstset{style=Ada}
+
+
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+
+\begin{document}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Opracowanie do egzaminu}} \\ \hline ZTB & 29 I 2020 & C2 s.224 10:00 \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+\section{Lista tematów}
+\begin{enumerate}
+\item CouchDB
+\item PostGIS
+\item Indeksy
+\item Postresql i xml
+\item ACID
+\item Neo4J i Cypher
+\end{enumerate}
+
+
+\section{CouchDB}
+
+Couch DB to rozwijany przez Fundację Apache wysokowydajny, nierelacyjny (NoSQL) silnik baz danych napisany w języku Erlang zorientowany na dokumenty. Udostępniony został na zasadach licencji Apache License 2.0. Dostęp do systemu realizuje się za pomocą API korzystającego z mechanizmu REST. \\
+
+Alternatywami dla systemu CouchDB są projekty Cassandra i MongoDB
+
+
+\subsection{Przechowywanie danych}
+
+W CouchDB serwer hostuje bazy danych, które zawierają w sobie dokumenty. Dokument jest podstawową jednostką danych w CouchDB. Składa się z dowolnej liczby pól i załączników. Pola to po prostu atrybuty, zapisywane tak jak w pliku JSON (klucz - wartość). O załącznikach możemy myśleć tak jak o załącznikach do email, są to po protu pliki, które dołączamy do dokumentu (np. image, video), z nich jednak nie będziemy raczej korzystać na egzaminie, ale dla kompletności o nich tutaj piszę. Każdy dokument ma nadawane przez bazę unikalne id (o ile nie określimy go sami). Struktura dokumentu odpowiada strukturze pliku typu JSON (klucz - wartość). \\
+
+Przykładowy dokument:
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"_id" : "bc2a41170621c326ec68382f846d5764",
+	"_rev" : "2612672603",
+	"item" : "apple",
+	"prices" : {
+		"Fresh Mart" : 1.59,
+		"Price Max" : 5.99,
+		"Apples Express" : 0.79
+	}
+}
+\end{lstlisting}
+
+Pole id to unikalne id nadane przez bazę, pole \_ rev służy do informowania czy dany dokument jest aktualny, omówimy go dokładniej później. \\
+
+Dokumenty możemy dodawać do bazy korzystając z HTTP i gotowych plików JSON. 
+
+\subsection{Komunikacja z bazą danych}
+
+Z bazą danych CouchDB komunikujemy się poprzez wysyłanie zapytań HTTP. CouchDB zapewnia obsługę API typu REST, dzięki czemu możemy wykonywać typowe zapytania typu GET, POST, PUT, DELETE. \\
+
+Do wysyłania zapytań najczęściej korzystamy z jakiegoś oprogramowania, najbardziej powszechnym w użyciu wydaje się tutaj CURL, ale możemy korzystać również z dowolnej innej alternatywy.
+
+\begin{lstlisting}[language=Ada, caption=Testowanie czy CouchDB dziala]
+curl http://nosql.kis.agh.edu.pl:5984/
+\end{lstlisting}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{"couchdb":"Welcome","version":"0.10.1"}
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Ada, caption=Tworzenie nowej bazy o nazwie dwrobel]
+curl -X PUT http://nosql.kis.agh.edu.pl:5984/dwrobel
+\end{lstlisting}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{"ok":true}
+\end{lstlisting}
+
+\subsection{Futon}
+
+Oczywiście wysyłanie zapytań do bazy danych jest bardzo ważne gdy komunikujemy się z bazą z poziomu naszego programu, jednak do celów administracyjnych mamy zapewniony interfejs graficzny dla CouchDB - Futon. Futon to interfejs, który jest wyświetlany w naszej przeglądarce:
+
+\begin{lstlisting}[language=Ada, caption=Przejscie do panelu administratora w przegladarce]
+http://nosql.kis.agh.edu.pl:5984/_utils/
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.4]{ZTB_1.png}
+  \caption{Interfejs graficzny do CouchDB - Futon}
+\end{figure}
+
+Przez ten interfejs możemy również tworzyć nowe bazy, dodawać dokumenty, ich pola, itd. 
+
+\subsection{Tworzenie zapytań - MapReduce}
+
+W tradycyjnej bazie danych SQL mamy możliwość odpytywania bazy danych przez tworzenie zapytań typu SELECT, stawiając odpowiednie warunki otrzymujemy określone dane. Jako, że CouchDB jest bazą NoSQL takie podejście nie jest możliwe. Alternatywą dla zapytań w CouchDB jest MapReduce. \\
+
+MapReduce to styl odpytywania bazy danych, który opiera się na dwóch funkcjach: \textit{map} i \textit{reduce}. Kombinacja funkcji \textit{map} i \textit{reduce} nazywana jest \textit{view} w terminologii CouchDB. Widoki mogą być tymczasowe lub zapisane na stałe. Zapisane na stałe przechowywane są w specjalnym typie dokumentów - \textit{design document}. Podczas rozwoju oprogramowania możemy korzystać z widoków tymczasowych, ale mogą być one o wiele wolniejsze dlatego finalnie należy przenieść widoki do \textit{design documents}. Najpierw omówimy sobie tworzenie \textit{temporary views}, a następnie ich zapisywanie w \textit{design documents}.  
+
+\issue{}{
+\textit{map} i \textit{reduce} to funkcje JavaScript, które są definiowane w \textit{view}. 
+}
+
+\subsubsection{Funkcja \textit{map}}
+Funkcja map jest wywoływana jeden raz dla każdego dokumentu. Funkcja może ominąć cały dokument lub wyemitować jedną lub więcej parę klucz-wartość. Funkcje map nie mogą polegać na żadnych informacjach, które znajdują się poza dokumentem. Dzięki temu mogą być wykonywane równolegle. \\
+
+\issue{}{
+Funkcja map służy do mapowania dokumentu z jego oryginalnej struktury na parę klucz-wartość. 
+}
+
+Przykład \\
+
+Mamy dany informacje o cenach jabłek, bananów i pomarańczy w naszej bazie danych:
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"_id" : "bc2a41170621c326ec68382f846d5764",
+	"_rev" : "2612672603",
+	"item" : "apple",
+	"prices" : {
+		"Fresh Mart" : 1.59,
+		"Price Max" : 5.99,
+		"Apples Express" : 0.79
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"_id" : "bc2a41170621c326ec68382f846d5764",
+	"_rev" : "2612672603",
+	"item" : "orange",
+	"prices" : {
+		"Fresh Mart" : 1.99,
+		"Price Max" : 3.19,
+		"Citrus Circus" : 1.09
+	}
+}
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"_id" : "bc2a41170621c326ec68382f846d5764",
+	"_rev" : "2612672603",
+	"item" : "banana",
+	"prices" : {
+		"Fresh Mart" : 1.99,
+		"Price Max" : 0.79,
+		"Banana Montana" : 4.22
+	}
+}
+\end{lstlisting}
+
+Funkcję \textit{map} tworzymy wybierając z interfejsu graficznego Futon \textit{temporary view}:
+\begin{lstlisting}[language=JavaScript, caption=Funkcja map emitujaca pary klucz:cena - wartosc: owoc sklep  ]
+function(doc) {
+	var store, price, value;
+	if (doc.item && doc.prices) {
+		for (store in doc.prices) {
+			price = doc.prices[store];
+			value = [doc.item, store];
+			emit(price, value);
+		}
+	}
+}
+\end{lstlisting}
+a następnie klikamy \textit{Run}, funkcja map zostanie wykonana na każdym z dokumentów. W trzeciej linijce sprawdzamy czy dokument zawiera pola item oraz prices. W 7 linijce emitujemy parę klucz - wartość.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_2.png}
+  \caption{Wynik działania \textit{map}}
+\end{figure}
+
+\issue{}{
+Argumentem funkcji \textit{map} jest obiekt JSON reprezentujący pojedynczy dokument.  
+}
+
+\issue{}{
+Funkcja \textit{emit} służy do emitowania par klucz-wartość, jej pierwszy argument to klucz, a drugi to wartość. 
+}
+
+Oczywiście funkcję \textit{map} możemy też wywołać poprzez wysłanie HTTP, wtedy wysyłamy JSON'a z polem o nazwie \textit{map}, które ma wartość ustawioną na ciało naszej funkcji.  \\
+
+Przykładowo wysyłając naszą funkcję map przez żądanie POST otrzymamy:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_3.png}
+  \caption{Wynik zapytania z funkcją \textit{map}}
+\end{figure}
+
+Zauważmy, że id jest zawsze emitowane, nawet jeśli tego nie zrobimy jawnie w kodzie. 
+
+
+\subsubsection{Funkcje \textit{reduce}}
+
+Funkcja \textit{map} produkuje wiersze z których każdy zawiera parę \textit{klucz-wartość}, te pary mogą zostać opcjonalnie zredukowane do pojedynczej wartości lub do grup wartości, właśnie do tego celu służy nam funkcja \textit{reduce}. 
+
+\issue{}{
+Krok (funkcja) \textit{reduce} jest opcjonalna i służy do:
+\begin{itemize}
+\item redukcji wszystkich wartości do jednej wartości lub
+\item redukcji do wartości pogrupowanych przez klucze 
+\end{itemize}
+} 
+
+CouchDB ma trzy wbudowane funkcje typu \textit{reduce}, są to: \textit{\_sum}, \textit{\_count}, \textit{\_stats}. Można również pisać swoje własne funkcje reduce, ale nie ma często takiej potrzeby.
+
+\begin{itemize}
+\item \textit{\_sum} - zwraca sumę wartości (tylko dla liczb)
+\item \textit{\_count} - zwraca liczbę wartości w zbiorze, zlicza również wartości null
+\item \textit{\_stats} - zwraca wartości statystyczne dla wartości numerycznych: \textit{sum, count, min, max}.
+\end{itemize}
+
+Przykład \\
+
+Mamy dane dokumenty z książkami:
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+	"_id":"978-0-596-52926-0",
+	"title":"RESTful Web Services",
+	"subtitle":"Web services for the real world",
+	"authors":[
+		"Leonard Richardson",
+		"Sam Ruby"
+	],
+	"publisher":"O'Reilly Media",
+	"released":"2007-05-08",
+	"pages":448
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+   "_id": "07909e1c065830be62e30169510f51a8",
+   "_rev": "1-ca7252e7a17b3b8eff123ca80ef5e974",
+   "title": "My Cool Book",
+   "subtitle": "Computer Science",
+   "authors": [
+       "Leo Book",
+       "Ruby Rail"
+   ],
+   "publisher": "Helion",
+   "released": "20010-05-08",
+   "pages": 345
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+   "_id": "07909e1c065830be62e30169510f5835",
+   "_rev": "1-1e05d2f9cadad03055d2b65699111aa5",
+   "title": "Java World",
+   "subtitle": "Java Language",
+   "authors": [
+       "Chris Java",
+       "Rob Compiler"
+   ],
+   "publisher": "Javadocs",
+   "released": "20015-05-08",
+   "pages": 231
+}
+\end{lstlisting}
+
+Wyślemy teraz zapytanie, które najpierw mapuje książki tak, że klucz jest formatem:
+
+\begin{lstlisting}[language=JavaScript]
+function(doc) {
+	if (doc.formats) 
+		{
+			for (var i in doc.formats) {
+				emit(doc.formats[i]);
+			}
+		}
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_4.png}
+  \caption{Wynik zapytania z funkcją \textit{map}}
+\end{figure}
+
+a następnie dodamy funkcję \textit{reduce}, która zliczy te wartości:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_5.png}
+  \caption{Wynik \textit{map} i \textit{reduce}}
+\end{figure}
+
+Jako, że w funkcja map zwróciła wszystkie wartości jako \textit{null}, a funkcja \_count zlicza również null otrzymaliśmy 6 jako wynik. Funkcja \_count zliczyła wszystkie 'wiersze'. \\
+
+A co jeśli chcielibyśmy wiedzieć ile książek jest w danym formacie ? \\
+
+Musimy wtedy zmodyfikować nasze zapytanie, ale nie przez modyfikację ciała JSON'a, ale przez dodanie parametru \textit{group} i ustawienie go na true: 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_6.png}
+  \caption{Dodanie parametru \textit{group} do zapytania.}
+\end{figure}
+
+Widzimy, że tym razem otrzymujemy redukcję do grup określonych przez klucze.  \\
+
+Analogicznie możemy korzystać z funkcji \_stats oraz \_sum, przykładowo dla \_stats:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_7.png}
+  \caption{Przykład dla \_stats}
+\end{figure}
+
+
+Możemy również pisać nasze właśnie funkcje \textit{reduce}, ale tam gdzie to tylko możliwe powinniśmy korzystać z funkcji wbudowanych. Szkielet naszej własnej funkcji \textit{reduce} wygląda następująco
+\begin{lstlisting}[language=JavaScript]
+function(keys, values, rereduce) {
+
+}
+\end{lstlisting}
+\begin{itemize}
+\item keys - tablica kluczy i dokumentów id, każdy z elementów tej tablicy jest w formie $[key,id]$, gdzie id to id dokumentu
+\item values - to tablica zawierająca zmapowane wartości
+\item rereduce - określa czy funkcja została wywołana poraz kolejny po tym jak dla wielkiego zbioru danych wywołano kilka funkcji reduce (to nam niewiele mówi, wyjaśnienia do tego pod spodem)
+\end{itemize}
+\textit{rereduce} jest ustawiane na \textit{true} lub \textit{false}. Chodzi o to, że funkcja \textit{map} może wyprodukować ogromną liczbę danych, wtedy optymalniej jest takie dane przetworzyć przez wiele funkcji \textit{reduce} równolegle, a na koniec skleić w całość i tak też zachowuje się CouchDB. Jeśli \textit{rereduce} jest ustawione na \textit{true} to znaczy, że mamy do czynienia z wywołaniem w którym musimy skleić wszystkie częściowe wartości, wtedy tablica \textit{keys} ustawiona jest na null, a tablica values zawiera częściowe wyniki wywołań reduce, które działały na częściowych danych. \\
+
+Dla zobrazowania tego zobaczymy jak będzie wyglądać implementacja funkcji \_count:
+
+\begin{lstlisting}[language=JavaScript]
+function(keys, values, rereduce) {
+	if (rereduce) {
+		return sum(values);
+	} else {
+		return values.length;
+	}
+}
+\end{lstlisting}
+Czyli jeśli jesteśmy już w kroku łączenia wyników częściowych \textit{reduce}, to sumujemy wszystkie wyniki, a jeśli jesteśmy w częściowym \textit{reduce}, to zwracamy długość tablicy values. \\
+
+Oczywiście funkcja reduce z parametrem rereduce ustawionym na true nie zawsze jest wywoływana, dzieje się to tylko gdy map wyprodukuje bardzo dużo danych. 
+
+
+\subsection{Design document}
+
+Wiemy już jak korzystać w naszej bazie z \textit{temporary views}, teraz chcielibyśmy móc zapisać nasze views w bazie tak aby były reużywalne. Do tego służą nam \textit{design documents}, czyli specjalny typ dokumentu przeznaczony na przetrzymywanie \textit{views}, dokument taki może przechowywać wiele \textit{views}. \\
+
+Design documents muszą mieć id, które będzie się zaczynało na \_design/nazwa ,przykładowo:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_8.png}
+  \caption{Design documents i zwykłe dokumenty w bazie CouchDB}
+\end{figure}
+
+Design documents tworzymy tak samo jak temporary views, z tą różnicą, że teraz je zapisujemy. Możemy to zrobić przez interfejs graficzny lub przez HTTP, w wyniku otrzymujemy dokument, który zawiera tablicę views, przykładowo:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_9.png}
+  \caption{Design document}
+\end{figure}
+
+Następnie możemy wyświetlić wynik wybranego przez nas \textit{view} z tego dokumentu przez zapytanie:
+
+\begin{lstlisting}[language=Ada, caption=Testowanie design documents]
+curl http://nosql.kis.agh.edu.pl:5984/dwrobel/_design/letters/_view/countLetters
+\end{lstlisting}
+
+
+
+\subsection{Zadania z poprzednich lat}
+
+\egz{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_10.png}
+\end{figure}
+}
+
+\begin{lstlisting}[language=JavaScript]
+// map
+function(doc){
+	if(!doc.uszkodzona && doc.wydruki){
+		emit(doc.typ, doc.wydruki)
+	}
+}
+
+// reduce
+function(keys, values, rereduce) {
+	
+	// sytuacja gdy jedna funkcja przetwarza WSZYSTKIE dane
+	if(!rereduce){
+	
+		valuesLength = values.length;
+		valuesAvg = sum(values) / valuesLength;	
+		return [valuesAvg, valuesLength];
+	}
+
+	// sytuacja gdy kilka funkcji rownolegle przetworzylo czesci danych 
+	if(rereduce) {
+		var allLength = sum(values.map(function(v){return v[1];}));
+		var allAvg = sum(values.map(function(v){return v[0]*(v[1]/allLength);}));
+		return [allAvg, allLength];
+
+	}
+
+}
+\end{lstlisting}
+
+\newpage
+\section{PostGIS}
+
+PostGIS to rozszerzenie geograficzne bazy PostgreSQL, które daje możliwość zapisywanie danych geograficznych wprost do bazy danych.
+
+\subsection{Typy przestrzenne w PostGIS}
+
+Rozszerzenie PostGIS wprowadza do naszej bazy możliwość używania nowych typów, które dedykowane są do przechowywania danych przestrzennych. Są cztery główne typy danych:
+\begin{itemize}
+\item \textit{Geometry} - najbardziej popularny model, opiera się na współrzędnych kartezjańskich, jest podstawą dla innych modeli
+\item \textit{Geography} - typ sferyczny, linie i wielokąty są rysowane na zakrzywionej powierzchni, co odzwierciedla rzeczywisty kształt ziemi  
+\end{itemize}
+O dwóch ostatnich typach tylko sobie wspomnimy, nie są one tak powszechne jak dwa pierwsze:
+\begin{itemize}
+\item \textit{Raster} - siatka prostokątnych komórek
+\item \textit{Topology} - modeluje świat jako sieć powiązanych węzłów, krawędzi i powierzchni
+\end{itemize}
+Wszystkie te typy możemy oczywiście przechowywać razem w bazie danych, możemy je także przechowywać w różnych kolumnach tej samej tabeli.
+
+\issue{}{
+Dwa najczęściej używane w PostGIS typy danych to \textit{geometry} i \textit{geography}. \textit{geometry} modeluje dane w dwóch wymiarach według współrzędnych kartezjańskich (wada: płaska ziemia, zaleta: szybkość obliczeń). \textit{geography} modeluje dane w trzech wymiarach według współrzędnych sferycznych (wada: wolne obliczenia, zaleta: dokładność reprezentacji) 
+}
+
+UWAGA: Sam PostgreSQL (bez PostGIS) również miał od początku wbudowane typy przestrzenne: \textit{point, polygon, lseg, box, circle, i path}. Nie są one jednak praktyczne, ponieważ praktycznie brak jest dla nich wsparcia w narzędziach do wizualizacji danych, zostały więc prawie całkowicie wyparte przez typy PostGIS. 
+
+\subsubsection{Hierarchiczna budowa typów w PostGIS}
+W PostGIS typy przestrzenne mają swoje podtypy, możemy o tym myśleć tak jak o dziedziczeniu w programowaniu, do klasy bazowej możemy przypisywać dowolny z jej podtypów, analogicznie jest w PostGIS. \\
+
+Typy \textit{geometry} i \textit{geography} mają swoje podtypy. Jeśli w bazie danych mamy kolumnę typu \textit{geometry}, to możemy do niej wstawić dane o dowolnym z podtypów dla \textit{geometry}, analogicznie dla \textit{geography}. Możemy także utworzyć kolumnę, która stricte określa typ jako jeden z podtypów \textit{geometry}. 
+
+\issue{}{
+W PostGIS typy mają strukturę hierarchiczną, najbardziej ogólne typy to \textit{geometry} i \textit{geography}. Do kolumn o tych typach można wstawiać dane o dowolnym z podtypów dla typu kolumny.
+} 
+
+\subsection{\textit{Geometry} i podtypy}
+Typ \textit{Geometry} służy do reprezentowania obiektów w dwóch wymiarach, traktuje świat jako płaską siatkę współrzędnych kartezjańskich, tak jak robimy to na mapach. Model ten jest intuicyjny i łatwo na nim wykonywać obliczenia, ale ma jedną poważną wadę, którą jest płaska ziemia. \\
+
+\textit{Geomtry} ma wiele podtypów, do najbardziej popularnych należą:
+\begin{itemize}
+\item \textit{POINT} - reprezentacja pojedynczego punktu
+\item \textit{LINESTRING} - reprezentacja linii, ścieżki 
+\item \textit{POLYGON} - reprezentacja wielokątu
+\end{itemize}
+
+Istnieją również podtypy dla tych podtypów, przykładowo \textit{POINT} ma podtypy, które umożliwają dodanie trzeciego wymiaru:
+\begin{itemize}
+\item \textit{POINT} - 2D
+\item \textit{POINTZ} - 3D
+\item \textit{POINTM} - 2D z miarą
+\item \textit{POINTZM} - 3D z miarą
+\end{itemize}
+Dla nas jednak wystarczą tylko te podstawowe podtypy, warto jednak pamiętać, że na tym hierarchia się nie kończy. 
+
+
+\subsubsection{\textit{POINT}}
+
+Służy do reprezentacji pojedynczego punktu na mapie, składa się z dwóch współrzędnych (dla punktu w 2D).
+
+\example{- Deklaracja typu dla kolumny: \textit{geometry} z podtypem \textit{POINT}}{
+$geometry(POINT,4326)$ \\
+\begin{itemize}
+\item \textit{geometry} - typ danych
+\item \textit{POINT} - podtyp
+\item \textit{4326} - SRID (o tym później)
+\end{itemize}
+}
+
+\example{- utworzenie bazy danych z typem geometry(POINT, 4326)}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_13.png}
+\end{figure}
+Przykład z projektu:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_14.png}
+\end{figure}
+}
+
+\example{Wstawianie danych}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.45]{ZTB_19.png}
+\end{figure}
+}
+Korzystamy tu z funkcji ST\_GeomFromText, patrz rozdział \textit{Funkcje PostGIS}.
+
+
+\subsubsection{\textit{LINESTRING}}
+Służy do reprezentacji ciągu punktów, które są ze sobą pod pewnym względem spójne, przykładowo, rzeki, ulice, trasy, rury itp.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_20.png}
+  \caption{Geometria typu Linestring}
+\end{figure}
+
+\example{- \textit{LINESTRING}}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_21.png}
+\end{figure}
+}
+
+
+\subsubsection{\textit{POLYGON}}
+
+To typ, który jest podobny do zamkniętego \textit{LINESTRING} (takiego, który ma punkt startowy taki jak końcowy), z tą różnicą, że tutaj, cała przestrzeń wewnątrz \textit{POLYGON} uznawana jest jako jego część. Granice \textit{POLYGON} określane są w terminologii PostGIS terminem \textit{ring}. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_22.png}
+  \caption{Geometria typu Polygon}
+\end{figure}
+
+\example{- \textit{POLYGON}}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_23.png}
+\end{figure}
+}
+
+\textit{POLYGON} może być również reprezentowany jako kilka zamkniętych \textit{LINESTRING}, wtedy, pierwszy z nich określa zewnętrzne granice (outer ring), a każdy kolejny wycina z niego skrawek (inner ring).
+
+\example{- \textit{POLYGON}}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_24.png}
+\end{figure}
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_25.png}
+\end{figure}
+}
+
+\subsection{SRID}
+SRID to skrót od \textit{Spatial Reference ID}, czyli id jednego z \textit{Spatial Reference System} (układu współrzędnych). \\
+
+Chodzi o to, że w zależności od tego jaki obszar przyjmiemy do analizy przestrzennej, nasze współrzędne będą się różnić. Przykładowo jeśli ujmiemy na mapie całą ziemię i utworzymy dla takiej reprezentacji układ współrzędnych, to będzie on mniej dokładny niż gdybyśmy analizowali tylko i wyłącznie sam obszar Polski. \\
+
+Powszechnie stosowanym układem jest tzw. WGS 84, dla którego SRID to 4326, a więc ten który stosowaliśmy w przykładzie. Układ ten obejmuje obszarem cały glob, ale jest najmniej dokładny. Jest to układ odniesienia, który bazuje na stopniach (długość i szerokość geograficzna) i chyba jest on każdemu znany z geografii. Co ważne, układ ten jest podstawą dla typu \textit{Geography}, który zakłada, że wszystkie dane są zapisane w tym układzie. \\
+
+Najważniejsze jest jednak dla nas, że aby móc obliczać relacje pomiędzy dwoma obiektami, przykładowo odległość pomiędzy dwoma punktami, musimy mieć dwa obiekty o współrzędnych z tym samym SRID. Dlatego przed wykonaniem takich operacji musimy zawsze się upewnić, że operujemy na danych o tym samym SRID, ewentualnie zastosować konwersję na wybrany SRID. 
+
+\issue{ - obliczanie relacji a SRID}{
+Jeśli dwa różne obiekty przestrzenne mają to samo SRID, wtedy możemy obliczyć relację pomiędzy nimi (np. odległość, zawieranie w sobie). Jeśli mamy do czynienia z dwoma różnymi SRID, ale są one nam znane, to możemy wykonać konwersję jednego z nich tak aby do siebie pasowały.  
+}
+
+Po zainstalowaniu PostGIS w naszej bazie, mamy automatycznie dodawaną tabelę z dostępnymi SRS:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_15.png}
+  \caption{Tabela z SRS w PostGis.}
+\end{figure}
+
+
+
+
+\subsection{Typ \textit{Geography} i podtypy}
+Kiedy mamy do zamodelowania obiekty, które są od siebie bardzo oddalone geograficznie, często konieczne jest wzięcie pod uwagę krzywizny ziemi, w takich przypadkach korzystamy z typu \textit{Geography}. Przykładowo dla modelowania tras lotów pasażerskich oczywistym wyborem jest typ \textit{Geography}. Dokładniejszą reprezentację dostajemy kosztem dłuższego czasu obliczeń, który jest spowodowany bardziej złożoną matematyką dla tego modelu. \\
+
+\issue{}{
+Typ \textit{geography} zakłada, że dane są przechowywane w układzie WGS 84 (długość i szerokość geograficzna). Jeśli nie określimy żadnego układu dla \textit{geography}, to defaultowo przyjęty zostanie WGS84.
+}
+
+
+Struktura podtypów dla \textit{geography} imituje tą dla \textit{geometry} dlatego wszystkie typy, które omówiliśmy dla \textbf{geometry} (\textit{POINT}, \textit{LINESTRING}, \textit{POLYGON}) są nadal dostępne i aktualne dla \textit{geography}. Jedyną różnicą jest tutaj zamiana terminu \textit{geometry} na \textit{geography}:
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_26.png}
+\end{figure}
+}
+
+
+\subsubsection{Różnica pomiędzy \textit{geometry} i \textit{geography}}
+Jeśli więc mamy te samy podtypy i możemy reprezentować je w tych samych układach współrzędnych, to ktoś może się zastanawiać jaka jest w końcu różnica pomiędzy \textit{geometry} i \textit{geography}. Na pierwszy rut oka różnica jest rzeczywiście niewidoczna, chodzi jednak o to, że inaczej przetwarzają dane. Porównajmy. Obliczmy dystans pomiędzy Krakowem i Warszawą najpierw dla \textit{geography}, a potem dla \textit{geometry}:
+
+\example{ - \textit{geography}}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_28.png}
+\end{figure}
+Otrzymujemy dystans w metrach (252 km):
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_29.png}
+\end{figure}
+}
+
+\example{ - \textit{geometry} - niepoprawy wynik}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ZTB_30.png}
+\end{figure}
+Otrzymujemy dystans w stopniach (prosta geometria pitagorejska)
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ZTB_31.png}
+\end{figure}
+}
+
+Aby dostać poprawny wynik musimy zastosować konwersję:
+
+
+\example{ - \textit{geometry} - poprawy wynik}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ZTB_32.png}
+\end{figure}
+}
+Funkcja ST\_Transform - patrz FunkcjePostGIS.
+
+\issue{}{
+Funkcje mierzące w PostGIS (np. dystans itp.) dla typu \textit{geometry} zawsze dają wynik w takich jednostkach w jakich zapisane są współrzędne. Jeśli nasze współrzędne są w stopach, to długości dostaniemy w stopach a pola w stopach kwadratowych, dlatego tak ważne jest dopasowanie odpowiednich współrzędnych zwłaszcza przy korzystaniu z tego typu funkcji. 
+}
+
+
+\newpage
+\subsection{GeoJSON}
+\textit{Geometry JavaScript Object Notation} to format bazujący na JSON. GeoJSON rozszerza JSON o specyfikację zapisu obiektów przestrzennych. Przykład
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{ "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+        "properties": {"prop0": "value0"}
+        },
+      { "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+            ]
+          },
+        "properties": {
+          "prop0": "value0",
+          "prop1": 0.0
+          }
+        },
+      { "type": "Feature",
+         "geometry": {
+           "type": "Polygon",
+           "coordinates": [
+             [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+               [100.0, 1.0], [100.0, 0.0] ]
+             ]
+         },
+         "properties": {
+           "prop0": "value0",
+           "prop1": {"this": "that"}
+           }
+         }
+       ]
+     }
+\end{lstlisting}
+
+
+
+\newpage
+\subsection{Funkcje PostGIS}
+Tutaj omówimy sobie najważniejsze funkcje PostGIS, które służą do operowania na danych geograficznych.
+
+\subsubsection{ST\_GeomFromText}
+To funkcja, która tworzy obiekt typu geometry na podstawie tekstu, jako pierwszy argument przyjmuje tekst, który ma reprezentować obiekt geometry, a jako drugi SRID dla tego obiektu. 
+
+\example{- ST\_GeomFromText}{
+
+\begin{itemize}
+\item \textit{POINT}
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_16.png}
+\end{figure}
+
+\item \textit{LINESTRING}
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_17.png}
+\end{figure}
+
+\item \textit{POLYGON}
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_18.png}
+\end{figure}
+\end{itemize}
+
+}
+
+
+\subsubsection{ST\_GeogFromText}
+Odpowiednik ST\_GeomFromText dla typu \textit{geography}, ale tutaj jeśli nie podamy układu współrzędnych, to przyjęty zostanie WGS 84 (4326). 
+
+\example{ - ST\_GeogFromText}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.7]{ZTB_27.png}
+\end{figure}
+}
+
+
+\subsubsection{ST\_Transform}
+Zwraca obiekt typu \textit{geometry}, który został przekonwertowany na układ którego SRID podaliśmy jako drugi argument. 
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{ZTB_33.png}
+\end{figure}
+
+Funkcja ta nie ma odpowiednika dla typu \textit{geography}. Możemy natomiast wykonywać prostą konwersję \textit{geometry} na \textit{geography} i odwrotnie, przykładowo:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{ZTB_35.png}
+\end{figure}
+
+Funkcja ST\_ClosestPoint przyjmuje jako argument tylko typ \textit{geometry}. 
+
+\subsubsection{ST\_GeomFromGeoJSON}
+Funkcja tworzy obiekt \textit{geometry} na podstawie GeoJSON, który możemy przekazać jako plik lub tekst. Jeśli nie określimy inaczej, otrzymany obiekt \textit{geometry} będzie miał SRID odpowiadające WGS 84.
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_34.png}
+\end{figure}
+}
+
+\subsubsection{ST\_Centroid}
+Funkcja oblicza środek ciężkości danego obiektu \textit{geometry}. Nie ma odpowiednika dla \textbf{geography}, ale można to ominąć przez rzutowanie na \textit{geometry}.
+
+$geometry ST_Centroid(geometry g1);$
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_35.png}
+\end{figure}
+
+
+\subsubsection{ST\_X i ST\_Y}
+
+To funkcje, których można użyć do uzyskania współrzędnej x oraz y danego punkty dla typu \textit{geometry}, nie ma odpowiednika dla \textit{geography}, ale możemy to ominąć przez rzutowanie.
+
+
+\subsubsection{ST\_Area}
+
+To funkcja, która służy do obliczania pola powierzchni obiektu o podtypie \textit{Polygon}. Funkcja ta działa zarówno dla typu \textit{geometry} jak i \textit{geography}. 
+\begin{itemize}
+\item Używając funkcji na typie \textit{geography} zawsze dostaniemy wynik w metrach kwadratowych
+\item Używając funkcji na typie \textit{geometry} zawsze dostaniemy wynik w takich jednostkach jak układ współrzędnych (dla WGS 84 w stopniach), dlatego musimy upewnić się, że nasze dane są odpowiednio zapisane lub przekonwertować je na odpowiedni układ współrzędnych w celu wykonania obliczeń
+\end{itemize}
+Oczywiście pamiętajmy także, że działając na typie \textit{geography} uwzględnimy krzywiznę ziemi, a działając na typie \textit{geometry} nie. 
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_37.png}
+\end{figure}
+}
+
+\subsubsection{ST\_Length i ST\_Perimeter}
+
+To funkcje, które służą do obliczania odpowiednio długości obiektu typu \textit{LINESTRING} (ST\_Length) oraz obwodu obiektu typu \textit{POLYGON}. \\
+
+Obie te funkcje są zdefiniowane zarówno dla typu \textit{geometry} jak i \textit{geography}. Podobnie jak dla \textit{ST\_Area}:
+
+\begin{itemize}
+\item Używając funkcji na typie \textit{geography} zawsze dostaniemy wynik w metrach
+\item Używając funkcji na typie \textit{geometry} zawsze dostaniemy wynik w takich jednostkach jak układ współrzędnych (dla WGS 84 w stopniach), dlatego musimy upewnić się, że nasze dane są odpowiednio zapisane lub przekonwertować je na odpowiedni układ współrzędnych w celu wykonania obliczeń
+\end{itemize}
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_38.png}
+\end{figure}
+}
+
+
+\subsubsection{ST\_Covers}
+
+To funkcja, która sprawdza czy jej pierwszy argument w całości zawiera jej drugi argument i zwraca \textit{true}(jeśli tak) lub \textit{false}(jeśli nie). Funkcja ta jest zdefiniowana dla typów \textit{geometry} i \textit{geography}. Funkcja korzysta z \textit{bounding box} do wykonania obliczeń.
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_39.png}
+\end{figure}
+} 
+
+\subsubsection{ST\_Distance}
+To funkcja, która oblicza najkrótszy dystans pomiędzy dwoma obiektami \textit{geometry} lub \textit{geography} (dwa obiekty muszą być tego samego typu). W odróżnieniu od ST\_Length i ST\_Perimeter, funkcja ta działa na dowolnych podtypach, tzn. możemy mierzyć odległość punktu od linestring, linestring od polygon itd.  \\
+
+Oczywiście również tutaj obwiązują nas te same zasady, przypomnijmy:
+
+\begin{itemize}
+\item Używając funkcji na typie \textit{geography} zawsze dostaniemy wynik w metrach
+\item Używając funkcji na typie \textit{geometry} zawsze dostaniemy wynik w takich jednostkach jak układ współrzędnych (dla WGS 84 w stopniach), dlatego musimy upewnić się, że nasze dane są odpowiednio zapisane lub przekonwertować je na odpowiedni układ współrzędnych w celu wykonania obliczeń
+\end{itemize}
+ 
+ 
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_40.png}
+\end{figure}
+}
+
+
+\newpage
+\subsection{Zadania z poprzednich lat}
+\egz{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_11.png}
+\end{figure}
+}
+
+Tworzymy tabele:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.8]{ZTB_41.png}
+\end{figure}
+
+Weźmy sobie takie dane dla Krakowa (z geojson.io):
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.3]{ZTB_42.png}
+\end{figure}
+
+I takie dla Polski:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.3]{ZTB_43.png}
+\end{figure}
+
+Wstawiamy dane do tabeli (oczywiście zgodnie z poleceniem wstawimy w miejsce JSONA  nazwy plików):
+
+\begin{lstlisting}
+INSERT INTO granice (nazwa, granica) VALUES ('Krakow', ST_GeomFromGeoJSON('{
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              19.890060424804688,
+              50.11133176013097
+            ],
+            [
+              19.835128784179688,
+              50.04655739071663
+            ],
+            [
+              19.961471557617184,
+              49.991849726784736
+            ],
+            [
+              20.103607177734375,
+              50.013916763992015
+            ],
+            [
+              20.207290649414062,
+              50.08402262960837
+            ],
+            [
+              20.133819580078125,
+              50.15094635096124
+            ],
+            [
+              19.955291748046875,
+              50.147426381905575
+            ],
+            [
+              19.890060424804688,
+              50.11133176013097
+            ]
+          ]
+        ]
+      }'));
+\end{lstlisting}
+
+\begin{lstlisting}
+INSERT INTO granice (nazwa, granica) VALUES ('Polska', ST_GeomFromGeoJSON('{
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              19.51171875,
+              54.648412502316695
+            ],
+            [
+              14.2822265625,
+              54.25238930276849
+            ],
+            [
+              14.17236328125,
+              51.91716758909015
+            ],
+            [
+              18.369140624999996,
+              49.33944093715546
+            ],
+            [
+              23.752441406249996,
+              49.33944093715546
+            ],
+            [
+              24.41162109375,
+              53.51418452077113
+            ],
+            [
+              19.51171875,
+              54.648412502316695
+            ]
+          ]
+        ]
+      }'));
+\end{lstlisting}
+
+Tworzymy zapytania, najpierw nie możemy korzystać z innych typów PostGIS a mamy obliczyć w metrach kwadratowych, nasze współrzędne są w WGS 84, a więc mamy stopnie, musimy zatem skorzystać z konwersji na jakiś inny układ, który zwróci nam pole w metrach, przykładowo 2178.
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.5]{ZTB_44.png}
+\end{figure}
+
+
+A według danych google to $327 000 000m^2$ więc jest ok. \\
+
+W drugim zapytaniu nie możemy korzystać z funkcji przekształcających współrzędne więc możemy chytrze przekonwertować się na \textit{geography}:
+
+ \begin{figure}[H]
+\centering
+  \includegraphics[scale=0.5]{ZTB_45.png}
+\end{figure}
+
+A według danych google to $312 679 km^2$ więc też jest ok.
+
+
+\newpage
+\section{ACID}
+\subsection{Zadania z poprzednich lat}
+\egz{}{
+Opisać czym jest ACID.
+}
+Zbiór właściwości gwarantujących poprawne przetwarzanie transakcji w bazach danych. ACID jest skrótowcem od angielskich słów atomicity, consistency, isolation, durability, czyli niepodzielność, spójność, izolacja, trwałość.
+
+\begin{itemize}
+\item atomicity - każda transakcja albo zostanie wykonana w całości, albo w ogóle – na przykład jeśli w ramach jednej transakcji odbywać się ma przelew bankowy (zmniejszenie wartości jednego konta i powiększenie innego o tę samą kwotę), to nie może dojść do sytuacji, że z jednego konta ubędzie pieniędzy, a kwota na koncie docelowym będzie bez zmian
+\item consistency - zapewnia, że każda transakcja może tylko zmienić stan bazy danych z prawidłowego na prawidłowy, tzn. po wykonaniu transakcji, wszystkie dane nadal poprawne względem ograniczeń, trigerów itd.   
+\item isolation - transakcje, które są wykonywane równolegle nie wpływają na siebie nawzajem, baza jest pozostawiana w takim stanie jakby transakcje były wykonywane sekwencyjnie
+\item durability - gwarantuje, że dane, które zostały zapisane w bazie danych pozostaną w niej, nawet w przypadku awarii systemu 
+\end{itemize}
+
+
+
+
+\newpage
+\section{Indeksy}
+Indeksy są nieodłącznie powiązane z wykonywaniem zapytań na bazie, bo służą do optymalizacji wyciągania z bazy danych przy pomocy zapytania typu SELECT. 
+
+\subsection{Ogólny proces wysyłania zapytani SELECT}
+Zanim przejdziemy stricte do omówienia indeksów przedstawmy sobie jaki proces przechodzi zapytanie SELECT od momentu jego wysłania do momentu gdy dostajemy dane z bazy. 
+\begin{itemize}
+\item Aplikacja ustanawia połączenie z bazą danych
+\item Aplikacja wysyła zapytanie do bazy danych
+\item Baza danych sprawdza poprawność zapytania i buduje na jego podstawie drzewo zapytania
+\item Następnie działa tzw. \textit{rewriter}, który bierze drzewo zapytania i transformuje go według pewnych reguł o ile jest taka potrzeba
+\item \textbf{\textit{Planner/Optimizer} bierze przepisane drzewo zapytania i tworzy na jego podstawie plan zapytania, który będzie wejściem do \textit{executor}, który wykona zapytanie} - to właśnie na tym etapie tworzone są wszystkie możliwe ścieżki prowadzące do uzyskania rezultatu zapytania, np. jeśli na relacji jest indeks, to mamy dwie takie możliwe ścieżki (sekwencyjna + ta z indeksem), wybierana jest ta najbardziej optymalna i plan dla niej jest przekazywany do \textit{executor}
+\item \textit{executor} wykonuje plan zapytania i zwracane są wyniki
+\end{itemize}
+
+
+\subsection{ANALYZE i EXPLAIN}
+Wiemy już o działaniu plannera, ale skąd mamy wiedzieć jaki optymalny plan on sobie wybrał dla naszego zapytania ? Do tego właśnie służy nam polecenie \textit{EXPLAIN}, które zwraca dla danego zapytania, to co planner uznał za optymalne. \\
+
+Jeśli dodamy po poleceniu EXPLAIN również polecenie \textit{ANALYZE} po którym wstawimy nasze zapytanie, to dostaniemy zarówno to co planner zaplanował jak i to co rzeczywiście miało miejsce, zapytanie bowiem zostanie naprawdę wykonane, a dane z plannera i dane rzeczywiste ukażą się nam w celu porównania.  
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.45]{ZTB_46.png}
+\end{figure}
+}
+
+Planner zwraca również operacje, które zostają wykonane na podstawie zapytania, w powyższym przykładzie mamy np. operacje \textit{filter}, ponieważ w klauzuli where zawarliśmy porównanie. 
+
+\subsection{Tworzenie i usuwanie indeksu}
+
+Indeks tworzymy przy pomocy polecenia:
+
+\begin{lstlisting}
+CREATE INDEX test1_id_index ON test1 (id);
+\end{lstlisting}
+
+a usuwamy przy pomocy polecenia:
+\begin{lstlisting}
+DROP INDEX test1_id_index;
+\end{lstlisting}
+
+Defaultowy typ tworzonego indeksu to b-tree.
+
+\subsection{Typy indeksów}
+PostgreSQL zapewnia kilka różnych typów indeksów, każdy z nich używa innego algorytmu, który jest odpowiedni dla pewnego rodzaju zapytań. 
+
+\subsubsection{Btree}
+To defaultowy indeks, który jest tworzony jeśli nie określimy jawnie typu indeksu. B-tree może obsłużyć zapytania bazujące a porównywaniu i zakresach, a więc takie w których indeksowana kolumna podlega któremuś z operatorów:
+\begin{itemize}
+\item $<$
+\item $<=$
+\item $=$
+\item $>=$
+\item $>$
+\end{itemize}
+
+Inne operatory, które są tworzone na podstawie tych operatorów (jak np. \textit{BEETWEEN, IN, IS NULL}) mogą również być używane z indeksem Btree. \\
+
+Oprócz tego \textit{optimizer} może również używać indeksu Btree dla zapytań, które zawierają dopasowywanie do wzorców, czyli dla operatorów takich jak \textit{LIKE} czy \textit{~} (ale uwaga, są dwa warunki !), pierwszy jest taki, że tylko wtedy gdy wzorzec jest stałą i znajduje się na początku wzorca. Przykładowo:
+\begin{itemize}
+\item LIKE $foo\%$
+\end{itemize} 
+ale już nie
+\begin{itemize}
+\item LIKE $\%bar$
+\end{itemize}
+a drugi jest taki, że jeśli nasza baza nie używa C locale, to musimy dodać przy tworzeniu indeksu klasę operatorów:
+\begin{lstlisting}
+CREATE INDEX zamowienia_uwagi ON zamowienia (uwagi varchar_pattern_ops);
+\end{lstlisting}
+
+
+\subsubsection{Hash}
+
+Kolejny typ indeksów to tzw. \textit{HASH}, tworząc taki indeks musimy jawnie określić jego typ, bo nie jest to defaultowe:
+\begin{lstlisting}
+CREATE INDEX name ON table USING HASH (column);
+\end{lstlisting}
+
+Hashe są o wiele prostsze od Btree i mogą działać tylko wtedy gdy mamy do czynienia operatorem porównania $=$, a więc mają bardzo ograniczone zastosowanie.
+
+\subsubsection{Inne}
+Oczywiście jest też wiele innych, ale my głównie skupiamy się na dwóch powyższych, opis pozostałych w dokumentacji.
+
+\subsection{Indeksy wielokolumnowe}
+Jeśli mamy tabelę typu:
+\begin{lstlisting}
+CREATE TABLE test2 (
+  major int,
+  minor int,
+  name varchar
+);
+\end{lstlisting}
+i często wykonujemy zapytania typu:
+\begin{lstlisting}
+SELECT name FROM test2 WHERE major = constant AND minor = constant;
+\end{lstlisting}
+to dobrze jest założyć wtedy indeks wielokolumnowy:
+\begin{lstlisting}
+CREATE INDEX test2_mm_idx ON test2 (major, minor);
+\end{lstlisting}
+
+\subsection{Indeksy i sortowanie}
+Chodzi o to, że jak już zdefiniujemy indeks, to dane układane są według pewnej kolejności określanej przez ten indeks i według takiej kolejności są wyszukiwane. Dla indeksu Btree defaultowa kolejność to \textit{ASC NULLS LAST}. \\
+
+Jeśli więc sortujemy dane wyjściowe przez kolumnę na której mamy indeks, to wtedy krok sortowania może być pominięty, ponieważ dane wyciągane są w kolejności takiej jak są ułożone przez indeks. My mamy natomiast kontrolę nad tym jak nasze dane będę przechowywane według indeksu (malejąco, rosnąco, nulle najpierw lub na końcu). Dzięki temu możemy oszczędzić bazie kroku sortowania i mieć dane według kolejności którą chcemy.
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.9]{ZTB_47.png}
+\end{figure}
+}
+
+\subsection{Indeksy częściowe i indeksy na wyrażeniach}
+
+Indeksy możemy również zakładać na części danych:
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.6]{ZTB_48.png}
+\end{figure}
+}
+
+Jak również na wyrażeniach, zamiast na kolumnach:
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.6]{ZTB_49.png}
+\end{figure}
+}
+
+
+\subsection{Zadania z poprzednich lat}
+
+\egz{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.65]{ZTB_50.png}
+\end{figure}
+}
+
+\begin{lstlisting}
+CREATE INDEX ind ON samochody USING BTREE (marka varchar_pattern_ops DESC NULLS LAST);
+\end{lstlisting}
+
+\begin{itemize}
+\item \textit{ILIKE} $M\%$ - nie, ponieważ dla ILIKE wzorzec może rozpoczynać się tylko od znaku na którego konwersja do małych / dużych liter nie ma wpływu
+\item \textit{LIKE} $M\%$ - tak, o ile dodamy klasę operatorów jak w przykładzie powyżej
+\item \textit{LIKE} $\%d$ - nie, bo wzorzec nie rozpoczyna się od stałej
+\item marka >= $'L'$ - tak, Btree działa poprawnie dla operatora $>=$
+\end{itemize}
+
+
+\newpage
+\section{XML}
+
+PostgreSQL umożliwia zarówno generację dokumentów XML na podstawie danych relacyjnych, jak i gromadzenie i przetwarzanie dokumentów XML. Omówimy sobie tutaj krótko jak z istniejącej tabeli uzyskać dane w formie xml, a także jak odpytywać dane, które mamy w bazie w formie xml. 
+
+\subsection{Tworzenie xml na podstawie tabeli}
+Załóżmy, że mamy w bazie danych zwykłą tabelę, bez żadnego xml i chcemy z niej wyciągnąć dane, które będę reprezentowane w strukturze xml. Posłuży nam do tego funkcja xmlelement. 
+
+\begin{lstlisting}
+xmlelement(NAME nazwa_elementu_xml, xmlattributes(column1 as atrybut1, column2 as atrybut2, ...), 'content1', 'content2', ... )
+\end{lstlisting}
+
+\begin{itemize}
+\item Pierwszy atrybut tej metody zawsze rozpoczyna się od NAME, a po nim następuje nazwa elementu xml
+\item Drugi z argumentów jest opcjonalny i określamy w nim atrybuty dla naszego elementu xml, po \textit{as} określamy jak atrybut ma się nazywać
+\item Kolejne argumenty są również opcjonalne, po przecinku dodajemy zawartość naszego elementu xml, w szczególności mogą to być kolejne funkcje xmlelement tworzące zagnieżdżone elementy xml
+\end{itemize}
+ 
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.5]{ZTB_51.png}
+\end{figure}
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_52.png}
+\end{figure}
+}
+
+\subsection{Tworzenie zapytań do typu xml}
+
+Bazę danych z kolumną xml możemy utworzyć w bardzo prosty sposób:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.55]{ZTB_53.png}
+\end{figure}
+
+Teraz chcemy utworzyć zapytanie, które wyciągnie z bazy danych jakieś konkretne dane z naszego xmla. \\
+
+W tym celu korzystamy z narzędzia \textit{xpath}, pierwszym argumentem do tej funkcji jest ścieżka określająca położenie elementu w dokumencie xml, a drugim kolumna z xml:
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.45]{ZTB_54.png}
+\end{figure}
+}
+
+Jeśli chcemy wybrać zamiast elementu wartość jakiegoś atrybutu, to nazwę atrybutu poprzedzamy znakiem małpy @.  \\
+
+Kolejną funkcją z której możemy korzystać jest \textit{path\_exists}. Funkcja ta zwraca true lub false w zależności od tego czy dany element znajduje się w xml.
+
+\example{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.45]{ZTB_55.png}
+\end{figure}
+}
+
+
+
+
+\newpage
+\section{Neo4j i Cypher}
+
+
+\subsection{Informacje ogólne}
+\begin{itemize}
+\item \textbf{Cypher} - język zapytań przeznaczony dla grafów, który pozwala użytkownikom na manipulacje danymi w graficznej bazie danych
+\item \textbf{Grafowa baza danych} - to baza danych w której danych nie dostosowujemy do konkretnego modelu, zamiast tego dane są łączone z innymi danymi relacjami, które tak jak w grafie pokazują połączenie lub relację pomiędzy nimi. Połączenia między danymi przechowywane są jako dane w modelu danych. Zapytania na grafowej bazie danych są bardzo wydajne, działają w czasie stałym i pozwalają na przeszukiwania nawet milionów połączeń
+\end{itemize}
+
+\subsection{Podstawowe pojęcia neo4j}
+
+\begin{itemize}
+\item \textbf{Węzły} - używane są w neo4j do reprezentowania pojedynczego węzła, czyli danych
+\item \textbf{Etykiety} - przypisywane są do węzłów i używane są w celu pogrupowania węzłów w zbiory, np. wszystkie węzły użytkowników mogłyby mieć przypisaną etykietę User. Etykiety mogą być dodawane i usuwane po dodaniu węzła. Węzeł może mieć 0 lub więcej etykiet. 
+\end{itemize}
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{ztb1.png}
+  \caption{Węzły w Neo4j.}
+  \label{fig:nodes}
+  
+\end{figure}
+\begin{itemize}
+\item \textbf{Relacje} - relacje łączą dwa węzły ze sobą, co tworzy struktury w naszym grafie. Relacja może mieć tylko jeden typ, ale za to może mieć 0 lub więcej własności. Relacje mogą być nieskierowane (z żadnej strony nie ma strzałki) lub skierowane tylko w jednym kierunku (strzałka tylko w jedną stronę). Relacja może być w szczególności skierowana do węzła z którego wychodzi. 
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb2.png}
+  \caption{Jedna z relacji jest typu DIRECTED, a druga ACTED\_IN, relacja ACTED\_IN ma dodatkowo przypisaną własność, która jest tablicą.}
+  \label{fig:nodes}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{Własności} - To pary nazwa:wartość, które są używane do dodania informacji do węzłów, a także relacji.  
+\end{itemize}
+
+\subsection{Konwencje nazewnictwa w Neo4j}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb3.png}
+  \caption{Konwencje nazewnictwa w Neo4j.}
+  \label{fig:nodes}
+\end{figure}
+
+\subsection{Cypher - Podstawy}
+W tym podrozdziale omówimy sobie język Cypher stosowany do manipulowania danymi w Neo4j. 
+
+\subsubsection{Węzły}
+\begin{itemize}
+\item Węzły reprezentujemy w nawiasach, które mają przypominać okrągły węzeł grafu
+\end{itemize}
+Przykłady
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb4.png}
+  \caption{Przykładowe reprezentacje węzłów w Cypher.}
+  \label{fig:nodes}
+\end{figure}
+\begin{itemize}
+\item Najprostszy węzeł to po prostu dwa nawiasy
+\item W drugiej linii widzimy węzeł ze zmienną, zmienną możemy wprowadzić do węzła jeśli chcemy się do niego odwoływać w innym miejscu
+\item W kolejnych liniach widzimy dodanie do węzła etykiety Movie
+\item Własności zapisujemy w nawiasach wąsatych w formacie nazwa:wartość, oddzielone przecinkami
+\end{itemize}
+
+\subsubsection{Relacje}
+
+\begin{itemize}
+\item Relacja reprezentowana jest jako dwa znaki myślnika \textit{(--)}, możemy dodatkowo dodać grot strzałki aby uformować relację skierowaną \textit{(-->)} lub \textit{(<--)}. 
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb5.png}
+  \caption{Przykładowe reprezentacje relacji w Cypher.}
+  \label{fig:nodes}
+\end{figure}
+\begin{itemize}
+\item Nawiasy kwadratowe pomiędzy myślnikami używane są do dodawania do relacji zmiennych, etykiet oraz własności. 
+\end{itemize}
+
+
+\subsubsection{Węzły + Relacje = Wzorce}
+\begin{itemize}
+\item Wzorce tworzymy poprzez połączenie składni węzłów oraz relacji
+\end{itemize}
+Przykład
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb6.png}
+  \caption{Przykładowy wzorzec w Cypher.}
+  \label{fig:nodes}
+\end{figure}
+
+\subsection{Cypher - CREATE, MATCH, MERGE}
+
+\begin{itemize}
+\item Wiedząc jak tworzyć wzorce w języku Cypher możemy teraz zacząć tworzyć zdania, które mają wykonywać określone zadania w naszej bazie danych takie jak tworzeniu czy wyszukiwanie.
+\end{itemize}
+
+\subsubsection{CREATE}
+\begin{itemize}
+\item Create to operacja, która pozwala na utworzenie nowych danych w bazie, mogą to być węzły, relacje, a także węzły wraz z relacjami. 
+\end{itemize}
+Przykładowo wyrażenie
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb7.png}
+  \caption{Utworzenie węzła o etykiecie Movie z dwiema własnościami.}
+  \label{fig:nodes}
+\end{figure}
+jest równoważne utworzeniu takiego węzła w grafie:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb8.png}
+  \caption{Utworzony węzeł.}
+  \label{fig:nodes}
+\end{figure}
+Możemy też przypisać wartość do nowo tworzonego węzła, np. po to aby go wyświetlić:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb9.png}
+  \caption{Tworzenie węzła z przypisaniem zmiennej.}
+  \label{fig:nodes}
+\end{figure}
+tutaj przykład tworzenia węzłów wraz z relacją:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb10.png}
+  \caption{Tworzenie węzłów z relacją między nimi.}
+  \label{fig:nodes}
+\end{figure}
+
+\subsubsection{MATCH}
+\begin{itemize}
+\item Aby utworzyć zapytanie, które zwróci informacje z bazy danych, tworzymy również Wzór, który przekazujemy do MATCH
+\item Szczególnie przydatne tutaj są zmienne, dzięki którym możemy wyświetlić konkretną informację
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb11.png}
+  \caption{Stosowanie MATCH.}
+  \label{fig:nodes}
+\end{figure}
+
+MATCH możemy też stosować do aktualizowania bazy danych w taki sposób:
+
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb12.png}
+  \caption{Aktualizacja bazy danych.}
+  \label{fig:nodes}
+\end{figure}
+
+\begin{itemize}
+\item Należy pamiętać, że MATCH zwraca jeden wiersz na dopasowanie dane, dlatego korzystając z połączenia MATCH-CREATE musimy wziąć pod uwagę, że CREATE może wykonać się wiele razy ze względu na to, że MATCH zwróci do zmiennej wiele wierszy.
+\end{itemize}
+
+Możemy też stosować MATCH razem z SET w celu dodania atrybutu do istniejących węzłów:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb19.png}
+  \caption{Aktualizacja bazy danych.}
+  \label{fig:nodes}
+\end{figure}
+
+\subsubsection{MERGE}
+
+\begin{itemize}
+\item MERGE działa jak \textit{MATCH or CREATE}, tzn. poszukuje wzorzec, jeśli go znajdzie, to go zwraca, jeśli go nie znajdzie, to go tworzy
+\end{itemize}
+Przykład
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb13.png}
+  \caption{Aktualizacja bazy danych.}
+  \label{fig:nodes}
+\end{figure}
+
+\subsection{Cypher - WHERE i funkcje agregujące}
+
+\subsubsection{WHERE}
+\begin{itemize}
+\item WHERE możemy używać podobnie jak w bazach relacyjnych do filtrowania otrzymanych rezultatów, możemy korzystać z wyrażeń regularnych, warunków logicznych i wielu innych opcji 
+\end{itemize}
+
+Przykład
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb14.png}
+  \caption{Przykład użycia WHERE.}
+  \label{fig:nodes}
+\end{figure}
+
+co jest równoważne:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb15.png}
+  \label{fig:nodes}
+\end{figure}
+
+można też jednak stosować bardziej skomplikowane rozwiązania:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb16.png}
+  \caption{Przykład użycia WHERE.}
+  \label{fig:nodes}
+\end{figure}
+
+zwłaszcza interesujące jest stosowanie wzorców w połączeniu z WHERE:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb17.png}
+  \caption{Stosowanie wzorców z WHERE.}
+  \label{fig:nodes}
+\end{figure}
+
+
+\subsubsection{Funkcje agregujące}
+
+Podobnie jak w zwykłym SQL możemy również stosować funkcję agregujące:
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.85]{ztb18.png}
+  \caption{Przykład zastosowania funkcji agregujących.}
+  \label{fig:nodes}
+\end{figure}
+
+
+\newpage
+\section{Inne}
+
+\egz{}{
+\begin{figure}[H]
+\centering
+  \includegraphics[scale=0.45]{ZTB_12.png}
+\end{figure}
+}
+
+
+
+
+\end{document}
